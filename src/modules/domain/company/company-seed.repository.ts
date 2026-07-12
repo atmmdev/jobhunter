@@ -8,6 +8,16 @@ export type SourceTypeValue =
   | 'SLACK'
   | 'OTHER';
 
+export type SourceSortByValue =
+  | 'name'
+  | 'company'
+  | 'ats'
+  | 'country'
+  | 'enabled'
+  | 'url';
+
+export type SortDirection = 'asc' | 'desc';
+
 export interface UpsertCompanyFromSeedInput {
   name: string;
   careersUrl: string;
@@ -40,10 +50,24 @@ export interface SourceListRow {
   createdAt: Date;
 }
 
+export interface ListSourcesFilter {
+  page: number;
+  pageSize: number;
+  sortBy: SourceSortByValue;
+  sortDir: SortDirection;
+}
+
+export interface ListSourcesResult {
+  items: SourceListRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 /**
  * Persistence port for company seed sync.
  */
 export interface CompanySeedRepository {
   upsertFromSeed(input: UpsertCompanyFromSeedInput): Promise<UpsertCompanyFromSeedResult>;
-  listSources(): Promise<SourceListRow[]>;
+  listSources(filter: ListSourcesFilter): Promise<ListSourcesResult>;
 }

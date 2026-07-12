@@ -1,11 +1,17 @@
+import type { Prisma } from '@prisma/client';
+
 import type {
   CompanySeedRepository,
+  ListSourcesFilter,
+  ListSourcesResult,
+  SortDirection,
   SourceListRow,
+  SourceSortByValue,
+  SourceTypeValue,
   UpsertCompanyFromSeedInput,
   UpsertCompanyFromSeedResult,
 } from '@/modules/domain/company/company-seed.repository';
 import type { AtsTypeValue } from '@/modules/domain/ats/ats-type';
-import type { SourceTypeValue } from '@/modules/domain/company/company-seed.repository';
 import { prisma } from '@/modules/infrastructure/prisma/client';
 
 /**
@@ -96,30 +102,64 @@ export class PrismaCompanySeedRepository implements CompanySeedRepository {
     };
   }
 
-  async listSources(): Promise<SourceListRow[]> {
-    const sources = await prisma.source.findMany({
-      include: {
-        company: { select: { name: true, country: true } },
-      },
-      orderBy: { createdAt: 'desc' },
-    });
+  async listSources(filter: ListSourcesFilter): Promise<ListSourcesResult> {
+    const skip = (filter.page - 1) * filter.pageSize;
+    const orderBy = buildSourceOrderBy(filter.sortBy, filter.sortDir);
 
-    return sources.map((source) => ({
-      id: source.id,
-      name: source.name,
-      type: source.type as SourceTypeValue,
-      atsType: source.atsType as AtsTypeValue | null,
-      baseUrl: source.baseUrl,
-      enabled: source.enabled,
-      companyName: source.company?.name ?? null,
-      country: source.company?.country ?? null,
-      lastRunAt: source.lastRunAt,
-      lastStatus: source.lastStatus,
-      createdAt: source.createdAt,
-    }));
+    const [sources, total] = await prisma.$transaction([
+      prisma.source.findMany({
+        include: {
+          company: { select: { name: true, country: true } },
+        },
+        orderBy,
+        skip,
+        take: filter.pageSize,
+      }),
+      prisma.source.count(),
+    ]);
+
+    return {
+      items: sources.map((source) => ({
+        id: source.id,
+        name: source.name,
+        type: source.type as SourceTypeValue,
+        atsType: source.atsType as AtsTypeValue | null,
+        baseUrl: source.baseUrl,
+        enabled: source.enabled,
+        companyName: source.company?.name ?? null,
+        country: source.company?.country ?? null,
+        lastRunAt: source.lastRunAt,
+        lastStatus: source.lastStatus,
+        createdAt: source.createdAt,
+      })),
+      total,
+      page: filter.page,
+      pageSize: filter.pageSize,
+    };
   }
 }
 
 function toSourceType(atsType: AtsTypeValue): SourceTypeValue {
   return atsType === 'CUSTOM' || atsType === 'UNKNOWN' ? 'CAREERS' : 'ATS';
+}
+
+function buildSourceOrderBy(
+  sortBy: SourceSortByValue,
+  sortDir: SortDirection,
+): Prisma.SourceOrderByWithRelationInput {
+  switch (sortBy) {
+    case 'company':
+      return { company: { name: sortDir } };
+    case 'ats':
+      return { atsType: sortDir };
+    case 'country':
+      return { company: { country: sortDir } };
+    case 'enabled':
+      return { enabled: sortDir };
+    case 'url':
+      return { baseUrl: sortDir };
+    case 'name':
+    default:
+      return { name: sortDir };
+  }
 }

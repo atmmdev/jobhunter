@@ -1,4 +1,8 @@
-import type { CompanySeedRepository } from '@/modules/domain/company/company-seed.repository';
+import type {
+  CompanySeedRepository,
+  ListSourcesResult,
+} from '@/modules/domain/company/company-seed.repository';
+import type { ListSourcesQueryDto } from '@/shared/schemas/source.schema';
 
 /**
  * Lists configured crawl/ingest sources for the admin UI.
@@ -6,7 +10,12 @@ import type { CompanySeedRepository } from '@/modules/domain/company/company-see
 export class ListSourcesService {
   constructor(private readonly seeds: CompanySeedRepository) {}
 
-  async execute() {
-    return this.seeds.listSources();
+  async execute(query: ListSourcesQueryDto): Promise<ListSourcesResult> {
+    return this.seeds.listSources({
+      page: query.page,
+      pageSize: query.pageSize,
+      sortBy: query.sortBy,
+      sortDir: query.sortDir,
+    });
   }
 }
