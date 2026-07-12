@@ -72,14 +72,14 @@ Phased delivery toward a production-ready system. Each phase must be shippable a
 **Status:** Mostly complete
 
 - [x] AiClient abstraction (OpenAI-compatible)
-- [ ] Parse job / extract tech / extract salary
+- [x] Parse job / extract tech / extract salary (deterministic on score)
 - [x] Hybrid scoring + JobScore persistence
 - [x] Resume recommendation
 - [x] Cover letter generation (pt-BR / en) + editable UI
 - [x] Notifications for high-score jobs
 - [x] Dashboard live metrics
 
-**Exit criteria:** New jobs auto-score; best resume recommended; cover letter editable. ✅ (salary/tech extraction pending)
+**Exit criteria:** New jobs auto-score; best resume recommended; cover letter editable. ✅
 
 ---
 

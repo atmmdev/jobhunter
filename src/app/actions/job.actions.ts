@@ -8,6 +8,7 @@ import { DomainError } from '@/modules/domain/shared/errors';
 import {
   createJobSchema,
   deleteJobSchema,
+  deleteJobsSchema,
   listJobsQuerySchema,
   updateJobStatusSchema,
 } from '@/shared/schemas/job.schema';
@@ -69,18 +70,40 @@ export async function updateJobStatusAction(
 }
 
 /**
- * Permanently deletes a job.
+ * Permanently deletes a single job.
  */
-export async function deleteJobAction(input: unknown): Promise<ActionResult<{ id: string }>> {
+export async function deleteJobAction(
+  input: unknown,
+): Promise<ActionResult<{ deleted: number }>> {
   try {
     await requireUserId();
     const parsed = deleteJobSchema.parse(input);
-    const { deleteJob } = createJobModule();
-    await deleteJob.execute(parsed);
+    const { deleteJobs } = createJobModule();
+    const result = await deleteJobs.execute({ jobIds: [parsed.jobId] });
     revalidatePath('/[locale]/jobs', 'page');
     revalidatePath('/[locale]/dashboard', 'page');
     revalidatePath('/[locale]/applications', 'page');
-    return { ok: true, data: { id: parsed.jobId } };
+    return { ok: true, data: result };
+  } catch (error) {
+    return { ok: false, error: toErrorMessage(error) };
+  }
+}
+
+/**
+ * Permanently deletes multiple jobs.
+ */
+export async function deleteJobsAction(
+  input: unknown,
+): Promise<ActionResult<{ deleted: number }>> {
+  try {
+    await requireUserId();
+    const parsed = deleteJobsSchema.parse(input);
+    const { deleteJobs } = createJobModule();
+    const result = await deleteJobs.execute(parsed);
+    revalidatePath('/[locale]/jobs', 'page');
+    revalidatePath('/[locale]/dashboard', 'page');
+    revalidatePath('/[locale]/applications', 'page');
+    return { ok: true, data: result };
   } catch (error) {
     return { ok: false, error: toErrorMessage(error) };
   }

@@ -177,4 +177,14 @@ export class PrismaJobRepository implements JobRepository {
   async delete(id: string): Promise<void> {
     await prisma.job.delete({ where: { id } });
   }
+
+  async deleteMany(ids: string[]): Promise<number> {
+    if (ids.length === 0) {
+      return 0;
+    }
+    const result = await prisma.job.deleteMany({
+      where: { id: { in: ids } },
+    });
+    return result.count;
+  }
 }

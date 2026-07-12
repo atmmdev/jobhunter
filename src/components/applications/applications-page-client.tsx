@@ -1,5 +1,16 @@
 'use client';
 
+import {
+  Ban,
+  CheckCircle2,
+  CircleHelp,
+  FileText,
+  Handshake,
+  Send,
+  UserRound,
+  XCircle,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useRouter } from '@/shared/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
@@ -8,14 +19,42 @@ import { CoverLetterEditor } from '@/components/applications/cover-letter-editor
 import { transitionApplicationAction } from '@/app/actions/application.actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { IconTooltipButton } from '@/components/ui/icon-tooltip-button';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import type { ApplicationListItemDto } from '@/shared/dto/application.dto';
-import type { ApplicationStatusValue } from '@/modules/domain/application/application.entity';
+import type {
+  ApplicationStatusValue,
+  ManualApplicationTransition,
+} from '@/modules/domain/application/application.entity';
+import type { ActionIconTone } from '@/shared/ui/action-icon-tones';
 
 interface ApplicationsPageClientProps {
   applications: ApplicationListItemDto[];
   total: number;
   status?: ApplicationStatusValue;
 }
+
+const TRANSITION_ICONS: Record<ManualApplicationTransition, LucideIcon> = {
+  APPROVED: CheckCircle2,
+  PENDING_APPLY: Send,
+  APPLIED: Send,
+  MANUAL_REQUIRED: CircleHelp,
+  INTERVIEW: UserRound,
+  OFFER: Handshake,
+  REJECTED: XCircle,
+  WITHDRAWN: Ban,
+};
+
+const TRANSITION_TONES: Record<ManualApplicationTransition, ActionIconTone> = {
+  APPROVED: 'approve',
+  PENDING_APPLY: 'pendingApply',
+  APPLIED: 'applied',
+  MANUAL_REQUIRED: 'manual',
+  INTERVIEW: 'interview',
+  OFFER: 'offer',
+  REJECTED: 'reject',
+  WITHDRAWN: 'withdrawn',
+};
 
 function statusVariant(
   status: ApplicationStatusValue,
@@ -61,139 +100,139 @@ export function ApplicationsPageClient({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-muted-foreground">{t('total', { count: total })}</p>
-        <div className="flex flex-wrap gap-2">
-          <Button
-            type="button"
-            size="sm"
-            variant={!status ? 'default' : 'outline'}
-            onClick={() => filterStatus(undefined)}
-          >
-            {t('allStatuses')}
-          </Button>
-          {(
-            [
-              'PENDING_APPROVAL',
-              'APPROVED',
-              'APPLIED',
-              'INTERVIEW',
-              'OFFER',
-              'MANUAL_REQUIRED',
-            ] as const
-          ).map((value) => (
+    <TooltipProvider delayDuration={300}>
+      <div className="space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-muted-foreground">{t('total', { count: total })}</p>
+          <div className="flex flex-wrap gap-2">
             <Button
-              key={value}
               type="button"
               size="sm"
-              variant={status === value ? 'default' : 'outline'}
-              onClick={() => filterStatus(value)}
+              variant={!status ? 'default' : 'outline'}
+              onClick={() => filterStatus(undefined)}
             >
-              {t(`status.${value}`)}
+              {t('allStatuses')}
             </Button>
-          ))}
+            {(
+              [
+                'PENDING_APPROVAL',
+                'APPROVED',
+                'APPLIED',
+                'INTERVIEW',
+                'OFFER',
+                'MANUAL_REQUIRED',
+              ] as const
+            ).map((value) => (
+              <Button
+                key={value}
+                type="button"
+                size="sm"
+                variant={status === value ? 'default' : 'outline'}
+                onClick={() => filterStatus(value)}
+              >
+                {t(`status.${value}`)}
+              </Button>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {error ? <p className="text-sm text-destructive">{error}</p> : null}
+        {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
-      {applications.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{t('empty')}</p>
-      ) : (
-        <div className="space-y-4">
-          {applications.map((app) => (
-            <div key={app.id} className="overflow-x-auto rounded-lg border border-border">
-              <table className="w-full min-w-[960px] text-left text-sm">
-                <thead className="border-b border-border bg-muted/40">
-                  <tr>
-                    <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.job')}</th>
-                    <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.company')}</th>
-                    <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.resume')}</th>
-                    <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.status')}</th>
-                    <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.updated')}</th>
-                    <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.actions')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b border-border last:border-0">
-                    <td className="px-4 py-3 align-top">
-                      <a
-                        href={app.applyUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="font-medium underline-offset-2 hover:underline"
-                      >
-                        {app.jobTitle}
-                      </a>
-                    </td>
-                    <td className="px-4 py-3 align-top">{app.companyName ?? '—'}</td>
-                    <td className="px-4 py-3 align-top">{app.resumeName}</td>
-                    <td className="px-4 py-3 align-top">
-                      <Badge variant={statusVariant(app.status)}>{t(`status.${app.status}`)}</Badge>
-                    </td>
-                    <td className="px-4 py-3 align-top text-xs text-muted-foreground">
-                      {new Date(app.updatedAt).toLocaleString()}
-                    </td>
-                    <td className="px-4 py-3 align-top">
-                      <div className="flex flex-wrap gap-1">
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="secondary"
-                          disabled={pending}
-                          onClick={() =>
-                            setEditingApplicationId((current) =>
-                              current === app.id ? null : app.id,
-                            )
-                          }
+        {applications.length === 0 ? (
+          <p className="text-sm text-muted-foreground">{t('empty')}</p>
+        ) : (
+          <div className="space-y-4">
+            {applications.map((app) => (
+              <div key={app.id} className="overflow-x-auto rounded-lg border border-border">
+                <table className="w-full min-w-[960px] text-left text-sm">
+                  <thead className="border-b border-border bg-muted/40">
+                    <tr>
+                      <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.job')}</th>
+                      <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.company')}</th>
+                      <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.resume')}</th>
+                      <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.status')}</th>
+                      <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.updated')}</th>
+                      <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.actions')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-border last:border-0">
+                      <td className="px-4 py-3 align-top">
+                        <a
+                          href={app.applyUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="font-medium underline-offset-2 hover:underline"
                         >
-                          {app.coverLetterId ? t('coverLetter.edit') : t('coverLetter.open')}
-                        </Button>
-                        {app.allowedTransitions.map((next) => (
-                          <Button
-                            key={next}
-                            type="button"
-                            size="sm"
-                            variant="outline"
+                          {app.jobTitle}
+                        </a>
+                      </td>
+                      <td className="px-4 py-3 align-top">{app.companyName ?? '—'}</td>
+                      <td className="px-4 py-3 align-top">{app.resumeName}</td>
+                      <td className="px-4 py-3 align-top">
+                        <Badge variant={statusVariant(app.status)}>{t(`status.${app.status}`)}</Badge>
+                      </td>
+                      <td className="px-4 py-3 align-top text-xs text-muted-foreground">
+                        {new Date(app.updatedAt).toLocaleString()}
+                      </td>
+                      <td className="px-4 py-3 align-top">
+                        <div className="flex flex-wrap items-center gap-1">
+                          <IconTooltipButton
+                            label={
+                              app.coverLetterId ? t('coverLetter.edit') : t('coverLetter.open')
+                            }
+                            icon={FileText}
+                            tone="coverLetter"
                             disabled={pending}
                             onClick={() =>
-                              startTransition(async () => {
-                                setError(null);
-                                const result = await transitionApplicationAction({
-                                  applicationId: app.id,
-                                  status: next,
-                                });
-                                if (!result.ok) {
-                                  setError(result.error);
-                                  return;
-                                }
-                                router.refresh();
-                              })
+                              setEditingApplicationId((current) =>
+                                current === app.id ? null : app.id,
+                              )
                             }
-                          >
-                            {t(`actions.${next}`)}
-                          </Button>
-                        ))}
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              {editingApplicationId === app.id ? (
-                <div className="border-t border-border p-4">
-                  <CoverLetterEditor
-                    applicationId={app.id}
-                    coverLetterId={app.coverLetterId}
-                    initialContent={app.coverLetterContent}
-                    onClose={() => setEditingApplicationId(null)}
-                  />
-                </div>
-              ) : null}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+                          />
+                          {app.allowedTransitions.map((next) => (
+                            <IconTooltipButton
+                              key={next}
+                              label={t(`actions.${next}`)}
+                              icon={TRANSITION_ICONS[next]}
+                              tone={TRANSITION_TONES[next]}
+                              disabled={pending}
+                              onClick={() =>
+                                startTransition(async () => {
+                                  setError(null);
+                                  const result = await transitionApplicationAction({
+                                    applicationId: app.id,
+                                    status: next,
+                                  });
+                                  if (!result.ok) {
+                                    setError(result.error);
+                                    return;
+                                  }
+                                  router.refresh();
+                                })
+                              }
+                            />
+                          ))}
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                {editingApplicationId === app.id ? (
+                  <div className="border-t border-border p-4">
+                    <CoverLetterEditor
+                      applicationId={app.id}
+                      coverLetterId={app.coverLetterId}
+                      initialContent={app.coverLetterContent}
+                      onClose={() => setEditingApplicationId(null)}
+                    />
+                  </div>
+                ) : null}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </TooltipProvider>
   );
 }

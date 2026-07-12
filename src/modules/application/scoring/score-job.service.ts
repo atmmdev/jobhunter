@@ -1,12 +1,11 @@
 import type { AiClient } from '@/modules/domain/ai/ai-client';
+import type { EnrichJobService } from '@/modules/application/enrichment/enrich-job.service';
 import type { JobRepository } from '@/modules/domain/job/job.repository';
 import type { CreateHighScoreNotificationService } from '@/modules/application/notification/create-high-score-notification.service';
 import type { ResumeRepository } from '@/modules/domain/resume/resume.repository';
 import { NotFoundError } from '@/modules/domain/shared/errors';
 import { scoreJobAgainstStacks } from '@/modules/domain/scoring/score-job.policy';
-import {
-  aiScoreSchema,
-} from '@/modules/infrastructure/ai/openai-compatible.client';
+import { aiScoreSchema } from '@/modules/infrastructure/ai/openai-compatible.client';
 import { prisma } from '@/modules/infrastructure/prisma/client';
 
 export interface ScoreJobResult {
@@ -15,6 +14,7 @@ export interface ScoreJobResult {
   explanation: string;
   recommendedResumeId: string | null;
   usedAi: boolean;
+  technologies: string[];
 }
 
 /**
@@ -27,6 +27,7 @@ export class ScoreJobService {
     private readonly ai: AiClient,
     private readonly modelName: string,
     private readonly highScoreNotifications?: CreateHighScoreNotificationService,
+    private readonly enrichJob?: EnrichJobService,
   ) {}
 
   async execute(userId: string, jobId: string): Promise<ScoreJobResult> {
@@ -34,6 +35,10 @@ export class ScoreJobService {
     if (!job) {
       throw new NotFoundError('Job', jobId);
     }
+
+    const enrichment = this.enrichJob
+      ? await this.enrichJob.execute(job.id)
+      : { technologies: [] as string[] };
 
     const resumes = (await this.resumes.listByUser(userId)).filter((resume) => resume.isActive);
     const availableStacks = [...new Set(resumes.map((resume) => resume.stack))];
@@ -62,6 +67,7 @@ export class ScoreJobService {
             isRemote: job.isRemote,
             descriptionExcerpt: job.descriptionText.slice(0, 4000),
             availableStacks,
+            technologies: enrichment.technologies,
             deterministicScore: deterministic.score,
           }),
         });
@@ -88,6 +94,7 @@ export class ScoreJobService {
           remoteBonus: deterministic.breakdown.remoteBonus,
           keywordHits: deterministic.breakdown.keywordHits,
           recommendedStack: deterministic.breakdown.recommendedStack,
+          technologies: enrichment.technologies,
         },
         explanation,
         model: usedAi ? this.modelName : 'deterministic-v1',
@@ -154,6 +161,7 @@ export class ScoreJobService {
       explanation,
       recommendedResumeId: recommendedResume?.id ?? null,
       usedAi,
+      technologies: enrichment.technologies,
     };
   }
 }

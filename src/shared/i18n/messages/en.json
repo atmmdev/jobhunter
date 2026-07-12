@@ -64,6 +64,11 @@
       "approve": "Approve",
       "delete": "Delete",
       "deleteConfirm": "Permanently delete this job? Related scores and applications will be removed.",
+      "deleteSelected": "Delete selected",
+      "deleteSelectedConfirm": "Permanently delete {count} jobs? Related scores and applications will be removed.",
+      "selected": "{count} selected",
+      "select": "Select job",
+      "selectAll": "Select all jobs",
       "open": "Open"
     },
     "form": {

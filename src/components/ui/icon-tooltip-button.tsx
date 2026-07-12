@@ -1,41 +1,50 @@
 'use client';
 
 import type { LucideIcon } from 'lucide-react';
-import type { ComponentProps } from 'react';
+import type { ButtonHTMLAttributes } from 'react';
 
-import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  ACTION_ICON_TONES,
+  type ActionIconTone,
+} from '@/shared/ui/action-icon-tones';
+import { cn } from '@/shared/lib/utils';
 
-interface IconTooltipButtonProps extends ComponentProps<typeof Button> {
+interface IconTooltipButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
   icon: LucideIcon;
+  tone?: ActionIconTone;
 }
 
 /**
- * Icon-only button with an accessible label and hover tooltip.
+ * Flat colored icon button with tooltip — shared action pattern for the whole app.
  * Requires a parent `TooltipProvider`.
  */
 export function IconTooltipButton({
   label,
   icon: Icon,
-  size = 'icon',
-  variant = 'ghost',
+  tone,
   className,
+  type = 'button',
   ...props
 }: IconTooltipButtonProps) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button
-          type="button"
-          size={size}
-          variant={variant}
-          className={className ?? 'h-8 w-8'}
+        <button
+          type={type}
           aria-label={label}
+          className={cn(
+            'inline-flex h-8 w-8 items-center justify-center rounded-md transition-colors',
+            'disabled:pointer-events-none disabled:opacity-40',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+            tone ? ACTION_ICON_TONES[tone] : 'text-muted-foreground hover:text-foreground',
+            className,
+          )}
           {...props}
         >
           <Icon className="h-4 w-4" />
-        </Button>
+        </button>
       </TooltipTrigger>
       <TooltipContent>{label}</TooltipContent>
     </Tooltip>

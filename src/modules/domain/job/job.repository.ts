@@ -46,4 +46,5 @@ export interface JobRepository {
   setStatus(id: string, status: JobStatusValue): Promise<JobEntity>;
   upsertByExternalId(input: UpsertScrapedJobInput): Promise<{ job: JobEntity; created: boolean }>;
   delete(id: string): Promise<void>;
+  deleteMany(ids: string[]): Promise<number>;
 }

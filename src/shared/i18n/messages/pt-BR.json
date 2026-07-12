@@ -64,6 +64,11 @@
       "approve": "Aprovar",
       "delete": "Excluir",
       "deleteConfirm": "Excluir esta vaga permanentemente? Scores e candidaturas relacionadas serão removidos.",
+      "deleteSelected": "Excluir selecionadas",
+      "deleteSelectedConfirm": "Excluir {count} vagas permanentemente? Scores e candidaturas relacionadas serão removidos.",
+      "selected": "{count} selecionadas",
+      "select": "Selecionar vaga",
+      "selectAll": "Selecionar todas as vagas",
       "open": "Abrir"
     },
     "form": {

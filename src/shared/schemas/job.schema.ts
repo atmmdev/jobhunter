@@ -53,3 +53,9 @@ export const deleteJobSchema = z.object({
 });
 
 export type DeleteJobDto = z.infer<typeof deleteJobSchema>;
+
+export const deleteJobsSchema = z.object({
+  jobIds: z.array(z.string().uuid()).min(1).max(100),
+});
+
+export type DeleteJobsDto = z.infer<typeof deleteJobsSchema>;

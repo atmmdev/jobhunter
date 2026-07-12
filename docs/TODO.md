@@ -53,13 +53,13 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 ## AI (Phase 4)
 
 - [x] `AiClient` OpenAI-compatible implementation
-- [ ] Prompts v1: parse, tech, salary, score, match, cover letter
+- [x] Prompts v1: score, cover letter + deterministic tech/salary extract
 - [x] Score job (deterministic + optional AI) + Jobs UI
 - [x] Recommend resume use case (via score)
 - [x] Cover letter generation + Applications UI editor
 - [x] High-score notification
 - [x] Dashboard live metrics from DB
-
+- [ ] Full AI parse/tech/salary prompts (optional refinement)
 ---
 
 ## Applications (Phase 5–6)
