@@ -59,9 +59,9 @@ Phased delivery toward a production-ready system. Each phase must be shippable a
 - [x] Adapter registry + normalization pipeline
 - [x] Greenhouse adapter
 - [x] Lever adapter
-- [ ] Generic careers HTML adapter (best-effort)
+- [x] Generic careers HTML adapter (best-effort, CUSTOM)
 - [x] Deduplication (externalId + contentHash)
-- [x] Scheduler / manual “Run source” (manual done; cron pending)
+- [x] Manual “Run source” + CLI scheduler (`scrape:run-all`)
 
 **Exit criteria:** Real jobs flowing from at least 2 ATS families into the DB. ✅
 
@@ -69,17 +69,17 @@ Phased delivery toward a production-ready system. Each phase must be shippable a
 
 ## Phase 4 — AI Enrichment
 
-**Status:** Partial
+**Status:** Mostly complete
 
 - [x] AiClient abstraction (OpenAI-compatible)
 - [ ] Parse job / extract tech / extract salary
 - [x] Hybrid scoring + JobScore persistence
 - [x] Resume recommendation
 - [x] Cover letter generation (pt-BR / en) + editable UI
-- [ ] Notifications for high-score jobs
+- [x] Notifications for high-score jobs
 - [x] Dashboard live metrics
 
-**Exit criteria:** New jobs auto-score; best resume recommended; cover letter editable.
+**Exit criteria:** New jobs auto-score; best resume recommended; cover letter editable. ✅ (salary/tech extraction pending)
 
 ---
 

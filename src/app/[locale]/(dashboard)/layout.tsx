@@ -1,17 +1,10 @@
 import type { ReactNode } from 'react';
 
-import { AppSidebar } from '@/components/layout/app-sidebar';
+import { DashboardChrome } from '@/components/layout/dashboard-chrome';
 
 /**
- * Authenticated dashboard chrome with sidebar.
+ * Authenticated dashboard layout shell.
  */
 export default function DashboardShellLayout({ children }: { children: ReactNode }) {
-  return (
-    <div className="flex min-h-screen">
-      <AppSidebar />
-      <div className="flex min-h-screen min-w-0 flex-1 flex-col">
-        <main className="flex-1 p-6 md:p-8">{children}</main>
-      </div>
-    </div>
-  );
+  return <DashboardChrome>{children}</DashboardChrome>;
 }

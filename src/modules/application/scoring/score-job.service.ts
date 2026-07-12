@@ -1,5 +1,6 @@
 import type { AiClient } from '@/modules/domain/ai/ai-client';
 import type { JobRepository } from '@/modules/domain/job/job.repository';
+import type { CreateHighScoreNotificationService } from '@/modules/application/notification/create-high-score-notification.service';
 import type { ResumeRepository } from '@/modules/domain/resume/resume.repository';
 import { NotFoundError } from '@/modules/domain/shared/errors';
 import { scoreJobAgainstStacks } from '@/modules/domain/scoring/score-job.policy';
@@ -25,6 +26,7 @@ export class ScoreJobService {
     private readonly resumes: ResumeRepository,
     private readonly ai: AiClient,
     private readonly modelName: string,
+    private readonly highScoreNotifications?: CreateHighScoreNotificationService,
   ) {}
 
   async execute(userId: string, jobId: string): Promise<ScoreJobResult> {
@@ -133,6 +135,16 @@ export class ScoreJobService {
       await prisma.job.update({
         where: { id: job.id },
         data: { status: 'SCORED' },
+      });
+    }
+
+    if (this.highScoreNotifications) {
+      await this.highScoreNotifications.execute({
+        userId,
+        jobId: job.id,
+        jobTitle: job.title,
+        companyName: job.companyName,
+        score,
       });
     }
 

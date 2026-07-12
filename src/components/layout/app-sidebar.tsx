@@ -8,6 +8,7 @@ import {
   Send,
   Settings,
 } from 'lucide-react';
+import type { ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { LocaleSwitcher } from '@/components/layout/locale-switcher';
@@ -25,10 +26,14 @@ const items = [
   { href: '/settings', key: 'settings', icon: Settings },
 ] as const;
 
+interface AppSidebarProps {
+  notifications?: ReactNode;
+}
+
 /**
  * Desktop-first sidebar navigation for the authenticated shell.
  */
-export function AppSidebar() {
+export function AppSidebar({ notifications }: AppSidebarProps) {
   const t = useTranslations('nav');
   const tApp = useTranslations('app');
   const pathname = usePathname();
@@ -61,6 +66,7 @@ export function AppSidebar() {
           );
         })}
       </nav>
+      {notifications}
       <div className="flex items-center justify-between gap-2 border-t border-border p-3">
         <LocaleSwitcher />
         <ThemeToggle />

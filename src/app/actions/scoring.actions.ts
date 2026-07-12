@@ -40,6 +40,7 @@ export async function scoreJobAction(
 
     revalidatePath('/[locale]/jobs', 'page');
     revalidatePath('/[locale]/dashboard', 'page');
+    revalidatePath('/[locale]', 'layout');
 
     return {
       ok: true,

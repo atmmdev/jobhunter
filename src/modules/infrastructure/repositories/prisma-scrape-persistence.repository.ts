@@ -37,6 +37,28 @@ export class PrismaScrapePersistenceRepository implements ScrapePersistenceRepos
     };
   }
 
+  async listEnabledForScrape(): Promise<SourceForScrape[]> {
+    const sources = await prisma.source.findMany({
+      where: { enabled: true },
+      include: {
+        company: { select: { id: true, name: true, country: true } },
+      },
+      orderBy: { name: 'asc' },
+    });
+
+    return sources.map((source) => ({
+      id: source.id,
+      name: source.name,
+      baseUrl: source.baseUrl,
+      atsType: source.atsType as AtsTypeValue | null,
+      enabled: source.enabled,
+      companyId: source.companyId,
+      companyName: source.company?.name ?? null,
+      country: source.company?.country ?? null,
+      type: source.type as SourceTypeValue,
+    }));
+  }
+
   async markSourceRun(
     sourceId: string,
     status: SourceRunStatusValue,

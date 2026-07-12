@@ -191,7 +191,7 @@
     "next": "Next",
     "run": "Run",
     "running": "Running…",
-    "runHint": "Run works for Greenhouse and Lever sources. Jobs appear under Jobs.",
+    "runHint": "Run works for Greenhouse, Lever, and CUSTOM careers pages. Jobs appear under Jobs.",
     "runResult": "{adapter}: found {found}, created {created}, updated {updated}",
     "enabled": "Enabled",
     "disabled": "Disabled",
@@ -200,7 +200,7 @@
     "syncResult": "Parsed {parsed}: created {created}, updated {updated}, sources +{sources}",
     "historyTitle": "Scrape history",
     "historySubtitle": "Most recent scrape runs across all sources",
-    "historyEmpty": "No scrape runs yet. Run a Greenhouse or Lever source to populate history.",
+    "historyEmpty": "No scrape runs yet. Run a supported source to populate history.",
     "historyColumns": {
       "source": "Source",
       "status": "Status",
@@ -232,6 +232,12 @@
     "themeLight": "Light",
     "themeDark": "Dark",
     "themeSystem": "System"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications yet.",
+    "markRead": "Mark read",
+    "viewJobs": "View jobs"
   },
   "common": {
     "loading": "Loading…",

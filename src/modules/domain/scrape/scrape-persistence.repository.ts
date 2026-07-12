@@ -24,6 +24,7 @@ export interface CreateScrapeRunInput {
  */
 export interface ScrapePersistenceRepository {
   findSourceById(id: string): Promise<SourceForScrape | null>;
+  listEnabledForScrape(): Promise<SourceForScrape[]>;
   markSourceRun(
     sourceId: string,
     status: SourceRunStatusValue,

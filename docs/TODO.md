@@ -22,8 +22,8 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 - [x] Manual “Run” action on Sources
 - [x] ScrapeRun history on Sources page
 - [x] Source enable/disable toggle action
-- [ ] Generic careers adapter
-- [ ] Cron/scheduler entrypoint
+- [x] Generic careers adapter (CUSTOM)
+- [x] Cron/scheduler entrypoint (`npm run scrape:run-all`)
 
 ---
 
@@ -43,10 +43,10 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 - [x] `JobSourceAdapter` + registry
 - [x] Greenhouse adapter + fixtures
 - [x] Lever adapter + fixtures
-- [ ] Generic careers adapter
+- [x] Generic careers adapter + fixtures
 - [x] Normalize + dedupe pipeline
 - [x] Manual “Run now” action
-- [ ] Cron/scheduler entrypoint
+- [x] Cron/scheduler entrypoint
 
 ---
 
@@ -57,7 +57,7 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 - [x] Score job (deterministic + optional AI) + Jobs UI
 - [x] Recommend resume use case (via score)
 - [x] Cover letter generation + Applications UI editor
-- [ ] High-score notification
+- [x] High-score notification
 - [x] Dashboard live metrics from DB
 
 ---

@@ -191,7 +191,7 @@
     "next": "Próxima",
     "run": "Rodar",
     "running": "Rodando…",
-    "runHint": "Rodar funciona para fontes Greenhouse e Lever. As vagas aparecem em Vagas.",
+    "runHint": "Rodar funciona para Greenhouse, Lever e páginas CUSTOM. As vagas aparecem em Vagas.",
     "runResult": "{adapter}: encontradas {found}, criadas {created}, atualizadas {updated}",
     "enabled": "Ativa",
     "disabled": "Inativa",
@@ -200,7 +200,7 @@
     "syncResult": "Lidas {parsed}: criadas {created}, atualizadas {updated}, fontes +{sources}",
     "historyTitle": "Histórico de scrapes",
     "historySubtitle": "Execuções recentes em todas as fontes",
-    "historyEmpty": "Nenhum scrape ainda. Rode uma fonte Greenhouse ou Lever para popular o histórico.",
+    "historyEmpty": "Nenhum scrape ainda. Rode uma fonte compatível para popular o histórico.",
     "historyColumns": {
       "source": "Fonte",
       "status": "Status",
@@ -232,6 +232,12 @@
     "themeLight": "Claro",
     "themeDark": "Escuro",
     "themeSystem": "Sistema"
+  },
+  "notifications": {
+    "title": "Notificações",
+    "empty": "Nenhuma notificação ainda.",
+    "markRead": "Marcar lida",
+    "viewJobs": "Ver vagas"
   },
   "common": {
     "loading": "Carregando…",

@@ -2,6 +2,7 @@ import type {
   JobSourceAdapter,
   ScrapeSourceInput,
 } from '@/modules/domain/scrape/job-source-adapter';
+import { GenericCareersAdapter } from '@/modules/infrastructure/scrapers/generic-careers.adapter';
 import { GreenhouseAdapter } from '@/modules/infrastructure/scrapers/greenhouse.adapter';
 import { LeverAdapter } from '@/modules/infrastructure/scrapers/lever.adapter';
 
@@ -11,7 +12,13 @@ import { LeverAdapter } from '@/modules/infrastructure/scrapers/lever.adapter';
 export class JobSourceAdapterRegistry {
   private readonly adapters: JobSourceAdapter[];
 
-  constructor(adapters: JobSourceAdapter[] = [new GreenhouseAdapter(), new LeverAdapter()]) {
+  constructor(
+    adapters: JobSourceAdapter[] = [
+      new GreenhouseAdapter(),
+      new LeverAdapter(),
+      new GenericCareersAdapter(),
+    ],
+  ) {
     this.adapters = adapters;
   }
 

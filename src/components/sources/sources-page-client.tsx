@@ -33,7 +33,7 @@ const SORTABLE_COLUMNS: SourceSortBy[] = [
   'url',
 ];
 
-const RUNNABLE_ATS = new Set(['GREENHOUSE', 'LEVER']);
+const RUNNABLE_ATS = new Set(['GREENHOUSE', 'LEVER', 'CUSTOM']);
 
 /**
  * Sources admin UI with sync, scrape run, enable toggle, history, sort, and pagination.
