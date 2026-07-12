@@ -1,0 +1,158 @@
+{
+  "app": {
+    "name": "Job Hunter AI",
+    "tagline": "Descubra, pontue e candidate-se com confiança"
+  },
+  "nav": {
+    "dashboard": "Painel",
+    "jobs": "Vagas",
+    "applications": "Candidaturas",
+    "resumes": "Currículos",
+    "sources": "Fontes",
+    "settings": "Configurações",
+    "signOut": "Sair"
+  },
+  "auth": {
+    "loginTitle": "Entrar",
+    "loginSubtitle": "Acesse seu espaço de busca de vagas",
+    "email": "E-mail",
+    "password": "Senha",
+    "submit": "Entrar",
+    "invalidCredentials": "E-mail ou senha inválidos",
+    "seedHint": "Use a conta admin criada com db:seed"
+  },
+  "dashboard": {
+    "title": "Painel",
+    "subtitle": "Visão do pipeline — as métricas serão preenchidas conforme as fontes entrarem",
+    "jobsFound": "Vagas encontradas",
+    "applications": "Candidaturas",
+    "favorites": "Favoritas",
+    "rejected": "Rejeitadas",
+    "interviews": "Entrevistas",
+    "offers": "Ofertas",
+    "responseRate": "Taxa de resposta",
+    "topTechnologies": "Top tecnologias",
+    "salaryAnalytics": "Análise salarial",
+    "countries": "Países",
+    "atsStatistics": "Estatísticas de ATS",
+    "emptyValue": "—",
+    "comingSoon": "Em fases posteriores"
+  },
+  "jobs": {
+    "title": "Vagas",
+    "subtitle": "Oportunidades centralizadas de todas as fontes",
+    "empty": "Nenhuma vaga ainda. Adicione manualmente ou sincronize fontes nas fases 2–3.",
+    "add": "Adicionar vaga",
+    "search": "Buscar título, empresa, localização…",
+    "filterStatus": "Status",
+    "allStatuses": "Todos os status",
+    "total": "{count} vagas",
+    "columns": {
+      "title": "Título",
+      "company": "Empresa",
+      "location": "Localização",
+      "status": "Status",
+      "source": "Fonte",
+      "actions": "Ações"
+    },
+    "actions": {
+      "favorite": "Favoritar",
+      "reject": "Rejeitar",
+      "restore": "Restaurar",
+      "open": "Abrir"
+    },
+    "form": {
+      "title": "Título",
+      "companyName": "Empresa",
+      "applyUrl": "URL de candidatura",
+      "description": "Descrição",
+      "location": "Localização",
+      "country": "País",
+      "isRemote": "Remoto",
+      "employmentType": "Tipo de contrato",
+      "seniority": "Senioridade",
+      "salaryRaw": "Salário (texto)",
+      "submit": "Salvar vaga",
+      "cancel": "Cancelar",
+      "success": "Vaga criada",
+      "error": "Não foi possível criar a vaga"
+    },
+    "status": {
+      "NEW": "Nova",
+      "SCORED": "Pontuada",
+      "FAVORITED": "Favorita",
+      "REJECTED": "Rejeitada",
+      "APPROVED": "Aprovada",
+      "APPLIED": "Candidatado",
+      "INTERVIEW": "Entrevista",
+      "OFFER": "Oferta",
+      "CLOSED": "Fechada"
+    }
+  },
+  "resumes": {
+    "title": "Currículos",
+    "subtitle": "Gerencie variantes por stack",
+    "empty": "Nenhum currículo ainda. Adicione perfis React/Node, .NET ou PHP.",
+    "add": "Adicionar currículo",
+    "delete": "Excluir",
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "stack": {
+      "JS_TS": "React / Next.js / Node / TypeScript",
+      "DOTNET": "C# / ASP.NET Core",
+      "PHP": "PHP / Laravel / WordPress",
+      "OTHER": "Outro"
+    },
+    "form": {
+      "name": "Nome",
+      "stack": "Stack",
+      "summary": "Resumo",
+      "content": "Conteúdo do currículo",
+      "isActive": "Ativo",
+      "submit": "Salvar currículo",
+      "cancel": "Cancelar",
+      "success": "Currículo criado",
+      "error": "Não foi possível criar o currículo",
+      "deleteConfirm": "Excluir este currículo?",
+      "deleteError": "Não foi possível excluir o currículo"
+    }
+  },
+  "applications": {
+    "title": "Candidaturas",
+    "subtitle": "Aprovações, envios e resultados",
+    "empty": "Nenhuma candidatura ainda."
+  },
+  "sources": {
+    "title": "Fontes",
+    "subtitle": "Carreiras e ATS importados de docs/companies-to-work",
+    "empty": "Nenhuma fonte ainda. Sincronize as empresas do markdown para começar.",
+    "sync": "Sincronizar empresas",
+    "total": "{count} fontes",
+    "enabled": "Ativa",
+    "disabled": "Inativa",
+    "syncResult": "Lidas {parsed}: criadas {created}, atualizadas {updated}, fontes +{sources}",
+    "columns": {
+      "name": "Fonte",
+      "company": "Empresa",
+      "ats": "ATS",
+      "country": "País",
+      "enabled": "Status",
+      "url": "URL"
+    }
+  },
+  "settings": {
+    "title": "Configurações",
+    "subtitle": "Preferências da conta",
+    "language": "Idioma",
+    "theme": "Tema",
+    "themeLight": "Claro",
+    "themeDark": "Escuro",
+    "themeSystem": "Sistema"
+  },
+  "common": {
+    "loading": "Carregando…",
+    "remote": "Remoto",
+    "yes": "Sim",
+    "no": "Não"
+  }
+}

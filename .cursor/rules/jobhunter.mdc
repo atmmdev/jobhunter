@@ -1,0 +1,31 @@
+---
+description: Job Hunter AI — enforce Clean Architecture and enterprise coding rules
+globs:
+alwaysApply: true
+---
+
+# Job Hunter AI — Cursor Project Rules
+
+Follow these documents as source of truth (in order):
+
+1. `docs/MASTER_PROMPT.md`
+2. `docs/CURSOR_RULES.md`
+3. `docs/RULES.md`
+4. `docs/ARCHITECTURE.md`
+5. Relevant domain docs (`docs/DATABASE.md`, `docs/AI.md`, `docs/PLAYWRIGHT.md`, `docs/SCRAPERS.md`, `docs/ATS.md`)
+
+Company seed data: `docs/companies-to-work/`.
+
+## Non-negotiables
+
+- Clean Architecture: Presentation → Application → Domain ← Infrastructure
+- Never put business logic in pages or React components
+- Never use `any`; TypeScript strict only
+- Always use DTOs, Repository Pattern, Service/Use Case layer, Zod validation
+- Components ≤ 300 lines; files ≤ 500 lines
+- Document exported functions
+- UI: shadcn/ui, Tailwind, dark mode, desktop-first, pt-BR + en
+- Playwright only via reusable browser services; no hardcoded brittle selectors in use cases
+- Prefer complete, production-ready implementations over stubs
+- Update `docs/TODO.md` when behavior or backlog changes
+- Do not commit secrets; do not push/PR unless asked

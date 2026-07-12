@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f7f7f5;
+  --foreground: #141414;
+  --card: #ffffff;
+  --card-foreground: #141414;
+  --popover: #ffffff;
+  --popover-foreground: #141414;
+  --primary: #1f3a2e;
+  --primary-foreground: #f4f7f5;
+  --secondary: #e8ebe8;
+  --secondary-foreground: #1a1a1a;
+  --muted: #ececec;
+  --muted-foreground: #5c5c5c;
+  --accent: #e4ebe6;
+  --accent-foreground: #141414;
+  --destructive: #b42318;
+  --destructive-foreground: #ffffff;
+  --border: #d9ddd9;
+  --input: #d9ddd9;
+  --ring: #1f3a2e;
+  --sidebar: #f0f2ef;
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: #0f1110;
+  --foreground: #ececec;
+  --card: #161916;
+  --card-foreground: #ececec;
+  --popover: #161916;
+  --popover-foreground: #ececec;
+  --primary: #8fbc9b;
+  --primary-foreground: #0f1411;
+  --secondary: #222622;
+  --secondary-foreground: #ececec;
+  --muted: #1c1f1c;
+  --muted-foreground: #9a9a9a;
+  --accent: #222822;
+  --accent-foreground: #ececec;
+  --destructive: #e5484d;
+  --destructive-foreground: #ffffff;
+  --border: #2a2e2a;
+  --input: #2a2e2a;
+  --ring: #8fbc9b;
+  --sidebar: #121512;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --radius-lg: var(--radius);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  border-color: var(--border);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}

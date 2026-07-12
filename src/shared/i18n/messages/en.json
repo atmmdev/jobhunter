@@ -1,0 +1,158 @@
+{
+  "app": {
+    "name": "Job Hunter AI",
+    "tagline": "Discover, score, and apply with confidence"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "jobs": "Jobs",
+    "applications": "Applications",
+    "resumes": "Resumes",
+    "sources": "Sources",
+    "settings": "Settings",
+    "signOut": "Sign out"
+  },
+  "auth": {
+    "loginTitle": "Sign in",
+    "loginSubtitle": "Access your job hunting workspace",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "invalidCredentials": "Invalid email or password",
+    "seedHint": "Use the seeded admin account after running db:seed"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Pipeline overview — metrics will populate as sources come online",
+    "jobsFound": "Jobs Found",
+    "applications": "Applications",
+    "favorites": "Favorites",
+    "rejected": "Rejected",
+    "interviews": "Interviews",
+    "offers": "Offers",
+    "responseRate": "Response Rate",
+    "topTechnologies": "Top Technologies",
+    "salaryAnalytics": "Salary Analytics",
+    "countries": "Countries",
+    "atsStatistics": "ATS Statistics",
+    "emptyValue": "—",
+    "comingSoon": "Coming in later phases"
+  },
+  "jobs": {
+    "title": "Jobs",
+    "subtitle": "Centralized opportunities from all sources",
+    "empty": "No jobs yet. Add one manually or sync sources in Phase 2–3.",
+    "add": "Add job",
+    "search": "Search title, company, location…",
+    "filterStatus": "Status",
+    "allStatuses": "All statuses",
+    "total": "{count} jobs",
+    "columns": {
+      "title": "Title",
+      "company": "Company",
+      "location": "Location",
+      "status": "Status",
+      "source": "Source",
+      "actions": "Actions"
+    },
+    "actions": {
+      "favorite": "Favorite",
+      "reject": "Reject",
+      "restore": "Restore",
+      "open": "Open"
+    },
+    "form": {
+      "title": "Title",
+      "companyName": "Company",
+      "applyUrl": "Apply URL",
+      "description": "Description",
+      "location": "Location",
+      "country": "Country",
+      "isRemote": "Remote",
+      "employmentType": "Employment type",
+      "seniority": "Seniority",
+      "salaryRaw": "Salary (raw)",
+      "submit": "Save job",
+      "cancel": "Cancel",
+      "success": "Job created",
+      "error": "Could not create job"
+    },
+    "status": {
+      "NEW": "New",
+      "SCORED": "Scored",
+      "FAVORITED": "Favorite",
+      "REJECTED": "Rejected",
+      "APPROVED": "Approved",
+      "APPLIED": "Applied",
+      "INTERVIEW": "Interview",
+      "OFFER": "Offer",
+      "CLOSED": "Closed"
+    }
+  },
+  "resumes": {
+    "title": "Resumes",
+    "subtitle": "Manage stack-specific resume variants",
+    "empty": "No resumes yet. Add React/Node, .NET, or PHP profiles.",
+    "add": "Add resume",
+    "delete": "Delete",
+    "active": "Active",
+    "inactive": "Inactive",
+    "stack": {
+      "JS_TS": "React / Next.js / Node / TypeScript",
+      "DOTNET": "C# / ASP.NET Core",
+      "PHP": "PHP / Laravel / WordPress",
+      "OTHER": "Other"
+    },
+    "form": {
+      "name": "Name",
+      "stack": "Stack",
+      "summary": "Summary",
+      "content": "Resume content",
+      "isActive": "Active",
+      "submit": "Save resume",
+      "cancel": "Cancel",
+      "success": "Resume created",
+      "error": "Could not create resume",
+      "deleteConfirm": "Delete this resume?",
+      "deleteError": "Could not delete resume"
+    }
+  },
+  "applications": {
+    "title": "Applications",
+    "subtitle": "Approvals, submissions, and outcomes",
+    "empty": "No applications yet."
+  },
+  "sources": {
+    "title": "Sources",
+    "subtitle": "Company careers and ATS boards imported from docs/companies-to-work",
+    "empty": "No sources yet. Sync companies from markdown to get started.",
+    "sync": "Sync companies",
+    "total": "{count} sources",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "syncResult": "Parsed {parsed}: created {created}, updated {updated}, sources +{sources}",
+    "columns": {
+      "name": "Source",
+      "company": "Company",
+      "ats": "ATS",
+      "country": "Country",
+      "enabled": "Status",
+      "url": "URL"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Account preferences",
+    "language": "Language",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System"
+  },
+  "common": {
+    "loading": "Loading…",
+    "remote": "Remote",
+    "yes": "Yes",
+    "no": "No"
+  }
+}
