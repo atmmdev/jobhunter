@@ -126,6 +126,15 @@ export class PrismaJobRepository implements JobRepository {
     return mapJob(job);
   }
 
+  async setStatus(id: string, status: JobStatusValue): Promise<JobEntity> {
+    const job = await prisma.job.update({
+      where: { id },
+      data: { status },
+      include: jobInclude,
+    });
+    return mapJob(job);
+  }
+
   async upsertByExternalId(
     input: UpsertScrapedJobInput,
   ): Promise<{ job: JobEntity; created: boolean }> {

@@ -32,6 +32,16 @@ export class UnauthorizedError extends DomainError {
 }
 
 /**
+ * Raised when a unique business constraint would be violated.
+ */
+export class ConflictError extends DomainError {
+  constructor(message: string) {
+    super('CONFLICT', message);
+    this.name = 'ConflictError';
+  }
+}
+
+/**
  * Raised when input fails validation after Zod parsing.
  */
 export class ValidationError extends DomainError {

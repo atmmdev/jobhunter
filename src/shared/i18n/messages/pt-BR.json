@@ -61,6 +61,7 @@
       "reject": "Rejeitar",
       "restore": "Restaurar",
       "score": "Pontuar",
+      "approve": "Aprovar",
       "open": "Abrir"
     },
     "form": {
@@ -129,8 +130,41 @@
   },
   "applications": {
     "title": "Candidaturas",
-    "subtitle": "Aprovações, envios e resultados",
-    "empty": "Nenhuma candidatura ainda."
+    "subtitle": "Aprove vagas, acompanhe envios e avance resultados",
+    "empty": "Nenhuma candidatura ainda. Aprove uma vaga em Vagas para começar.",
+    "total": "{count} candidaturas",
+    "allStatuses": "Todas",
+    "columns": {
+      "job": "Vaga",
+      "company": "Empresa",
+      "resume": "Currículo",
+      "status": "Status",
+      "updated": "Atualizado",
+      "actions": "Ações"
+    },
+    "actions": {
+      "APPROVED": "Aprovar",
+      "PENDING_APPLY": "Fila de envio",
+      "APPLIED": "Marcar enviado",
+      "MANUAL_REQUIRED": "Manual",
+      "INTERVIEW": "Entrevista",
+      "OFFER": "Oferta",
+      "REJECTED": "Rejeitada",
+      "WITHDRAWN": "Retirar"
+    },
+    "status": {
+      "DRAFT": "Rascunho",
+      "PENDING_APPROVAL": "Aguardando aprovação",
+      "APPROVED": "Aprovada",
+      "PENDING_APPLY": "Aguardando envio",
+      "APPLIED": "Enviada",
+      "FAILED": "Falhou",
+      "MANUAL_REQUIRED": "Manual necessário",
+      "INTERVIEW": "Entrevista",
+      "REJECTED": "Rejeitada",
+      "OFFER": "Oferta",
+      "WITHDRAWN": "Retirada"
+    }
   },
   "sources": {
     "title": "Fontes",

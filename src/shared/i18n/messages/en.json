@@ -61,6 +61,7 @@
       "reject": "Reject",
       "restore": "Restore",
       "score": "Score",
+      "approve": "Approve",
       "open": "Open"
     },
     "form": {
@@ -129,8 +130,41 @@
   },
   "applications": {
     "title": "Applications",
-    "subtitle": "Approvals, submissions, and outcomes",
-    "empty": "No applications yet."
+    "subtitle": "Approve jobs, track submissions, and advance outcomes",
+    "empty": "No applications yet. Approve a job from the Jobs page to start.",
+    "total": "{count} applications",
+    "allStatuses": "All",
+    "columns": {
+      "job": "Job",
+      "company": "Company",
+      "resume": "Resume",
+      "status": "Status",
+      "updated": "Updated",
+      "actions": "Actions"
+    },
+    "actions": {
+      "APPROVED": "Approve",
+      "PENDING_APPLY": "Queue apply",
+      "APPLIED": "Mark applied",
+      "MANUAL_REQUIRED": "Needs manual",
+      "INTERVIEW": "Interview",
+      "OFFER": "Offer",
+      "REJECTED": "Rejected",
+      "WITHDRAWN": "Withdraw"
+    },
+    "status": {
+      "DRAFT": "Draft",
+      "PENDING_APPROVAL": "Pending approval",
+      "APPROVED": "Approved",
+      "PENDING_APPLY": "Pending apply",
+      "APPLIED": "Applied",
+      "FAILED": "Failed",
+      "MANUAL_REQUIRED": "Manual required",
+      "INTERVIEW": "Interview",
+      "REJECTED": "Rejected",
+      "OFFER": "Offer",
+      "WITHDRAWN": "Withdrawn"
+    }
   },
   "sources": {
     "title": "Sources",

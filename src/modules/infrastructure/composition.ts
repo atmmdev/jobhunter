@@ -1,3 +1,6 @@
+import { CreateApplicationFromJobService } from '@/modules/application/application/create-application-from-job.service';
+import { ListApplicationsService } from '@/modules/application/application/list-applications.service';
+import { TransitionApplicationService } from '@/modules/application/application/transition-application.service';
 import { CreateJobService } from '@/modules/application/job/create-job.service';
 import { ListJobsService } from '@/modules/application/job/list-jobs.service';
 import { UpdateJobStatusService } from '@/modules/application/job/update-job-status.service';
@@ -15,6 +18,8 @@ import { SetSourceEnabledService } from '@/modules/application/source/set-source
 import { OpenAiCompatibleClient } from '@/modules/infrastructure/ai/openai-compatible.client';
 import { JobSourceAdapterRegistry } from '@/modules/infrastructure/scrapers/adapter-registry';
 import { PrismaAnalyticsRepository } from '@/modules/infrastructure/repositories/prisma-analytics.repository';
+import { PrismaApplicationRepository } from '@/modules/infrastructure/repositories/prisma-application.repository';
+import { PrismaAuditLogRepository } from '@/modules/infrastructure/repositories/prisma-audit-log.repository';
 import { PrismaCompanyRepository } from '@/modules/infrastructure/repositories/prisma-company.repository';
 import { PrismaCompanySeedRepository } from '@/modules/infrastructure/repositories/prisma-company-seed.repository';
 import { PrismaJobRepository } from '@/modules/infrastructure/repositories/prisma-job.repository';
@@ -112,5 +117,21 @@ export function createScoringModule() {
 export function createAnalyticsModule() {
   return {
     getDashboardStats: new GetDashboardStatsService(new PrismaAnalyticsRepository()),
+  };
+}
+
+/**
+ * Composes application workflow services.
+ */
+export function createApplicationModule() {
+  const applications = new PrismaApplicationRepository();
+  const jobs = new PrismaJobRepository();
+  const resumes = new PrismaResumeRepository();
+  const audit = new PrismaAuditLogRepository();
+
+  return {
+    createFromJob: new CreateApplicationFromJobService(applications, jobs, resumes, audit),
+    listApplications: new ListApplicationsService(applications),
+    transition: new TransitionApplicationService(applications, jobs, audit),
   };
 }

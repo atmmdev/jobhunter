@@ -1,18 +1,40 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ApplicationsPageClient } from '@/components/applications/applications-page-client';
+import { auth } from '@/modules/infrastructure/auth/auth';
+import { createApplicationModule } from '@/modules/infrastructure/composition';
+import type { ApplicationStatusValue } from '@/modules/domain/application/application.entity';
+import { toApplicationListItemDto } from '@/shared/dto/application.dto';
+import { listApplicationsQuerySchema } from '@/shared/schemas/application.schema';
 
 /**
- * Applications placeholder (Phase 5).
+ * Applications approval queue and tracking page.
  */
 export default async function ApplicationsPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations('applications');
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return null;
+  }
+
+  const raw = await searchParams;
+  const query = listApplicationsQuerySchema.parse({
+    status: typeof raw.status === 'string' ? raw.status : undefined,
+    limit: 50,
+    offset: 0,
+  });
+
+  const { listApplications } = createApplicationModule();
+  const result = await listApplications.execute(session.user.id, query);
 
   return (
     <div className="space-y-6">
@@ -20,13 +42,11 @@ export default async function ApplicationsPage({
         <h1 className="text-3xl font-semibold tracking-tight">{t('title')}</h1>
         <p className="text-muted-foreground">{t('subtitle')}</p>
       </header>
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('title')}</CardTitle>
-          <CardDescription>{t('empty')}</CardDescription>
-        </CardHeader>
-        <CardContent />
-      </Card>
+      <ApplicationsPageClient
+        applications={result.items.map(toApplicationListItemDto)}
+        total={result.total}
+        status={query.status as ApplicationStatusValue | undefined}
+      />
     </div>
   );
 }

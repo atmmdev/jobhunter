@@ -64,9 +64,9 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 
 ## Applications (Phase 5–6)
 
-- [ ] Approval queue UI
-- [ ] Application status machine + audit log
-- [ ] Manual applied / interview / offer transitions
+- [x] Approval queue UI
+- [x] Application status machine + audit log
+- [x] Manual applied / interview / offer transitions
 - [ ] `BrowserService`
 - [ ] Greenhouse apply strategy
 - [ ] Lever apply strategy

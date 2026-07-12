@@ -11,6 +11,7 @@ import { useTranslations } from 'next-intl';
 import { useMemo, useTransition } from 'react';
 
 import { updateJobStatusAction } from '@/app/actions/job.actions';
+import { createApplicationFromJobAction } from '@/app/actions/application.actions';
 import { scoreJobAction } from '@/app/actions/scoring.actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -134,6 +135,26 @@ export function JobsTable({ jobs }: JobsTableProps) {
               >
                 {t('actions.score')}
               </Button>
+              {job.status !== 'APPROVED' &&
+              job.status !== 'APPLIED' &&
+              job.status !== 'INTERVIEW' &&
+              job.status !== 'OFFER' &&
+              job.status !== 'CLOSED' ? (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="default"
+                  disabled={pending}
+                  onClick={() =>
+                    startTransition(async () => {
+                      await createApplicationFromJobAction({ jobId: job.id });
+                      router.refresh();
+                    })
+                  }
+                >
+                  {t('actions.approve')}
+                </Button>
+              ) : null}
               {job.status !== 'FAVORITED' ? (
                 <Button
                   type="button"

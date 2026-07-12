@@ -43,5 +43,6 @@ export interface JobRepository {
   list(filter: ListJobsFilter): Promise<ListJobsResult>;
   create(input: CreateJobPersistInput): Promise<JobEntity>;
   updateStatus(id: string, status: ManualJobStatus): Promise<JobEntity>;
+  setStatus(id: string, status: JobStatusValue): Promise<JobEntity>;
   upsertByExternalId(input: UpsertScrapedJobInput): Promise<{ job: JobEntity; created: boolean }>;
 }

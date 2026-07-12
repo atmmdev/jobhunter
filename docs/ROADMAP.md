@@ -40,39 +40,44 @@ Phased delivery toward a production-ready system. Each phase must be shippable a
 
 ## Phase 2 — Company Seed & Source Registry
 
-**Status:** Mostly complete (ScrapeRun history UI deferred to Phase 3)
+**Status:** Complete
 
 - [x] Parse/sync `docs/companies-to-work/` → Company/Source
 - [x] ATS URL detection (`ATS.md`) + unit tests
 - [x] Sources listing UI + sync from markdown
-- [ ] Source enable/disable toggle
-- [ ] ScrapeRun history UI
+- [x] Source enable/disable toggle
+- [x] ScrapeRun history UI
 
-**Exit criteria:** Companies imported; sources visible and manageable. ✅ (history/toggle pending)
+**Exit criteria:** Companies imported; sources visible and manageable. ✅
 
 ---
 
 ## Phase 3 — Scrapers & ATS Discovery (P0)
 
-- [ ] Adapter registry + normalization pipeline
-- [ ] Greenhouse adapter
-- [ ] Lever adapter
-- [ ] Generic careers HTML adapter (best-effort)
-- [ ] Deduplication (externalId + contentHash)
-- [ ] Scheduler / manual “Run source”
+**Status:** Mostly complete
 
-**Exit criteria:** Real jobs flowing from at least 2 ATS families into the DB.
+- [x] Adapter registry + normalization pipeline
+- [x] Greenhouse adapter
+- [x] Lever adapter
+- [ ] Generic careers HTML adapter (best-effort)
+- [x] Deduplication (externalId + contentHash)
+- [x] Scheduler / manual “Run source” (manual done; cron pending)
+
+**Exit criteria:** Real jobs flowing from at least 2 ATS families into the DB. ✅
 
 ---
 
 ## Phase 4 — AI Enrichment
 
-- [ ] AiClient abstraction (OpenAI-compatible)
+**Status:** Partial
+
+- [x] AiClient abstraction (OpenAI-compatible)
 - [ ] Parse job / extract tech / extract salary
-- [ ] Hybrid scoring + JobScore persistence
-- [ ] Resume recommendation
+- [x] Hybrid scoring + JobScore persistence
+- [x] Resume recommendation
 - [ ] Cover letter generation (pt-BR / en)
 - [ ] Notifications for high-score jobs
+- [x] Dashboard live metrics
 
 **Exit criteria:** New jobs auto-score; best resume recommended; cover letter editable.
 
@@ -80,13 +85,15 @@ Phased delivery toward a production-ready system. Each phase must be shippable a
 
 ## Phase 5 — Application Workflow
 
-- [ ] Approval queue
-- [ ] Application state machine
-- [ ] Manual mark as applied
-- [ ] Audit log of transitions
+**Status:** Complete (manual tracking; no Playwright yet)
+
+- [x] Approval queue
+- [x] Application state machine
+- [x] Manual mark as applied
+- [x] Audit log of transitions
 - [ ] Basic notifications (in-app)
 
-**Exit criteria:** Human-in-the-loop apply tracking works without Playwright.
+**Exit criteria:** Human-in-the-loop apply tracking works without Playwright. ✅
 
 ---
 
