@@ -7,6 +7,7 @@ import { CreateApplicationFromJobService } from '@/modules/application/applicati
 import { ListApplicationsService } from '@/modules/application/application/list-applications.service';
 import { TransitionApplicationService } from '@/modules/application/application/transition-application.service';
 import { CreateJobService } from '@/modules/application/job/create-job.service';
+import { DeleteJobService } from '@/modules/application/job/delete-job.service';
 import { ListJobsService } from '@/modules/application/job/list-jobs.service';
 import { UpdateJobStatusService } from '@/modules/application/job/update-job-status.service';
 import { SyncCompaniesFromMarkdownService } from '@/modules/application/company/sync-companies-from-markdown.service';
@@ -71,6 +72,7 @@ export function createJobModule() {
     createJob: new CreateJobService(jobs, sources, companies),
     listJobs: new ListJobsService(jobs),
     updateJobStatus: new UpdateJobStatusService(jobs),
+    deleteJob: new DeleteJobService(jobs),
   };
 }
 

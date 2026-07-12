@@ -173,4 +173,8 @@ export class PrismaJobRepository implements JobRepository {
     const job = await this.create(input);
     return { job, created: true };
   }
+
+  async delete(id: string): Promise<void> {
+    await prisma.job.delete({ where: { id } });
+  }
 }

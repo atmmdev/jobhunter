@@ -62,6 +62,8 @@
       "restore": "Restaurar",
       "score": "Pontuar",
       "approve": "Aprovar",
+      "delete": "Excluir",
+      "deleteConfirm": "Excluir esta vaga permanentemente? Scores e candidaturas relacionadas serão removidos.",
       "open": "Abrir"
     },
     "form": {

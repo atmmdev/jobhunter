@@ -47,3 +47,9 @@ export const updateJobStatusSchema = z.object({
 });
 
 export type UpdateJobStatusDto = z.infer<typeof updateJobStatusSchema>;
+
+export const deleteJobSchema = z.object({
+  jobId: z.string().uuid(),
+});
+
+export type DeleteJobDto = z.infer<typeof deleteJobSchema>;

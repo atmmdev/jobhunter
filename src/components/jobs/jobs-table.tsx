@@ -1,6 +1,15 @@
 'use client';
 
 import {
+  CheckCircle2,
+  ExternalLink,
+  RotateCcw,
+  Sparkles,
+  Star,
+  Trash2,
+  XCircle,
+} from 'lucide-react';
+import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
@@ -10,11 +19,12 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useMemo, useTransition } from 'react';
 
-import { updateJobStatusAction } from '@/app/actions/job.actions';
+import { deleteJobAction, updateJobStatusAction } from '@/app/actions/job.actions';
 import { createApplicationFromJobAction } from '@/app/actions/application.actions';
 import { scoreJobAction } from '@/app/actions/scoring.actions';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { IconTooltipButton } from '@/components/ui/icon-tooltip-button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import type { JobListItemDto } from '@/shared/dto/job.dto';
 import type { JobStatusValue } from '@/modules/domain/job/job.entity';
 
@@ -57,15 +67,23 @@ export function JobsTable({ jobs }: JobsTableProps) {
         header: t('columns.title'),
         cell: (info) => (
           <div className="max-w-xs">
-            <p className="font-medium">{info.getValue()}</p>
-            <a
-              href={info.row.original.applyUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="text-xs text-muted-foreground underline-offset-2 hover:underline"
-            >
-              {t('actions.open')}
-            </a>
+            <div className="flex items-start gap-1.5">
+              <p className="font-medium">{info.getValue()}</p>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <a
+                    href={info.row.original.applyUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={t('actions.open')}
+                    className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent>{t('actions.open')}</TooltipContent>
+              </Tooltip>
+            </div>
           </div>
         ),
       }),
@@ -120,10 +138,10 @@ export function JobsTable({ jobs }: JobsTableProps) {
         cell: ({ row }) => {
           const job = row.original;
           return (
-            <div className="flex flex-wrap gap-1">
-              <Button
-                type="button"
-                size="sm"
+            <div className="flex flex-wrap gap-0.5">
+              <IconTooltipButton
+                label={t('actions.score')}
+                icon={Sparkles}
                 variant="secondary"
                 disabled={pending}
                 onClick={() =>
@@ -132,17 +150,15 @@ export function JobsTable({ jobs }: JobsTableProps) {
                     router.refresh();
                   })
                 }
-              >
-                {t('actions.score')}
-              </Button>
+              />
               {job.status !== 'APPROVED' &&
               job.status !== 'APPLIED' &&
               job.status !== 'INTERVIEW' &&
               job.status !== 'OFFER' &&
               job.status !== 'CLOSED' ? (
-                <Button
-                  type="button"
-                  size="sm"
+                <IconTooltipButton
+                  label={t('actions.approve')}
+                  icon={CheckCircle2}
                   variant="default"
                   disabled={pending}
                   onClick={() =>
@@ -151,14 +167,12 @@ export function JobsTable({ jobs }: JobsTableProps) {
                       router.refresh();
                     })
                   }
-                >
-                  {t('actions.approve')}
-                </Button>
+                />
               ) : null}
               {job.status !== 'FAVORITED' ? (
-                <Button
-                  type="button"
-                  size="sm"
+                <IconTooltipButton
+                  label={t('actions.favorite')}
+                  icon={Star}
                   variant="outline"
                   disabled={pending}
                   onClick={() =>
@@ -167,14 +181,12 @@ export function JobsTable({ jobs }: JobsTableProps) {
                       router.refresh();
                     })
                   }
-                >
-                  {t('actions.favorite')}
-                </Button>
+                />
               ) : null}
               {job.status !== 'REJECTED' ? (
-                <Button
-                  type="button"
-                  size="sm"
+                <IconTooltipButton
+                  label={t('actions.reject')}
+                  icon={XCircle}
                   variant="ghost"
                   disabled={pending}
                   onClick={() =>
@@ -183,14 +195,12 @@ export function JobsTable({ jobs }: JobsTableProps) {
                       router.refresh();
                     })
                   }
-                >
-                  {t('actions.reject')}
-                </Button>
+                />
               ) : null}
               {job.status === 'FAVORITED' || job.status === 'REJECTED' ? (
-                <Button
-                  type="button"
-                  size="sm"
+                <IconTooltipButton
+                  label={t('actions.restore')}
+                  icon={RotateCcw}
                   variant="secondary"
                   disabled={pending}
                   onClick={() =>
@@ -199,10 +209,27 @@ export function JobsTable({ jobs }: JobsTableProps) {
                       router.refresh();
                     })
                   }
-                >
-                  {t('actions.restore')}
-                </Button>
+                />
               ) : null}
+              <IconTooltipButton
+                label={t('actions.delete')}
+                icon={Trash2}
+                variant="destructive"
+                disabled={pending}
+                onClick={() => {
+                  if (!window.confirm(t('actions.deleteConfirm'))) {
+                    return;
+                  }
+                  startTransition(async () => {
+                    const result = await deleteJobAction({ jobId: job.id });
+                    if (!result.ok) {
+                      window.alert(result.error);
+                      return;
+                    }
+                    router.refresh();
+                  });
+                }}
+              />
             </div>
           );
         },
@@ -222,33 +249,35 @@ export function JobsTable({ jobs }: JobsTableProps) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-border">
-      <table className="w-full min-w-[900px] text-left text-sm">
-        <thead className="border-b border-border bg-muted/40">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id} className="px-4 py-3 font-medium text-muted-foreground">
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(header.column.columnDef.header, header.getContext())}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="border-b border-border last:border-0">
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="px-4 py-3 align-top">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <TooltipProvider delayDuration={300}>
+      <div className="overflow-x-auto rounded-lg border border-border">
+        <table className="w-full min-w-[900px] text-left text-sm">
+          <thead className="border-b border-border bg-muted/40">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th key={header.id} className="px-4 py-3 font-medium text-muted-foreground">
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(header.column.columnDef.header, header.getContext())}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id} className="border-b border-border last:border-0">
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id} className="px-4 py-3 align-top">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </TooltipProvider>
   );
 }

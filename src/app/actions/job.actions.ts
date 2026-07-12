@@ -7,6 +7,7 @@ import { auth } from '@/modules/infrastructure/auth/auth';
 import { DomainError } from '@/modules/domain/shared/errors';
 import {
   createJobSchema,
+  deleteJobSchema,
   listJobsQuerySchema,
   updateJobStatusSchema,
 } from '@/shared/schemas/job.schema';
@@ -62,6 +63,24 @@ export async function updateJobStatusAction(
     const job = await updateJobStatus.execute(parsed);
     revalidatePath('/[locale]/jobs', 'page');
     return { ok: true, data: { id: job.id, status: job.status } };
+  } catch (error) {
+    return { ok: false, error: toErrorMessage(error) };
+  }
+}
+
+/**
+ * Permanently deletes a job.
+ */
+export async function deleteJobAction(input: unknown): Promise<ActionResult<{ id: string }>> {
+  try {
+    await requireUserId();
+    const parsed = deleteJobSchema.parse(input);
+    const { deleteJob } = createJobModule();
+    await deleteJob.execute(parsed);
+    revalidatePath('/[locale]/jobs', 'page');
+    revalidatePath('/[locale]/dashboard', 'page');
+    revalidatePath('/[locale]/applications', 'page');
+    return { ok: true, data: { id: parsed.jobId } };
   } catch (error) {
     return { ok: false, error: toErrorMessage(error) };
   }
