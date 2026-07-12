@@ -6,23 +6,22 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 
 ---
 
-## Now (Phase 2)
+## Now (Phase 3)
 
-### Phase 1 — Jobs & Resumes — done
+### Phase 1–2 highlights — done
 
-- [x] Repository interfaces for Job, Company, Resume, Source
-- [x] Jobs list page (TanStack Table) with filters/status
-- [x] Manual job create
-- [x] Favorites / Reject / Restore flows
-- [x] Resumes list + create form (RHF + Zod)
-- [x] Resume contentText management + delete
+- [x] Jobs / Resumes / Sources sync + pagination/sort
+- [x] Seed 3 default resumes (JS_TS, DOTNET, PHP)
 
-### Phase 2 — Companies & Sources
+### Phase 3 — Scraping P0
 
-- [x] Markdown parser for `docs/companies-to-work/*.md`
-- [x] `SyncCompaniesFromMarkdown` use case
-- [x] ATS detection heuristics + unit tests
-- [x] Sources admin page (+ sync button)
+- [x] `JobSourceAdapter` + registry
+- [x] Greenhouse adapter
+- [x] Lever adapter
+- [x] Normalize + upsert pipeline + ScrapeRun
+- [x] Manual “Run” action on Sources
+- [ ] Generic careers adapter
+- [ ] Cron/scheduler entrypoint
 - [ ] ScrapeRun history page
 - [ ] Source enable/disable toggle action
 

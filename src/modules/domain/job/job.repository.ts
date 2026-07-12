@@ -6,6 +6,7 @@ export interface CreateJobPersistInput {
   externalId?: string | null;
   title: string;
   descriptionText: string;
+  descriptionHtml?: string | null;
   location?: string | null;
   country?: string | null;
   isRemote?: boolean | null;
@@ -14,7 +15,12 @@ export interface CreateJobPersistInput {
   salaryRaw?: string | null;
   applyUrl: string;
   contentHash: string;
+  postedAt?: Date | null;
   status?: JobStatusValue;
+}
+
+export interface UpsertScrapedJobInput extends CreateJobPersistInput {
+  externalId: string;
 }
 
 export interface ListJobsFilter {
@@ -37,4 +43,5 @@ export interface JobRepository {
   list(filter: ListJobsFilter): Promise<ListJobsResult>;
   create(input: CreateJobPersistInput): Promise<JobEntity>;
   updateStatus(id: string, status: ManualJobStatus): Promise<JobEntity>;
+  upsertByExternalId(input: UpsertScrapedJobInput): Promise<{ job: JobEntity; created: boolean }>;
 }

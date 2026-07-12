@@ -132,6 +132,10 @@
     "pageOf": "Página {page} de {totalPages}",
     "previous": "Anterior",
     "next": "Próxima",
+    "run": "Rodar",
+    "running": "Rodando…",
+    "runHint": "Rodar funciona para fontes Greenhouse e Lever. As vagas aparecem em Vagas.",
+    "runResult": "{adapter}: encontradas {found}, criadas {created}, atualizadas {updated}",
     "enabled": "Ativa",
     "disabled": "Inativa",
     "syncResult": "Lidas {parsed}: criadas {created}, atualizadas {updated}, fontes +{sources}",
@@ -141,7 +145,8 @@
       "ats": "ATS",
       "country": "País",
       "enabled": "Status",
-      "url": "URL"
+      "url": "URL",
+      "actions": "Ações"
     }
   },
   "settings": {

@@ -1,0 +1,127 @@
+import { NotFoundError, ValidationError } from '@/modules/domain/shared/errors';
+import type { JobRepository } from '@/modules/domain/job/job.repository';
+import type { JobSourceAdapterRegistry } from '@/modules/infrastructure/scrapers/adapter-registry';
+import type { ScrapePersistenceRepository } from '@/modules/domain/scrape/scrape-persistence.repository';
+import { buildJobContentHash } from '@/shared/lib/job-content-hash';
+import type { RunSourceDto } from '@/shared/schemas/scrape.schema';
+
+export interface RunSourceScrapeResult {
+  sourceId: string;
+  adapterKey: string;
+  jobsFound: number;
+  jobsCreated: number;
+  jobsUpdated: number;
+  status: 'SUCCESS' | 'PARTIAL' | 'FAILED';
+  errorSummary: string | null;
+}
+
+/**
+ * Runs a single source scrape through the matching ATS adapter and upserts jobs.
+ */
+export class RunSourceScrapeService {
+  constructor(
+    private readonly persistence: ScrapePersistenceRepository,
+    private readonly jobs: JobRepository,
+    private readonly adapters: JobSourceAdapterRegistry,
+  ) {}
+
+  async execute(input: RunSourceDto): Promise<RunSourceScrapeResult> {
+    const source = await this.persistence.findSourceById(input.sourceId);
+    if (!source) {
+      throw new NotFoundError('Source', input.sourceId);
+    }
+    if (!source.enabled) {
+      throw new ValidationError('Source is disabled');
+    }
+
+    const adapter = this.adapters.resolve(source);
+    if (!adapter) {
+      throw new ValidationError(
+        `No scraper adapter for ATS ${source.atsType ?? 'UNKNOWN'} (${source.baseUrl})`,
+      );
+    }
+
+    const startedAt = new Date();
+    let jobsFound = 0;
+    let jobsCreated = 0;
+    let jobsUpdated = 0;
+    let errorSummary: string | null = null;
+    let status: 'SUCCESS' | 'PARTIAL' | 'FAILED' = 'SUCCESS';
+
+    try {
+      const normalizedJobs = await adapter.fetchJobs(source);
+      jobsFound = normalizedJobs.length;
+
+      for (const job of normalizedJobs) {
+        if (!job.externalId) {
+          continue;
+        }
+
+        const contentHash = buildJobContentHash({
+          title: job.title,
+          applyUrl: job.applyUrl,
+          descriptionText: job.descriptionText,
+          companyName: job.companyName ?? source.companyName,
+        });
+
+        const result = await this.jobs.upsertByExternalId({
+          sourceId: source.id,
+          companyId: source.companyId,
+          externalId: job.externalId,
+          title: job.title,
+          descriptionText: job.descriptionText,
+          descriptionHtml: job.descriptionHtml ?? null,
+          applyUrl: job.applyUrl,
+          location: job.location ?? null,
+          country: job.country ?? source.country,
+          isRemote: job.isRemote ?? null,
+          employmentType: job.employmentType ?? null,
+          seniority: job.seniority ?? null,
+          salaryRaw: job.salaryRaw ?? null,
+          postedAt: job.postedAt ?? null,
+          contentHash,
+          status: 'NEW',
+        });
+
+        if (result.created) {
+          jobsCreated += 1;
+        } else {
+          jobsUpdated += 1;
+        }
+      }
+    } catch (error) {
+      status = 'FAILED';
+      errorSummary = error instanceof Error ? error.message : 'Unknown scrape error';
+    }
+
+    if (status !== 'FAILED' && jobsFound > 0 && jobsCreated + jobsUpdated < jobsFound) {
+      status = 'PARTIAL';
+    }
+
+    const finishedAt = new Date();
+    await this.persistence.createScrapeRun({
+      sourceId: source.id,
+      status,
+      jobsFound,
+      jobsUpserted: jobsCreated + jobsUpdated,
+      errorSummary,
+      startedAt,
+      finishedAt,
+    });
+    await this.persistence.markSourceRun(source.id, status, finishedAt);
+
+    if (status === 'FAILED') {
+      throw new ValidationError(errorSummary ?? 'Scrape failed');
+    }
+
+    return {
+      sourceId: source.id,
+      adapterKey: adapter.key,
+      jobsFound,
+      jobsCreated,
+      jobsUpdated,
+      status,
+      errorSummary,
+    };
+  }
+}

@@ -6,6 +6,7 @@ import type {
   JobRepository,
   ListJobsFilter,
   ListJobsResult,
+  UpsertScrapedJobInput,
 } from '@/modules/domain/job/job.repository';
 import type { ManualJobStatus } from '@/modules/domain/job/job.entity';
 import { prisma } from '@/modules/infrastructure/prisma/client';
@@ -97,6 +98,7 @@ export class PrismaJobRepository implements JobRepository {
         companyId: input.companyId ?? null,
         externalId: input.externalId ?? null,
         title: input.title,
+        descriptionHtml: input.descriptionHtml ?? null,
         descriptionText: input.descriptionText,
         location: input.location ?? null,
         country: input.country ?? null,
@@ -106,6 +108,7 @@ export class PrismaJobRepository implements JobRepository {
         salaryRaw: input.salaryRaw ?? null,
         applyUrl: input.applyUrl,
         contentHash: input.contentHash,
+        postedAt: input.postedAt ?? null,
         status: input.status ?? 'NEW',
       },
       include: jobInclude,
@@ -121,5 +124,44 @@ export class PrismaJobRepository implements JobRepository {
       include: jobInclude,
     });
     return mapJob(job);
+  }
+
+  async upsertByExternalId(
+    input: UpsertScrapedJobInput,
+  ): Promise<{ job: JobEntity; created: boolean }> {
+    const existing = await prisma.job.findFirst({
+      where: {
+        sourceId: input.sourceId,
+        externalId: input.externalId,
+      },
+      include: jobInclude,
+    });
+
+    if (existing) {
+      const job = await prisma.job.update({
+        where: { id: existing.id },
+        data: {
+          title: input.title,
+          descriptionHtml: input.descriptionHtml ?? null,
+          descriptionText: input.descriptionText,
+          location: input.location ?? null,
+          country: input.country ?? null,
+          isRemote: input.isRemote ?? null,
+          employmentType: input.employmentType ?? null,
+          seniority: input.seniority ?? null,
+          salaryRaw: input.salaryRaw ?? null,
+          applyUrl: input.applyUrl,
+          contentHash: input.contentHash,
+          postedAt: input.postedAt ?? existing.postedAt,
+          scrapedAt: new Date(),
+          companyId: input.companyId ?? existing.companyId,
+        },
+        include: jobInclude,
+      });
+      return { job: mapJob(job), created: false };
+    }
+
+    const job = await this.create(input);
+    return { job, created: true };
   }
 }

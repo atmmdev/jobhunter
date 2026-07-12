@@ -132,6 +132,10 @@
     "pageOf": "Page {page} of {totalPages}",
     "previous": "Previous",
     "next": "Next",
+    "run": "Run",
+    "running": "Running…",
+    "runHint": "Run works for Greenhouse and Lever sources. Jobs appear under Jobs.",
+    "runResult": "{adapter}: found {found}, created {created}, updated {updated}",
     "enabled": "Enabled",
     "disabled": "Disabled",
     "syncResult": "Parsed {parsed}: created {created}, updated {updated}, sources +{sources}",
@@ -141,7 +145,8 @@
       "ats": "ATS",
       "country": "Country",
       "enabled": "Status",
-      "url": "URL"
+      "url": "URL",
+      "actions": "Actions"
     }
   },
   "settings": {

@@ -5,11 +5,14 @@ import { SyncCompaniesFromMarkdownService } from '@/modules/application/company/
 import { CreateResumeService } from '@/modules/application/resume/create-resume.service';
 import { DeleteResumeService } from '@/modules/application/resume/delete-resume.service';
 import { ListResumesService } from '@/modules/application/resume/list-resumes.service';
+import { RunSourceScrapeService } from '@/modules/application/scrape/run-source-scrape.service';
 import { ListSourcesService } from '@/modules/application/source/list-sources.service';
+import { JobSourceAdapterRegistry } from '@/modules/infrastructure/scrapers/adapter-registry';
 import { PrismaCompanyRepository } from '@/modules/infrastructure/repositories/prisma-company.repository';
 import { PrismaCompanySeedRepository } from '@/modules/infrastructure/repositories/prisma-company-seed.repository';
 import { PrismaJobRepository } from '@/modules/infrastructure/repositories/prisma-job.repository';
 import { PrismaResumeRepository } from '@/modules/infrastructure/repositories/prisma-resume.repository';
+import { PrismaScrapePersistenceRepository } from '@/modules/infrastructure/repositories/prisma-scrape-persistence.repository';
 import { PrismaSourceRepository } from '@/modules/infrastructure/repositories/prisma-source.repository';
 
 /**
@@ -49,5 +52,18 @@ export function createCompanyModule() {
   return {
     syncCompanies: new SyncCompaniesFromMarkdownService(seeds),
     listSources: new ListSourcesService(seeds),
+  };
+}
+
+/**
+ * Composes scrape/discovery services.
+ */
+export function createScrapeModule() {
+  const jobs = new PrismaJobRepository();
+  const persistence = new PrismaScrapePersistenceRepository();
+  const adapters = new JobSourceAdapterRegistry();
+
+  return {
+    runSource: new RunSourceScrapeService(persistence, jobs, adapters),
   };
 }
