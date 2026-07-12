@@ -25,12 +25,17 @@ export interface JobListItemDto {
   status: JobStatusValue;
   createdAt: string;
   updatedAt: string;
+  score: number | null;
+  recommendedResumeName: string | null;
 }
 
 /**
  * Maps a Job entity to a serializable list DTO.
  */
-export function toJobListItemDto(job: JobEntity): JobListItemDto {
+export function toJobListItemDto(
+  job: JobEntity,
+  extras?: { score?: number | null; recommendedResumeName?: string | null },
+): JobListItemDto {
   return {
     id: job.id,
     companyId: job.companyId,
@@ -53,5 +58,7 @@ export function toJobListItemDto(job: JobEntity): JobListItemDto {
     status: job.status,
     createdAt: job.createdAt.toISOString(),
     updatedAt: job.updatedAt.toISOString(),
+    score: extras?.score ?? null,
+    recommendedResumeName: extras?.recommendedResumeName ?? null,
   };
 }

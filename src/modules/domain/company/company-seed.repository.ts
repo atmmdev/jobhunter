@@ -70,4 +70,5 @@ export interface ListSourcesResult {
 export interface CompanySeedRepository {
   upsertFromSeed(input: UpsertCompanyFromSeedInput): Promise<UpsertCompanyFromSeedResult>;
   listSources(filter: ListSourcesFilter): Promise<ListSourcesResult>;
+  setEnabled(sourceId: string, enabled: boolean): Promise<SourceListRow>;
 }

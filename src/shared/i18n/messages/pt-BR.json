@@ -23,7 +23,7 @@
   },
   "dashboard": {
     "title": "Painel",
-    "subtitle": "Visão do pipeline — as métricas serão preenchidas conforme as fontes entrarem",
+    "subtitle": "Métricas ao vivo do pipeline de vagas, candidaturas e fontes",
     "jobsFound": "Vagas encontradas",
     "applications": "Candidaturas",
     "favorites": "Favoritas",
@@ -53,12 +53,14 @@
       "location": "Localização",
       "status": "Status",
       "source": "Fonte",
+      "score": "Score",
       "actions": "Ações"
     },
     "actions": {
       "favorite": "Favoritar",
       "reject": "Rejeitar",
       "restore": "Restaurar",
+      "score": "Pontuar",
       "open": "Abrir"
     },
     "form": {
@@ -146,7 +148,25 @@
     "runResult": "{adapter}: encontradas {found}, criadas {created}, atualizadas {updated}",
     "enabled": "Ativa",
     "disabled": "Inativa",
+    "enable": "Ativar",
+    "disable": "Desativar",
     "syncResult": "Lidas {parsed}: criadas {created}, atualizadas {updated}, fontes +{sources}",
+    "historyTitle": "Histórico de scrapes",
+    "historySubtitle": "Execuções recentes em todas as fontes",
+    "historyEmpty": "Nenhum scrape ainda. Rode uma fonte Greenhouse ou Lever para popular o histórico.",
+    "historyColumns": {
+      "source": "Fonte",
+      "status": "Status",
+      "found": "Encontradas",
+      "upserted": "Gravadas",
+      "started": "Início",
+      "error": "Erro"
+    },
+    "runStatus": {
+      "SUCCESS": "Sucesso",
+      "FAILED": "Falhou",
+      "PARTIAL": "Parcial"
+    },
     "columns": {
       "name": "Fonte",
       "company": "Empresa",

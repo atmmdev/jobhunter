@@ -3,11 +3,12 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { SourcesPageClient } from '@/components/sources/sources-page-client';
 import { auth } from '@/modules/infrastructure/auth/auth';
 import { createCompanyModule } from '@/modules/infrastructure/composition';
+import { toScrapeRunListItemDto } from '@/shared/dto/scrape-run.dto';
 import { toSourceListItemDto } from '@/shared/dto/source.dto';
 import { listSourcesQuerySchema } from '@/shared/schemas/source.schema';
 
 /**
- * Sources admin page — sync companies and browse crawl sources.
+ * Sources admin page — sync, run scrapers, toggle, and scrape history.
  */
 export default async function SourcesPage({
   params,
@@ -33,8 +34,11 @@ export default async function SourcesPage({
     sortDir: typeof raw.sortDir === 'string' ? raw.sortDir : undefined,
   });
 
-  const { listSources } = createCompanyModule();
-  const result = await listSources.execute(query);
+  const { listSources, listScrapeRuns } = createCompanyModule();
+  const [result, runs] = await Promise.all([
+    listSources.execute(query),
+    listScrapeRuns.execute(20),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -49,6 +53,7 @@ export default async function SourcesPage({
         pageSize={result.pageSize}
         sortBy={query.sortBy}
         sortDir={query.sortDir}
+        scrapeRuns={runs.map(toScrapeRunListItemDto)}
       />
     </div>
   );

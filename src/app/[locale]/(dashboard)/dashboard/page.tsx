@@ -1,9 +1,11 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { MetricCard } from '@/components/dashboard/metric-card';
+import { auth } from '@/modules/infrastructure/auth/auth';
+import { createAnalyticsModule } from '@/modules/infrastructure/composition';
 
 /**
- * Main dashboard with placeholder analytics metrics.
+ * Main dashboard with live analytics metrics.
  */
 export default async function DashboardPage({
   params,
@@ -13,20 +15,67 @@ export default async function DashboardPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations('dashboard');
+  const session = await auth();
 
-  const metrics = [
-    'jobsFound',
-    'applications',
-    'favorites',
-    'rejected',
-    'interviews',
-    'offers',
-    'responseRate',
-    'topTechnologies',
-    'salaryAnalytics',
-    'countries',
-    'atsStatistics',
-  ] as const;
+  if (!session?.user?.id) {
+    return null;
+  }
+
+  const { getDashboardStats } = createAnalyticsModule();
+  const stats = await getDashboardStats.execute();
+
+  const cards: Array<{ key: string; value: string; hint?: string }> = [
+    { key: 'jobsFound', value: String(stats.jobsFound) },
+    { key: 'applications', value: String(stats.applications) },
+    { key: 'favorites', value: String(stats.favorites) },
+    { key: 'rejected', value: String(stats.rejected) },
+    { key: 'interviews', value: String(stats.interviews) },
+    { key: 'offers', value: String(stats.offers) },
+    {
+      key: 'responseRate',
+      value: stats.responseRate === null ? t('emptyValue') : `${stats.responseRate}%`,
+    },
+    {
+      key: 'topTechnologies',
+      value:
+        stats.topTechnologies.length === 0
+          ? t('emptyValue')
+          : stats.topTechnologies.map((item) => item.name).slice(0, 3).join(', '),
+      hint:
+        stats.topTechnologies.length > 0
+          ? stats.topTechnologies.map((item) => `${item.name} (${item.count})`).join(' · ')
+          : undefined,
+    },
+    {
+      key: 'salaryAnalytics',
+      value:
+        stats.averageSalaryMin === null && stats.averageSalaryMax === null
+          ? t('emptyValue')
+          : `${formatSalary(stats.averageSalaryMin)} – ${formatSalary(stats.averageSalaryMax)}`,
+    },
+    {
+      key: 'countries',
+      value:
+        stats.countries.length === 0
+          ? t('emptyValue')
+          : stats.countries.map((item) => item.name).slice(0, 3).join(', '),
+      hint:
+        stats.countries.length > 0
+          ? stats.countries.map((item) => `${item.name} (${item.count})`).join(' · ')
+          : undefined,
+    },
+    {
+      key: 'atsStatistics',
+      value:
+        stats.atsStatistics.length === 0
+          ? t('emptyValue')
+          : stats.atsStatistics.map((item) => item.name).slice(0, 3).join(', '),
+      hint:
+        stats.atsStatistics.length > 0
+          ? stats.atsStatistics.map((item) => `${item.name} (${item.count})`).join(' · ')
+          : undefined,
+    },
+  ];
 
   return (
     <div className="space-y-8">
@@ -35,15 +84,17 @@ export default async function DashboardPage({
         <p className="max-w-2xl text-muted-foreground">{t('subtitle')}</p>
       </header>
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-        {metrics.map((key) => (
-          <MetricCard
-            key={key}
-            title={t(key)}
-            value={t('emptyValue')}
-            hint={t('comingSoon')}
-          />
+        {cards.map((card) => (
+          <MetricCard key={card.key} title={t(card.key)} value={card.value} hint={card.hint} />
         ))}
       </section>
     </div>
   );
+}
+
+function formatSalary(value: number | null): string {
+  if (value === null || Number.isNaN(value)) {
+    return '—';
+  }
+  return Math.round(value).toLocaleString();
 }

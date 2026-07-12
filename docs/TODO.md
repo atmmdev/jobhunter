@@ -20,10 +20,10 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 - [x] Lever adapter
 - [x] Normalize + upsert pipeline + ScrapeRun
 - [x] Manual “Run” action on Sources
+- [x] ScrapeRun history on Sources page
+- [x] Source enable/disable toggle action
 - [ ] Generic careers adapter
 - [ ] Cron/scheduler entrypoint
-- [ ] ScrapeRun history page
-- [ ] Source enable/disable toggle action
 
 ---
 
@@ -31,32 +31,34 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 
 ### Companies & Sources
 
-- [ ] Markdown parser for `docs/companies-to-work/*.md`
-- [ ] `SyncCompaniesFromMarkdown` use case
-- [ ] ATS detection heuristics + unit tests
-- [ ] Sources admin page
-- [ ] ScrapeRun history page
+- [x] Markdown parser for `docs/companies-to-work/*.md`
+- [x] `SyncCompaniesFromMarkdown` use case
+- [x] ATS detection heuristics + unit tests
+- [x] Sources admin page
+- [x] ScrapeRun history (Sources page section)
+- [ ] Dedicated ScrapeRun history page (optional)
 
 ### Scraping P0
 
-- [ ] `JobSourceAdapter` + registry
-- [ ] Greenhouse adapter + fixtures
-- [ ] Lever adapter + fixtures
+- [x] `JobSourceAdapter` + registry
+- [x] Greenhouse adapter + fixtures
+- [x] Lever adapter + fixtures
 - [ ] Generic careers adapter
-- [ ] Normalize + dedupe pipeline
-- [ ] Manual “Run now” action
+- [x] Normalize + dedupe pipeline
+- [x] Manual “Run now” action
 - [ ] Cron/scheduler entrypoint
 
 ---
 
 ## AI (Phase 4)
 
-- [ ] `AiClient` OpenAI-compatible implementation
+- [x] `AiClient` OpenAI-compatible implementation
 - [ ] Prompts v1: parse, tech, salary, score, match, cover letter
-- [ ] Score job worker
-- [ ] Recommend resume use case
+- [x] Score job (deterministic + optional AI) + Jobs UI
+- [x] Recommend resume use case (via score)
 - [ ] Cover letter UI editor
 - [ ] High-score notification
+- [x] Dashboard live metrics from DB
 
 ---
 

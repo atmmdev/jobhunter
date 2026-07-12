@@ -5,11 +5,12 @@ import { useRouter as useNextRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
 
-import { syncCompaniesAction } from '@/app/actions/company.actions';
+import { setSourceEnabledAction, syncCompaniesAction } from '@/app/actions/company.actions';
 import { runSourceScrapeAction } from '@/app/actions/scrape.actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useRouter } from '@/shared/i18n/navigation';
+import type { ScrapeRunListItemDto } from '@/shared/dto/scrape-run.dto';
 import type { SourceListItemDto } from '@/shared/dto/source.dto';
 import type { SourceSortBy } from '@/shared/schemas/source.schema';
 
@@ -20,6 +21,7 @@ interface SourcesPageClientProps {
   pageSize: number;
   sortBy: SourceSortBy;
   sortDir: 'asc' | 'desc';
+  scrapeRuns: ScrapeRunListItemDto[];
 }
 
 const SORTABLE_COLUMNS: SourceSortBy[] = [
@@ -34,7 +36,7 @@ const SORTABLE_COLUMNS: SourceSortBy[] = [
 const RUNNABLE_ATS = new Set(['GREENHOUSE', 'LEVER']);
 
 /**
- * Sources admin UI with sync, scrape run, sortable columns, and pagination.
+ * Sources admin UI with sync, scrape run, enable toggle, history, sort, and pagination.
  */
 export function SourcesPageClient({
   sources,
@@ -43,12 +45,14 @@ export function SourcesPageClient({
   pageSize,
   sortBy,
   sortDir,
+  scrapeRuns,
 }: SourcesPageClientProps) {
   const t = useTranslations('sources');
   const router = useRouter();
   const nextRouter = useNextRouter();
   const [pending, startTransition] = useTransition();
   const [runningSourceId, setRunningSourceId] = useState<string | null>(null);
+  const [togglingSourceId, setTogglingSourceId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -78,155 +82,238 @@ export function SourcesPageClient({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-muted-foreground">{t('showing', { from, to, total })}</p>
-        <Button
-          type="button"
-          disabled={pending}
-          onClick={() =>
-            startTransition(async () => {
-              setError(null);
-              setMessage(null);
-              const result = await syncCompaniesAction();
-              if (!result.ok) {
-                setError(result.error);
-                return;
-              }
-              setMessage(
-                t('syncResult', {
-                  parsed: result.data.totalParsed,
-                  created: result.data.companiesCreated,
-                  updated: result.data.companiesUpdated,
-                  sources: result.data.sourcesCreated,
-                }),
-              );
-              nextRouter.refresh();
-            })
-          }
-        >
-          {t('sync')}
-        </Button>
+    <div className="space-y-8">
+      <div className="space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-muted-foreground">{t('showing', { from, to, total })}</p>
+          <Button
+            type="button"
+            disabled={pending}
+            onClick={() =>
+              startTransition(async () => {
+                setError(null);
+                setMessage(null);
+                const result = await syncCompaniesAction();
+                if (!result.ok) {
+                  setError(result.error);
+                  return;
+                }
+                setMessage(
+                  t('syncResult', {
+                    parsed: result.data.totalParsed,
+                    created: result.data.companiesCreated,
+                    updated: result.data.companiesUpdated,
+                    sources: result.data.sourcesCreated,
+                  }),
+                );
+                nextRouter.refresh();
+              })
+            }
+          >
+            {t('sync')}
+          </Button>
+        </div>
+
+        <p className="text-xs text-muted-foreground">{t('runHint')}</p>
+
+        {message ? <p className="text-sm text-emerald-600 dark:text-emerald-400">{message}</p> : null}
+        {error ? <p className="text-sm text-destructive">{error}</p> : null}
+
+        {total === 0 ? (
+          <p className="text-sm text-muted-foreground">{t('empty')}</p>
+        ) : (
+          <>
+            <div className="overflow-x-auto rounded-lg border border-border">
+              <table className="w-full min-w-[1080px] text-left text-sm">
+                <thead className="border-b border-border bg-muted/40">
+                  <tr>
+                    {SORTABLE_COLUMNS.map((column) => (
+                      <th key={column} className="px-4 py-3">
+                        <button
+                          type="button"
+                          className="inline-flex items-center gap-1.5 font-medium text-muted-foreground hover:text-foreground"
+                          onClick={() => toggleSort(column)}
+                        >
+                          {t(`columns.${column}`)}
+                          <SortIcon active={sortBy === column} direction={sortDir} />
+                        </button>
+                      </th>
+                    ))}
+                    <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.actions')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sources.map((source) => {
+                    const canRun =
+                      source.enabled && source.atsType !== null && RUNNABLE_ATS.has(source.atsType);
+                    return (
+                      <tr key={source.id} className="border-b border-border last:border-0">
+                        <td className="px-4 py-3 align-top font-medium">{source.name}</td>
+                        <td className="px-4 py-3 align-top">{source.companyName ?? '—'}</td>
+                        <td className="px-4 py-3 align-top">
+                          <Badge variant="secondary">{source.atsType ?? source.type}</Badge>
+                        </td>
+                        <td className="px-4 py-3 align-top">{source.country ?? '—'}</td>
+                        <td className="px-4 py-3 align-top">
+                          <Badge variant={source.enabled ? 'success' : 'outline'}>
+                            {source.enabled ? t('enabled') : t('disabled')}
+                          </Badge>
+                        </td>
+                        <td className="px-4 py-3 align-top">
+                          <a
+                            href={source.baseUrl.startsWith('http') ? source.baseUrl : undefined}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="break-all text-xs text-muted-foreground underline-offset-2 hover:underline"
+                          >
+                            {source.baseUrl}
+                          </a>
+                        </td>
+                        <td className="px-4 py-3 align-top">
+                          <div className="flex flex-wrap gap-1">
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="ghost"
+                              disabled={pending || togglingSourceId === source.id}
+                              onClick={() =>
+                                startTransition(async () => {
+                                  setError(null);
+                                  setMessage(null);
+                                  setTogglingSourceId(source.id);
+                                  const result = await setSourceEnabledAction({
+                                    sourceId: source.id,
+                                    enabled: !source.enabled,
+                                  });
+                                  setTogglingSourceId(null);
+                                  if (!result.ok) {
+                                    setError(result.error);
+                                    return;
+                                  }
+                                  nextRouter.refresh();
+                                })
+                              }
+                            >
+                              {source.enabled ? t('disable') : t('enable')}
+                            </Button>
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="outline"
+                              disabled={!canRun || pending || runningSourceId === source.id}
+                              onClick={() =>
+                                startTransition(async () => {
+                                  setError(null);
+                                  setMessage(null);
+                                  setRunningSourceId(source.id);
+                                  const result = await runSourceScrapeAction({ sourceId: source.id });
+                                  setRunningSourceId(null);
+                                  if (!result.ok) {
+                                    setError(result.error);
+                                    return;
+                                  }
+                                  setMessage(
+                                    t('runResult', {
+                                      adapter: result.data.adapterKey,
+                                      found: result.data.jobsFound,
+                                      created: result.data.jobsCreated,
+                                      updated: result.data.jobsUpdated,
+                                    }),
+                                  );
+                                  nextRouter.refresh();
+                                })
+                              }
+                            >
+                              {runningSourceId === source.id ? t('running') : t('run')}
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p className="text-sm text-muted-foreground">{t('pageOf', { page, totalPages })}</p>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={page <= 1}
+                  onClick={() => navigate({ page: page - 1 })}
+                >
+                  {t('previous')}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={page >= totalPages}
+                  onClick={() => navigate({ page: page + 1 })}
+                >
+                  {t('next')}
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
-      <p className="text-xs text-muted-foreground">{t('runHint')}</p>
-
-      {message ? <p className="text-sm text-emerald-600 dark:text-emerald-400">{message}</p> : null}
-      {error ? <p className="text-sm text-destructive">{error}</p> : null}
-
-      {total === 0 ? (
-        <p className="text-sm text-muted-foreground">{t('empty')}</p>
-      ) : (
-        <>
+      <section className="space-y-3">
+        <div>
+          <h2 className="text-lg font-semibold tracking-tight">{t('historyTitle')}</h2>
+          <p className="text-sm text-muted-foreground">{t('historySubtitle')}</p>
+        </div>
+        {scrapeRuns.length === 0 ? (
+          <p className="text-sm text-muted-foreground">{t('historyEmpty')}</p>
+        ) : (
           <div className="overflow-x-auto rounded-lg border border-border">
-            <table className="w-full min-w-[1080px] text-left text-sm">
+            <table className="w-full min-w-[720px] text-left text-sm">
               <thead className="border-b border-border bg-muted/40">
                 <tr>
-                  {SORTABLE_COLUMNS.map((column) => (
-                    <th key={column} className="px-4 py-3">
-                      <button
-                        type="button"
-                        className="inline-flex items-center gap-1.5 font-medium text-muted-foreground hover:text-foreground"
-                        onClick={() => toggleSort(column)}
-                      >
-                        {t(`columns.${column}`)}
-                        <SortIcon active={sortBy === column} direction={sortDir} />
-                      </button>
-                    </th>
-                  ))}
-                  <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.actions')}</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground">{t('historyColumns.source')}</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground">{t('historyColumns.status')}</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground">{t('historyColumns.found')}</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground">{t('historyColumns.upserted')}</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground">{t('historyColumns.started')}</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground">{t('historyColumns.error')}</th>
                 </tr>
               </thead>
               <tbody>
-                {sources.map((source) => {
-                  const canRun = source.enabled && source.atsType !== null && RUNNABLE_ATS.has(source.atsType);
-                  return (
-                    <tr key={source.id} className="border-b border-border last:border-0">
-                      <td className="px-4 py-3 align-top font-medium">{source.name}</td>
-                      <td className="px-4 py-3 align-top">{source.companyName ?? '—'}</td>
-                      <td className="px-4 py-3 align-top">
-                        <Badge variant="secondary">{source.atsType ?? source.type}</Badge>
-                      </td>
-                      <td className="px-4 py-3 align-top">{source.country ?? '—'}</td>
-                      <td className="px-4 py-3 align-top">
-                        <Badge variant={source.enabled ? 'success' : 'outline'}>
-                          {source.enabled ? t('enabled') : t('disabled')}
-                        </Badge>
-                      </td>
-                      <td className="px-4 py-3 align-top">
-                        <a
-                          href={source.baseUrl.startsWith('http') ? source.baseUrl : undefined}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="break-all text-xs text-muted-foreground underline-offset-2 hover:underline"
-                        >
-                          {source.baseUrl}
-                        </a>
-                      </td>
-                      <td className="px-4 py-3 align-top">
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="outline"
-                          disabled={!canRun || pending || runningSourceId === source.id}
-                          onClick={() =>
-                            startTransition(async () => {
-                              setError(null);
-                              setMessage(null);
-                              setRunningSourceId(source.id);
-                              const result = await runSourceScrapeAction({ sourceId: source.id });
-                              setRunningSourceId(null);
-                              if (!result.ok) {
-                                setError(result.error);
-                                return;
-                              }
-                              setMessage(
-                                t('runResult', {
-                                  adapter: result.data.adapterKey,
-                                  found: result.data.jobsFound,
-                                  created: result.data.jobsCreated,
-                                  updated: result.data.jobsUpdated,
-                                }),
-                              );
-                              nextRouter.refresh();
-                            })
-                          }
-                        >
-                          {runningSourceId === source.id ? t('running') : t('run')}
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                })}
+                {scrapeRuns.map((run) => (
+                  <tr key={run.id} className="border-b border-border last:border-0">
+                    <td className="px-4 py-3 align-top font-medium">{run.sourceName}</td>
+                    <td className="px-4 py-3 align-top">
+                      <Badge
+                        variant={
+                          run.status === 'SUCCESS'
+                            ? 'success'
+                            : run.status === 'FAILED'
+                              ? 'danger'
+                              : 'secondary'
+                        }
+                      >
+                        {t(`runStatus.${run.status}`)}
+                      </Badge>
+                    </td>
+                    <td className="px-4 py-3 align-top">{run.jobsFound}</td>
+                    <td className="px-4 py-3 align-top">{run.jobsUpserted}</td>
+                    <td className="px-4 py-3 align-top text-xs text-muted-foreground">
+                      {new Date(run.startedAt).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-3 align-top text-xs text-muted-foreground">
+                      {run.errorSummary ?? '—'}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm text-muted-foreground">{t('pageOf', { page, totalPages })}</p>
-            <div className="flex gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                disabled={page <= 1}
-                onClick={() => navigate({ page: page - 1 })}
-              >
-                {t('previous')}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                disabled={page >= totalPages}
-                onClick={() => navigate({ page: page + 1 })}
-              >
-                {t('next')}
-              </Button>
-            </div>
-          </div>
-        </>
-      )}
+        )}
+      </section>
     </div>
   );
 }

@@ -11,6 +11,7 @@ import { useTranslations } from 'next-intl';
 import { useMemo, useTransition } from 'react';
 
 import { updateJobStatusAction } from '@/app/actions/job.actions';
+import { scoreJobAction } from '@/app/actions/scoring.actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import type { JobListItemDto } from '@/shared/dto/job.dto';
@@ -94,6 +95,24 @@ export function JobsTable({ jobs }: JobsTableProps) {
       columnHelper.accessor('sourceName', {
         header: t('columns.source'),
       }),
+      columnHelper.accessor('score', {
+        header: t('columns.score'),
+        cell: (info) => {
+          const score = info.getValue();
+          const recommended = info.row.original.recommendedResumeName;
+          if (score === null) {
+            return '—';
+          }
+          return (
+            <div>
+              <p className="font-medium">{score}</p>
+              {recommended ? (
+                <p className="text-xs text-muted-foreground">{recommended}</p>
+              ) : null}
+            </div>
+          );
+        },
+      }),
       columnHelper.display({
         id: 'actions',
         header: t('columns.actions'),
@@ -101,6 +120,20 @@ export function JobsTable({ jobs }: JobsTableProps) {
           const job = row.original;
           return (
             <div className="flex flex-wrap gap-1">
+              <Button
+                type="button"
+                size="sm"
+                variant="secondary"
+                disabled={pending}
+                onClick={() =>
+                  startTransition(async () => {
+                    await scoreJobAction({ jobId: job.id });
+                    router.refresh();
+                  })
+                }
+              >
+                {t('actions.score')}
+              </Button>
               {job.status !== 'FAVORITED' ? (
                 <Button
                   type="button"

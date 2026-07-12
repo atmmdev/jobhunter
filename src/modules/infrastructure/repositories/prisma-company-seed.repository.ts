@@ -137,6 +137,30 @@ export class PrismaCompanySeedRepository implements CompanySeedRepository {
       pageSize: filter.pageSize,
     };
   }
+
+  async setEnabled(sourceId: string, enabled: boolean): Promise<SourceListRow> {
+    const source = await prisma.source.update({
+      where: { id: sourceId },
+      data: { enabled },
+      include: {
+        company: { select: { name: true, country: true } },
+      },
+    });
+
+    return {
+      id: source.id,
+      name: source.name,
+      type: source.type as SourceTypeValue,
+      atsType: source.atsType as AtsTypeValue | null,
+      baseUrl: source.baseUrl,
+      enabled: source.enabled,
+      companyName: source.company?.name ?? null,
+      country: source.company?.country ?? null,
+      lastRunAt: source.lastRunAt,
+      lastStatus: source.lastStatus,
+      createdAt: source.createdAt,
+    };
+  }
 }
 
 function toSourceType(atsType: AtsTypeValue): SourceTypeValue {

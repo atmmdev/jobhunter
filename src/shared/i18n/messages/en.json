@@ -23,7 +23,7 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "subtitle": "Pipeline overview — metrics will populate as sources come online",
+    "subtitle": "Live pipeline metrics from jobs, applications, and sources",
     "jobsFound": "Jobs Found",
     "applications": "Applications",
     "favorites": "Favorites",
@@ -53,12 +53,14 @@
       "location": "Location",
       "status": "Status",
       "source": "Source",
+      "score": "Score",
       "actions": "Actions"
     },
     "actions": {
       "favorite": "Favorite",
       "reject": "Reject",
       "restore": "Restore",
+      "score": "Score",
       "open": "Open"
     },
     "form": {
@@ -146,7 +148,25 @@
     "runResult": "{adapter}: found {found}, created {created}, updated {updated}",
     "enabled": "Enabled",
     "disabled": "Disabled",
+    "enable": "Enable",
+    "disable": "Disable",
     "syncResult": "Parsed {parsed}: created {created}, updated {updated}, sources +{sources}",
+    "historyTitle": "Scrape history",
+    "historySubtitle": "Most recent scrape runs across all sources",
+    "historyEmpty": "No scrape runs yet. Run a Greenhouse or Lever source to populate history.",
+    "historyColumns": {
+      "source": "Source",
+      "status": "Status",
+      "found": "Found",
+      "upserted": "Upserted",
+      "started": "Started",
+      "error": "Error"
+    },
+    "runStatus": {
+      "SUCCESS": "Success",
+      "FAILED": "Failed",
+      "PARTIAL": "Partial"
+    },
     "columns": {
       "name": "Source",
       "company": "Company",
