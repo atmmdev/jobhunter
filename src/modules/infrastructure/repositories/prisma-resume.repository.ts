@@ -6,6 +6,7 @@ import type {
   ResumeRepository,
   UpdateResumePersistInput,
 } from '@/modules/domain/resume/resume.repository';
+import { toAppLocale, toPrismaLocale } from '@/modules/domain/user/user.entity';
 import { prisma } from '@/modules/infrastructure/prisma/client';
 
 function mapResume(resume: PrismaResume): ResumeEntity {
@@ -14,6 +15,7 @@ function mapResume(resume: PrismaResume): ResumeEntity {
     userId: resume.userId,
     name: resume.name,
     stack: resume.stack as ResumeStackValue,
+    locale: toAppLocale(resume.locale),
     summary: resume.summary,
     contentText: resume.contentText,
     filePath: resume.filePath,
@@ -35,7 +37,7 @@ export class PrismaResumeRepository implements ResumeRepository {
   async listByUser(userId: string): Promise<ResumeEntity[]> {
     const resumes = await prisma.resume.findMany({
       where: { userId },
-      orderBy: { updatedAt: 'desc' },
+      orderBy: [{ locale: 'asc' }, { stack: 'asc' }, { updatedAt: 'desc' }],
     });
     return resumes.map(mapResume);
   }
@@ -46,6 +48,7 @@ export class PrismaResumeRepository implements ResumeRepository {
         userId: input.userId,
         name: input.name,
         stack: input.stack,
+        locale: toPrismaLocale(input.locale),
         summary: input.summary ?? null,
         contentText: input.contentText,
         isActive: input.isActive ?? true,
@@ -60,6 +63,7 @@ export class PrismaResumeRepository implements ResumeRepository {
       data: {
         ...(input.name !== undefined ? { name: input.name } : {}),
         ...(input.stack !== undefined ? { stack: input.stack } : {}),
+        ...(input.locale !== undefined ? { locale: toPrismaLocale(input.locale) } : {}),
         ...(input.summary !== undefined ? { summary: input.summary } : {}),
         ...(input.contentText !== undefined ? { contentText: input.contentText } : {}),
         ...(input.isActive !== undefined ? { isActive: input.isActive } : {}),

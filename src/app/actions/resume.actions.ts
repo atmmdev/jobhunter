@@ -8,6 +8,7 @@ import { DomainError } from '@/modules/domain/shared/errors';
 import {
   createResumeSchema,
   deleteResumeSchema,
+  updateResumeSchema,
 } from '@/shared/schemas/resume.schema';
 
 export type ActionResult<T> =
@@ -33,6 +34,24 @@ export async function createResumeAction(
     const parsed = createResumeSchema.parse(input);
     const { createResume } = createResumeModule();
     const resume = await createResume.execute(userId, parsed);
+    revalidatePath('/[locale]/resumes', 'page');
+    return { ok: true, data: { id: resume.id } };
+  } catch (error) {
+    return { ok: false, error: toErrorMessage(error) };
+  }
+}
+
+/**
+ * Updates a resume owned by the current user.
+ */
+export async function updateResumeAction(
+  input: unknown,
+): Promise<ActionResult<{ id: string }>> {
+  try {
+    const userId = await requireUserId();
+    const parsed = updateResumeSchema.parse(input);
+    const { updateResume } = createResumeModule();
+    const resume = await updateResume.execute(userId, parsed);
     revalidatePath('/[locale]/resumes', 'page');
     return { ok: true, data: { id: resume.id } };
   } catch (error) {

@@ -5,6 +5,7 @@ import { SyncCompaniesFromMarkdownService } from '@/modules/application/company/
 import { CreateResumeService } from '@/modules/application/resume/create-resume.service';
 import { DeleteResumeService } from '@/modules/application/resume/delete-resume.service';
 import { ListResumesService } from '@/modules/application/resume/list-resumes.service';
+import { UpdateResumeService } from '@/modules/application/resume/update-resume.service';
 import { RunSourceScrapeService } from '@/modules/application/scrape/run-source-scrape.service';
 import { ListSourcesService } from '@/modules/application/source/list-sources.service';
 import { JobSourceAdapterRegistry } from '@/modules/infrastructure/scrapers/adapter-registry';
@@ -38,6 +39,7 @@ export function createResumeModule() {
 
   return {
     createResume: new CreateResumeService(resumes),
+    updateResume: new UpdateResumeService(resumes),
     listResumes: new ListResumesService(resumes),
     deleteResume: new DeleteResumeService(resumes),
   };

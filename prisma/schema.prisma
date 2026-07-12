@@ -108,6 +108,7 @@ model Resume {
   userId       String
   name         String
   stack        ResumeStack
+  locale       Locale      @default(en)
   summary      String?     @db.Text
   contentText  String      @db.LongText
   filePath     String?
@@ -122,6 +123,8 @@ model Resume {
 
   @@index([userId])
   @@index([stack])
+  @@index([locale])
+  @@unique([userId, stack, locale])
   @@map("resumes")
 }
 

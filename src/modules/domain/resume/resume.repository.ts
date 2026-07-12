@@ -1,9 +1,11 @@
+import type { AppLocale } from '@/modules/domain/user/user.entity';
 import type { ResumeEntity, ResumeStackValue } from '@/modules/domain/resume/resume.entity';
 
 export interface CreateResumePersistInput {
   userId: string;
   name: string;
   stack: ResumeStackValue;
+  locale: AppLocale;
   summary?: string | null;
   contentText: string;
   isActive?: boolean;
@@ -12,6 +14,7 @@ export interface CreateResumePersistInput {
 export interface UpdateResumePersistInput {
   name?: string;
   stack?: ResumeStackValue;
+  locale?: AppLocale;
   summary?: string | null;
   contentText?: string;
   isActive?: boolean;

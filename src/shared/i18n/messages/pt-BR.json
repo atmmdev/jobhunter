@@ -91,12 +91,17 @@
   },
   "resumes": {
     "title": "Currículos",
-    "subtitle": "Gerencie variantes por stack",
+    "subtitle": "Gerencie variantes por stack em inglês e português",
     "empty": "Nenhum currículo ainda. Adicione perfis React/Node, .NET ou PHP.",
     "add": "Adicionar currículo",
+    "edit": "Editar",
     "delete": "Excluir",
     "active": "Ativo",
     "inactive": "Inativo",
+    "locale": {
+      "en": "Inglês",
+      "pt-BR": "Português"
+    },
     "stack": {
       "JS_TS": "React / Next.js / Node / TypeScript",
       "DOTNET": "C# / ASP.NET Core",
@@ -106,13 +111,16 @@
     "form": {
       "name": "Nome",
       "stack": "Stack",
+      "locale": "Idioma",
       "summary": "Resumo",
       "content": "Conteúdo do currículo",
       "isActive": "Ativo",
       "submit": "Salvar currículo",
+      "save": "Salvar alterações",
       "cancel": "Cancelar",
       "success": "Currículo criado",
       "error": "Não foi possível criar o currículo",
+      "updateError": "Não foi possível atualizar o currículo",
       "deleteConfirm": "Excluir este currículo?",
       "deleteError": "Não foi possível excluir o currículo"
     }

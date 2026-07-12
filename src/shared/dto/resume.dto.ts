@@ -1,3 +1,4 @@
+import type { AppLocale } from '@/modules/domain/user/user.entity';
 import type { ResumeEntity, ResumeStackValue } from '@/modules/domain/resume/resume.entity';
 
 /**
@@ -8,6 +9,7 @@ export interface ResumeListItemDto {
   userId: string;
   name: string;
   stack: ResumeStackValue;
+  locale: AppLocale;
   summary: string | null;
   contentText: string;
   filePath: string | null;
@@ -25,6 +27,7 @@ export function toResumeListItemDto(resume: ResumeEntity): ResumeListItemDto {
     userId: resume.userId,
     name: resume.name,
     stack: resume.stack,
+    locale: resume.locale,
     summary: resume.summary,
     contentText: resume.contentText,
     filePath: resume.filePath,

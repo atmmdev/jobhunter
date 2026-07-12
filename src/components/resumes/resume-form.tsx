@@ -5,45 +5,80 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { createResumeAction } from '@/app/actions/resume.actions';
+import { createResumeAction, updateResumeAction } from '@/app/actions/resume.actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { createResumeSchema, type CreateResumeDto } from '@/shared/schemas/resume.schema';
+import type { ResumeListItemDto } from '@/shared/dto/resume.dto';
+import {
+  createResumeSchema,
+  updateResumeSchema,
+  type CreateResumeDto,
+  type UpdateResumeDto,
+} from '@/shared/schemas/resume.schema';
 
-interface CreateResumeFormProps {
+interface ResumeFormProps {
+  initial?: ResumeListItemDto;
   onSuccess?: () => void;
   onCancel?: () => void;
 }
 
+type ResumeFormValues = CreateResumeDto;
+
 /**
- * Form for creating a stack-specific resume variant.
+ * Shared create/edit form for resume variants (includes locale).
  */
-export function CreateResumeForm({ onSuccess, onCancel }: CreateResumeFormProps) {
+export function ResumeForm({ initial, onSuccess, onCancel }: ResumeFormProps) {
   const t = useTranslations('resumes');
   const [error, setError] = useState<string | null>(null);
+  const isEdit = Boolean(initial);
 
-  const form = useForm<CreateResumeDto>({
+  const form = useForm<ResumeFormValues>({
     resolver: zodResolver(createResumeSchema),
     defaultValues: {
-      name: '',
-      stack: 'JS_TS',
-      summary: '',
-      contentText: '',
-      isActive: true,
+      name: initial?.name ?? '',
+      stack: initial?.stack ?? 'JS_TS',
+      locale: initial?.locale ?? 'en',
+      summary: initial?.summary ?? '',
+      contentText: initial?.contentText ?? '',
+      isActive: initial?.isActive ?? true,
     },
   });
 
   const onSubmit = form.handleSubmit(async (values) => {
     setError(null);
+
+    if (isEdit && initial) {
+      const payload: UpdateResumeDto = { id: initial.id, ...values };
+      const parsed = updateResumeSchema.safeParse(payload);
+      if (!parsed.success) {
+        setError(t('form.error'));
+        return;
+      }
+      const result = await updateResumeAction(parsed.data);
+      if (!result.ok) {
+        setError(result.error || t('form.updateError'));
+        return;
+      }
+      onSuccess?.();
+      return;
+    }
+
     const result = await createResumeAction(values);
     if (!result.ok) {
       setError(result.error || t('form.error'));
       return;
     }
-    form.reset();
+    form.reset({
+      name: '',
+      stack: 'JS_TS',
+      locale: 'en',
+      summary: '',
+      contentText: '',
+      isActive: true,
+    });
     onSuccess?.();
   });
 
@@ -55,6 +90,13 @@ export function CreateResumeForm({ onSuccess, onCancel }: CreateResumeFormProps)
           <Input id="name" {...form.register('name')} />
         </div>
         <div className="space-y-2">
+          <Label htmlFor="locale">{t('form.locale')}</Label>
+          <Select id="locale" {...form.register('locale')}>
+            <option value="en">{t('locale.en')}</option>
+            <option value="pt-BR">{t('locale.pt-BR')}</option>
+          </Select>
+        </div>
+        <div className="space-y-2 md:col-span-2">
           <Label htmlFor="stack">{t('form.stack')}</Label>
           <Select id="stack" {...form.register('stack')}>
             <option value="JS_TS">{t('stack.JS_TS')}</option>
@@ -69,7 +111,7 @@ export function CreateResumeForm({ onSuccess, onCancel }: CreateResumeFormProps)
         </div>
         <div className="space-y-2 md:col-span-2">
           <Label htmlFor="contentText">{t('form.content')}</Label>
-          <Textarea id="contentText" className="min-h-[180px]" {...form.register('contentText')} />
+          <Textarea id="contentText" className="min-h-[220px]" {...form.register('contentText')} />
         </div>
         <div className="flex items-center gap-2 md:col-span-2">
           <input id="isActive" type="checkbox" className="h-4 w-4" {...form.register('isActive')} />
@@ -79,7 +121,7 @@ export function CreateResumeForm({ onSuccess, onCancel }: CreateResumeFormProps)
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
       <div className="flex gap-2">
         <Button type="submit" disabled={form.formState.isSubmitting}>
-          {t('form.submit')}
+          {isEdit ? t('form.save') : t('form.submit')}
         </Button>
         {onCancel ? (
           <Button type="button" variant="outline" onClick={onCancel}>

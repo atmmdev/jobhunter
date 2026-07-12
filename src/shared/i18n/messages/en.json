@@ -91,12 +91,17 @@
   },
   "resumes": {
     "title": "Resumes",
-    "subtitle": "Manage stack-specific resume variants",
+    "subtitle": "Manage stack-specific resume variants in English and Portuguese",
     "empty": "No resumes yet. Add React/Node, .NET, or PHP profiles.",
     "add": "Add resume",
+    "edit": "Edit",
     "delete": "Delete",
     "active": "Active",
     "inactive": "Inactive",
+    "locale": {
+      "en": "English",
+      "pt-BR": "Portuguese"
+    },
     "stack": {
       "JS_TS": "React / Next.js / Node / TypeScript",
       "DOTNET": "C# / ASP.NET Core",
@@ -106,13 +111,16 @@
     "form": {
       "name": "Name",
       "stack": "Stack",
+      "locale": "Language",
       "summary": "Summary",
       "content": "Resume content",
       "isActive": "Active",
       "submit": "Save resume",
+      "save": "Save changes",
       "cancel": "Cancel",
       "success": "Resume created",
       "error": "Could not create resume",
+      "updateError": "Could not update resume",
       "deleteConfirm": "Delete this resume?",
       "deleteError": "Could not delete resume"
     }

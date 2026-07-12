@@ -1,18 +1,23 @@
 import { hash } from 'bcryptjs';
-import { PrismaClient, type ResumeStack } from '@prisma/client';
+import { PrismaClient, type Locale, type ResumeStack } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-const DEFAULT_RESUMES: Array<{
+interface SeedResume {
   name: string;
   stack: ResumeStack;
+  locale: Locale;
   summary: string;
   contentText: string;
-}> = [
+}
+
+const DEFAULT_RESUMES: SeedResume[] = [
   {
     name: 'React / Next.js / Node / TypeScript',
     stack: 'JS_TS',
-    summary: 'Full-stack JavaScript engineer focused on React, Next.js, Node.js and TypeScript.',
+    locale: 'en',
+    summary:
+      'Full-stack JavaScript engineer focused on React, Next.js, Node.js and TypeScript.',
     contentText: `PROFESSIONAL SUMMARY
 Senior software engineer specializing in React, Next.js, Node.js and TypeScript.
 Strong experience building production web apps, APIs, and developer platforms.
@@ -32,8 +37,33 @@ Frontend Engineer, Full-stack Engineer, TypeScript Engineer (Remote / Hybrid)
 `,
   },
   {
+    name: 'React / Next.js / Node / TypeScript',
+    stack: 'JS_TS',
+    locale: 'pt_BR',
+    summary:
+      'Engenheiro full-stack JavaScript focado em React, Next.js, Node.js e TypeScript.',
+    contentText: `RESUMO PROFISSIONAL
+Engenheiro de software sênior especializado em React, Next.js, Node.js e TypeScript.
+Experiência sólida em aplicações web de produção, APIs e plataformas para desenvolvedores.
+
+COMPETÊNCIAS
+React, Next.js, TypeScript, Node.js, REST, GraphQL, Prisma, PostgreSQL/MySQL,
+TailwindCSS, testes (Vitest/Jest/Playwright), CI/CD, Docker, fundamentos de AWS.
+
+DESTAQUES DE EXPERIÊNCIA
+- Construiu e manteve aplicações Next.js grandes com App Router e TypeScript
+- Projetou APIs Node.js com validação, observabilidade e foco em performance
+- Colaborou com produto/design em sistemas de UI acessíveis e responsivos
+- Mentoria de engenheiros e melhoria de qualidade via reviews e automação
+
+OBJETIVO
+Frontend Engineer, Full-stack Engineer, TypeScript Engineer (Remoto / Híbrido)
+`,
+  },
+  {
     name: 'C# / ASP.NET Core',
     stack: 'DOTNET',
+    locale: 'en',
     summary: 'Backend-focused .NET engineer with ASP.NET Core, C# and enterprise APIs.',
     contentText: `PROFESSIONAL SUMMARY
 Software engineer specialized in C# and ASP.NET Core for scalable backend systems.
@@ -54,8 +84,32 @@ TARGET ROLES
 `,
   },
   {
+    name: 'C# / ASP.NET Core',
+    stack: 'DOTNET',
+    locale: 'pt_BR',
+    summary: 'Engenheiro .NET focado em backend com ASP.NET Core, C# e APIs corporativas.',
+    contentText: `RESUMO PROFISSIONAL
+Engenheiro de software especializado em C# e ASP.NET Core para backends escaláveis.
+Experiência com design orientado a domínio, bancos SQL e serviços em nuvem.
+
+COMPETÊNCIAS
+C#, ASP.NET Core, Entity Framework, SQL Server/MySQL, APIs REST, autenticação,
+workers em background, Docker, CI/CD, testes unitários/integração.
+
+DESTAQUES DE EXPERIÊNCIA
+- Entregou APIs e serviços ASP.NET Core para fluxos críticos de negócio
+- Modelou dados relacionais e otimizou queries/índices
+- Implementou autenticação, autorização e logs auditáveis
+- Melhorou confiabilidade com testes automatizados e tratamento estruturado de erros
+
+OBJETIVO
+Engenheiro Backend .NET, Engenheiro ASP.NET Core, Engenheiro C#
+`,
+  },
+  {
     name: 'PHP / Laravel / WordPress',
     stack: 'PHP',
+    locale: 'en',
     summary: 'PHP engineer with Laravel APIs/apps and WordPress customization experience.',
     contentText: `PROFESSIONAL SUMMARY
 Software engineer focused on PHP ecosystems: Laravel applications and WordPress sites.
@@ -75,10 +129,33 @@ TARGET ROLES
 PHP/Laravel Engineer, WordPress Developer, Backend PHP Engineer
 `,
   },
+  {
+    name: 'PHP / Laravel / WordPress',
+    stack: 'PHP',
+    locale: 'pt_BR',
+    summary: 'Engenheiro PHP com experiência em APIs/apps Laravel e customização WordPress.',
+    contentText: `RESUMO PROFISSIONAL
+Engenheiro de software focado no ecossistema PHP: aplicações Laravel e sites WordPress.
+Experiência em backends manuteníveis, integrações e plataformas de conteúdo.
+
+COMPETÊNCIAS
+PHP, Laravel, WordPress, MySQL, APIs REST, templates Blade/Twig, filas,
+cache, Composer, testes, Docker, fluxos Git.
+
+DESTAQUES DE EXPERIÊNCIA
+- Construiu aplicações Laravel com limites claros de service/repository
+- Customizou temas/plugins WordPress e melhorou fluxos editoriais
+- Integração com APIs de terceiros e provedores de pagamento/conteúdo
+- Fortaleceu deploys com ambientes, migrations e monitoramento básico
+
+OBJETIVO
+Engenheiro PHP/Laravel, Desenvolvedor WordPress, Engenheiro Backend PHP
+`,
+  },
 ];
 
 /**
- * Seeds the baseline admin user, Manual Entry source, and default resumes.
+ * Seeds the baseline admin user, Manual Entry source, and bilingual resumes.
  */
 async function main(): Promise<void> {
   const email = (process.env.SEED_USER_EMAIL ?? 'admin@jobhunter.local').toLowerCase();
@@ -122,7 +199,7 @@ async function main(): Promise<void> {
       where: {
         userId: user.id,
         stack: resume.stack,
-        name: resume.name,
+        locale: resume.locale,
       },
     });
 
@@ -130,6 +207,7 @@ async function main(): Promise<void> {
       await prisma.resume.update({
         where: { id: existing.id },
         data: {
+          name: resume.name,
           summary: resume.summary,
           contentText: resume.contentText,
           isActive: true,
@@ -143,6 +221,7 @@ async function main(): Promise<void> {
         userId: user.id,
         name: resume.name,
         stack: resume.stack,
+        locale: resume.locale,
         summary: resume.summary,
         contentText: resume.contentText,
         isActive: true,
@@ -152,7 +231,7 @@ async function main(): Promise<void> {
 
   console.log(`Seeded user: ${email}`);
   console.log('Seeded Manual Entry source');
-  console.log(`Seeded ${DEFAULT_RESUMES.length} default resumes`);
+  console.log(`Seeded ${DEFAULT_RESUMES.length} resumes (EN + PT-BR)`);
 }
 
 main()

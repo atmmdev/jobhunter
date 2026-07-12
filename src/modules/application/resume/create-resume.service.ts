@@ -13,6 +13,7 @@ export class CreateResumeService {
       userId,
       name: input.name.trim(),
       stack: input.stack,
+      locale: input.locale,
       summary: input.summary?.trim() ? input.summary.trim() : null,
       contentText: input.contentText.trim(),
       isActive: input.isActive,
