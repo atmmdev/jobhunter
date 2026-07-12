@@ -4,6 +4,7 @@ import { useRouter } from '@/shared/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
 
+import { CoverLetterEditor } from '@/components/applications/cover-letter-editor';
 import { transitionApplicationAction } from '@/app/actions/application.actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -49,6 +50,7 @@ export function ApplicationsPageClient({
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [editingApplicationId, setEditingApplicationId] = useState<string | null>(null);
 
   const filterStatus = (next?: ApplicationStatusValue) => {
     const params = new URLSearchParams();
@@ -99,72 +101,97 @@ export function ApplicationsPageClient({
       {applications.length === 0 ? (
         <p className="text-sm text-muted-foreground">{t('empty')}</p>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-border">
-          <table className="w-full min-w-[960px] text-left text-sm">
-            <thead className="border-b border-border bg-muted/40">
-              <tr>
-                <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.job')}</th>
-                <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.company')}</th>
-                <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.resume')}</th>
-                <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.status')}</th>
-                <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.updated')}</th>
-                <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.actions')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {applications.map((app) => (
-                <tr key={app.id} className="border-b border-border last:border-0">
-                  <td className="px-4 py-3 align-top">
-                    <a
-                      href={app.applyUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="font-medium underline-offset-2 hover:underline"
-                    >
-                      {app.jobTitle}
-                    </a>
-                  </td>
-                  <td className="px-4 py-3 align-top">{app.companyName ?? '—'}</td>
-                  <td className="px-4 py-3 align-top">{app.resumeName}</td>
-                  <td className="px-4 py-3 align-top">
-                    <Badge variant={statusVariant(app.status)}>{t(`status.${app.status}`)}</Badge>
-                  </td>
-                  <td className="px-4 py-3 align-top text-xs text-muted-foreground">
-                    {new Date(app.updatedAt).toLocaleString()}
-                  </td>
-                  <td className="px-4 py-3 align-top">
-                    <div className="flex flex-wrap gap-1">
-                      {app.allowedTransitions.map((next) => (
+        <div className="space-y-4">
+          {applications.map((app) => (
+            <div key={app.id} className="overflow-x-auto rounded-lg border border-border">
+              <table className="w-full min-w-[960px] text-left text-sm">
+                <thead className="border-b border-border bg-muted/40">
+                  <tr>
+                    <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.job')}</th>
+                    <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.company')}</th>
+                    <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.resume')}</th>
+                    <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.status')}</th>
+                    <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.updated')}</th>
+                    <th className="px-4 py-3 font-medium text-muted-foreground">{t('columns.actions')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-border last:border-0">
+                    <td className="px-4 py-3 align-top">
+                      <a
+                        href={app.applyUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-medium underline-offset-2 hover:underline"
+                      >
+                        {app.jobTitle}
+                      </a>
+                    </td>
+                    <td className="px-4 py-3 align-top">{app.companyName ?? '—'}</td>
+                    <td className="px-4 py-3 align-top">{app.resumeName}</td>
+                    <td className="px-4 py-3 align-top">
+                      <Badge variant={statusVariant(app.status)}>{t(`status.${app.status}`)}</Badge>
+                    </td>
+                    <td className="px-4 py-3 align-top text-xs text-muted-foreground">
+                      {new Date(app.updatedAt).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-3 align-top">
+                      <div className="flex flex-wrap gap-1">
                         <Button
-                          key={next}
                           type="button"
                           size="sm"
-                          variant="outline"
+                          variant="secondary"
                           disabled={pending}
                           onClick={() =>
-                            startTransition(async () => {
-                              setError(null);
-                              const result = await transitionApplicationAction({
-                                applicationId: app.id,
-                                status: next,
-                              });
-                              if (!result.ok) {
-                                setError(result.error);
-                                return;
-                              }
-                              router.refresh();
-                            })
+                            setEditingApplicationId((current) =>
+                              current === app.id ? null : app.id,
+                            )
                           }
                         >
-                          {t(`actions.${next}`)}
+                          {app.coverLetterId ? t('coverLetter.edit') : t('coverLetter.open')}
                         </Button>
-                      ))}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                        {app.allowedTransitions.map((next) => (
+                          <Button
+                            key={next}
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            disabled={pending}
+                            onClick={() =>
+                              startTransition(async () => {
+                                setError(null);
+                                const result = await transitionApplicationAction({
+                                  applicationId: app.id,
+                                  status: next,
+                                });
+                                if (!result.ok) {
+                                  setError(result.error);
+                                  return;
+                                }
+                                router.refresh();
+                              })
+                            }
+                          >
+                            {t(`actions.${next}`)}
+                          </Button>
+                        ))}
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              {editingApplicationId === app.id ? (
+                <div className="border-t border-border p-4">
+                  <CoverLetterEditor
+                    applicationId={app.id}
+                    coverLetterId={app.coverLetterId}
+                    initialContent={app.coverLetterContent}
+                    onClose={() => setEditingApplicationId(null)}
+                  />
+                </div>
+              ) : null}
+            </div>
+          ))}
         </div>
       )}
     </div>

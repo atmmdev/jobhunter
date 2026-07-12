@@ -1,3 +1,5 @@
+import { GenerateCoverLetterService } from '@/modules/application/cover-letter/generate-cover-letter.service';
+import { UpdateCoverLetterService } from '@/modules/application/cover-letter/update-cover-letter.service';
 import { CreateApplicationFromJobService } from '@/modules/application/application/create-application-from-job.service';
 import { ListApplicationsService } from '@/modules/application/application/list-applications.service';
 import { TransitionApplicationService } from '@/modules/application/application/transition-application.service';
@@ -20,6 +22,7 @@ import { JobSourceAdapterRegistry } from '@/modules/infrastructure/scrapers/adap
 import { PrismaAnalyticsRepository } from '@/modules/infrastructure/repositories/prisma-analytics.repository';
 import { PrismaApplicationRepository } from '@/modules/infrastructure/repositories/prisma-application.repository';
 import { PrismaAuditLogRepository } from '@/modules/infrastructure/repositories/prisma-audit-log.repository';
+import { PrismaCoverLetterRepository } from '@/modules/infrastructure/repositories/prisma-cover-letter.repository';
 import { PrismaCompanyRepository } from '@/modules/infrastructure/repositories/prisma-company.repository';
 import { PrismaCompanySeedRepository } from '@/modules/infrastructure/repositories/prisma-company-seed.repository';
 import { PrismaJobRepository } from '@/modules/infrastructure/repositories/prisma-job.repository';
@@ -133,5 +136,28 @@ export function createApplicationModule() {
     createFromJob: new CreateApplicationFromJobService(applications, jobs, resumes, audit),
     listApplications: new ListApplicationsService(applications),
     transition: new TransitionApplicationService(applications, jobs, audit),
+  };
+}
+
+/**
+ * Composes cover letter generation and editing services.
+ */
+export function createCoverLetterModule() {
+  const applications = new PrismaApplicationRepository();
+  const jobs = new PrismaJobRepository();
+  const resumes = new PrismaResumeRepository();
+  const coverLetters = new PrismaCoverLetterRepository();
+  const ai = createAiClient();
+
+  return {
+    generateCoverLetter: new GenerateCoverLetterService(
+      applications,
+      jobs,
+      resumes,
+      coverLetters,
+      ai,
+      process.env.OPENAI_MODEL || 'gpt-4o-mini',
+    ),
+    updateCoverLetter: new UpdateCoverLetterService(coverLetters, applications),
   };
 }

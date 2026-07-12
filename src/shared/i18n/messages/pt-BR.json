@@ -164,6 +164,19 @@
       "REJECTED": "Rejeitada",
       "OFFER": "Oferta",
       "WITHDRAWN": "Retirada"
+    },
+    "coverLetter": {
+      "open": "Carta de apresentação",
+      "edit": "Editar carta",
+      "title": "Carta de apresentação",
+      "close": "Fechar",
+      "generate": "Gerar",
+      "regenerate": "Regenerar",
+      "save": "Salvar",
+      "placeholder": "Gere ou escreva sua carta de apresentação aqui…",
+      "generatedTemplate": "Carta gerada a partir do template.",
+      "generatedAi": "Carta gerada com IA.",
+      "saved": "Carta salva."
     }
   },
   "sources": {

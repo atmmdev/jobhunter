@@ -164,6 +164,19 @@
       "REJECTED": "Rejected",
       "OFFER": "Offer",
       "WITHDRAWN": "Withdrawn"
+    },
+    "coverLetter": {
+      "open": "Cover letter",
+      "edit": "Edit letter",
+      "title": "Cover letter",
+      "close": "Close",
+      "generate": "Generate",
+      "regenerate": "Regenerate",
+      "save": "Save",
+      "placeholder": "Generate or write your cover letter here…",
+      "generatedTemplate": "Template cover letter generated.",
+      "generatedAi": "AI cover letter generated.",
+      "saved": "Cover letter saved."
     }
   },
   "sources": {

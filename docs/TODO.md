@@ -56,7 +56,7 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 - [ ] Prompts v1: parse, tech, salary, score, match, cover letter
 - [x] Score job (deterministic + optional AI) + Jobs UI
 - [x] Recommend resume use case (via score)
-- [ ] Cover letter UI editor
+- [x] Cover letter generation + Applications UI editor
 - [ ] High-score notification
 - [x] Dashboard live metrics from DB
 

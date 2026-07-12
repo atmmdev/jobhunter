@@ -75,7 +75,7 @@ Phased delivery toward a production-ready system. Each phase must be shippable a
 - [ ] Parse job / extract tech / extract salary
 - [x] Hybrid scoring + JobScore persistence
 - [x] Resume recommendation
-- [ ] Cover letter generation (pt-BR / en)
+- [x] Cover letter generation (pt-BR / en) + editable UI
 - [ ] Notifications for high-score jobs
 - [x] Dashboard live metrics
 

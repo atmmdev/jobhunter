@@ -8,6 +8,8 @@ export interface ApplicationListItemDto {
   id: string;
   jobId: string;
   resumeId: string;
+  coverLetterId: string | null;
+  coverLetterContent: string | null;
   status: ApplicationEntity['status'];
   approvedAt: string | null;
   appliedAt: string | null;
@@ -24,11 +26,16 @@ export interface ApplicationListItemDto {
 /**
  * Maps an Application entity to a serializable list DTO.
  */
-export function toApplicationListItemDto(app: ApplicationEntity): ApplicationListItemDto {
+export function toApplicationListItemDto(
+  app: ApplicationEntity,
+  extras?: { coverLetterContent?: string | null },
+): ApplicationListItemDto {
   return {
     id: app.id,
     jobId: app.jobId,
     resumeId: app.resumeId,
+    coverLetterId: app.coverLetterId,
+    coverLetterContent: extras?.coverLetterContent ?? null,
     status: app.status,
     approvedAt: app.approvedAt?.toISOString() ?? null,
     appliedAt: app.appliedAt?.toISOString() ?? null,

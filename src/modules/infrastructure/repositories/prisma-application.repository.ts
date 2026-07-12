@@ -128,4 +128,16 @@ export class PrismaApplicationRepository implements ApplicationRepository {
     });
     return mapApplication(row);
   }
+
+  async attachCoverLetter(
+    applicationId: string,
+    coverLetterId: string,
+  ): Promise<ApplicationEntity> {
+    const row = await prisma.application.update({
+      where: { id: applicationId },
+      data: { coverLetterId },
+      include: applicationInclude,
+    });
+    return mapApplication(row);
+  }
 }

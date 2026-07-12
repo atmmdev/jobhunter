@@ -41,4 +41,5 @@ export interface ApplicationRepository {
   list(filter: ListApplicationsFilter): Promise<ListApplicationsResult>;
   create(input: CreateApplicationInput): Promise<ApplicationEntity>;
   transition(input: TransitionApplicationInput): Promise<ApplicationEntity>;
+  attachCoverLetter(applicationId: string, coverLetterId: string): Promise<ApplicationEntity>;
 }
