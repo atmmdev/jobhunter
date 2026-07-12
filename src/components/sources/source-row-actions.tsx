@@ -10,7 +10,14 @@ import { runSourceScrapeAction } from '@/app/actions/scrape.actions';
 import { IconTooltipButton } from '@/components/ui/icon-tooltip-button';
 import type { SourceListItemDto } from '@/shared/dto/source.dto';
 
-const RUNNABLE_ATS = new Set(['GREENHOUSE', 'LEVER', 'CUSTOM']);
+const RUNNABLE_ATS = new Set([
+  'GREENHOUSE',
+  'LEVER',
+  'ASHBY',
+  'APINFO',
+  'GUPY',
+  'CUSTOM',
+]);
 
 interface SourceRowActionsProps {
   source: SourceListItemDto;

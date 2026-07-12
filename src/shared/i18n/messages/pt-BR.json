@@ -198,7 +198,7 @@
     "next": "Próxima",
     "run": "Rodar",
     "running": "Rodando…",
-    "runHint": "Rodar funciona para Greenhouse, Lever e páginas CUSTOM. As vagas aparecem em Vagas.",
+    "runHint": "Rodar funciona para Greenhouse, Lever, Ashby, Apinfo, Gupy e páginas CUSTOM. As vagas aparecem em Vagas.",
     "runResult": "{adapter}: encontradas {found}, criadas {created}, atualizadas {updated}",
     "enabled": "Ativa",
     "disabled": "Inativa",

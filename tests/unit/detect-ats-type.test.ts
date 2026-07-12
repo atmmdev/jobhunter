@@ -20,6 +20,14 @@ describe('detectAtsType', () => {
     assert.equal(detectAtsType('https://acme.wd1.myworkdayjobs.com/Careers'), 'WORKDAY');
   });
 
+  it('detects Ashby boards', () => {
+    assert.equal(detectAtsType('https://jobs.ashbyhq.com/notion'), 'ASHBY');
+  });
+
+  it('detects Apinfo', () => {
+    assert.equal(detectAtsType('http://www.apinfo.com/apinfo'), 'APINFO');
+  });
+
   it('returns CUSTOM for unknown careers sites', () => {
     assert.equal(detectAtsType('https://careers.example.com/jobs'), 'CUSTOM');
   });

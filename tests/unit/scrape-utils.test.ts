@@ -2,7 +2,9 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
 import {
+  extractAshbyBoard,
   extractGreenhouseBoardToken,
+  extractGupySubdomain,
   extractLeverSite,
 } from '../../src/modules/infrastructure/scrapers/extract-board-token';
 import { stripHtml } from '../../src/modules/infrastructure/scrapers/strip-html';
@@ -21,6 +23,19 @@ describe('extract board tokens', () => {
 
   it('extracts Lever site', () => {
     assert.equal(extractLeverSite('https://jobs.lever.co/netflix'), 'netflix');
+  });
+
+  it('extracts Ashby board', () => {
+    assert.equal(extractAshbyBoard('https://jobs.ashbyhq.com/notion'), 'notion');
+  });
+
+  it('extracts Gupy subdomain', () => {
+    assert.equal(extractGupySubdomain('https://ambev.gupy.io/'), 'ambev');
+    assert.equal(
+      extractGupySubdomain('https://career.gupy.io/companies/ambev/jobs'),
+      'ambev',
+    );
+    assert.equal(extractGupySubdomain('https://portal.gupy.io/'), null);
   });
 });
 

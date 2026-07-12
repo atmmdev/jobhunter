@@ -2,8 +2,11 @@ import type {
   JobSourceAdapter,
   ScrapeSourceInput,
 } from '@/modules/domain/scrape/job-source-adapter';
+import { ApinfoAdapter } from '@/modules/infrastructure/scrapers/apinfo.adapter';
+import { AshbyAdapter } from '@/modules/infrastructure/scrapers/ashby.adapter';
 import { GenericCareersAdapter } from '@/modules/infrastructure/scrapers/generic-careers.adapter';
 import { GreenhouseAdapter } from '@/modules/infrastructure/scrapers/greenhouse.adapter';
+import { GupyAdapter } from '@/modules/infrastructure/scrapers/gupy.adapter';
 import { LeverAdapter } from '@/modules/infrastructure/scrapers/lever.adapter';
 
 /**
@@ -16,6 +19,9 @@ export class JobSourceAdapterRegistry {
     adapters: JobSourceAdapter[] = [
       new GreenhouseAdapter(),
       new LeverAdapter(),
+      new AshbyAdapter(),
+      new ApinfoAdapter(),
+      new GupyAdapter(),
       new GenericCareersAdapter(),
     ],
   ) {

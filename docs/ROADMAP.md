@@ -111,11 +111,14 @@ Phased delivery toward a production-ready system. Each phase must be shippable a
 
 ## Phase 7 — Expanded Sources
 
-- [ ] Ashby, Workday, Gupy adapters
+- [x] Ashby adapter
+- [ ] Workday adapter
+- [x] Gupy adapter (career SSR)
 - [ ] BambooHR, SmartRecruiters, TeamTailor
 - [ ] Kenoby, Solides
 - [ ] LinkedIn / Indeed (cautious)
-- [ ] Catho / APInfo
+- [ ] Catho
+- [x] APInfo (homepage recent jobs)
 - [ ] Telegram + Slack ingest
 
 **Exit criteria:** Coverage matches product source list at MVP breadth.

@@ -24,6 +24,9 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 - [x] Source enable/disable toggle action
 - [x] Generic careers adapter (CUSTOM)
 - [x] Cron/scheduler entrypoint (`npm run scrape:run-all`)
+- [x] Apinfo adapter (recent jobs from homepage)
+- [x] Ashby adapter (public board API)
+- [x] Gupy adapter (career page SSR `__NEXT_DATA__`)
 
 ---
 
@@ -78,14 +81,15 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 
 ## Expanded coverage (Phase 7)
 
-- [ ] Ashby adapter
+- [x] Ashby adapter
 - [ ] Workday adapter
-- [ ] Gupy adapter + apply strategy
+- [x] Gupy adapter (career SSR listing)
 - [ ] BambooHR / SmartRecruiters / TeamTailor adapters
 - [ ] Kenoby / Solides adapters
 - [ ] LinkedIn discovery (careful)
 - [ ] Indeed discovery (careful)
-- [ ] Catho / APInfo adapters
+- [ ] Catho adapter
+- [x] APInfo adapter (homepage recent jobs)
 - [ ] Telegram source ingest
 - [ ] Slack source ingest
 
