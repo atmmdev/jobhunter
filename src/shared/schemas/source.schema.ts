@@ -14,6 +14,7 @@ export const listSourcesQuerySchema = z.object({
   pageSize: z.coerce.number().int().min(1).max(100).default(20),
   sortBy: sourceSortBySchema.default('name'),
   sortDir: z.enum(['asc', 'desc']).default('asc'),
+  search: z.string().trim().max(200).optional(),
 });
 
 export type ListSourcesQueryDto = z.infer<typeof listSourcesQuerySchema>;

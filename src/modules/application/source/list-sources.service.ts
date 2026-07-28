@@ -16,6 +16,7 @@ export class ListSourcesService {
       pageSize: query.pageSize,
       sortBy: query.sortBy,
       sortDir: query.sortDir,
+      search: query.search,
     });
   }
 }

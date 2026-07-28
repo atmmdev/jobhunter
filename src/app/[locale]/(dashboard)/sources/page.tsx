@@ -32,6 +32,7 @@ export default async function SourcesPage({
     pageSize: typeof raw.pageSize === 'string' ? raw.pageSize : 20,
     sortBy: typeof raw.sortBy === 'string' ? raw.sortBy : undefined,
     sortDir: typeof raw.sortDir === 'string' ? raw.sortDir : undefined,
+    search: typeof raw.search === 'string' ? raw.search : undefined,
   });
 
   const { listSources, listScrapeRuns } = createCompanyModule();
@@ -53,6 +54,7 @@ export default async function SourcesPage({
         pageSize={result.pageSize}
         sortBy={query.sortBy}
         sortDir={query.sortDir}
+        search={query.search}
         scrapeRuns={runs.map(toScrapeRunListItemDto)}
       />
     </div>

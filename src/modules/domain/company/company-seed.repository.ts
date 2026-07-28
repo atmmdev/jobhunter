@@ -55,6 +55,7 @@ export interface ListSourcesFilter {
   pageSize: number;
   sortBy: SourceSortByValue;
   sortDir: SortDirection;
+  search?: string;
 }
 
 export interface ListSourcesResult {

@@ -7,8 +7,10 @@ import { useState, useTransition } from 'react';
 
 import { syncCompaniesAction } from '@/app/actions/company.actions';
 import { SourceRowActions } from '@/components/sources/source-row-actions';
+import { SourcesScrapeHistory } from '@/components/sources/sources-scrape-history';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { useRouter } from '@/shared/i18n/navigation';
 import type { ScrapeRunListItemDto } from '@/shared/dto/scrape-run.dto';
@@ -22,6 +24,7 @@ interface SourcesPageClientProps {
   pageSize: number;
   sortBy: SourceSortBy;
   sortDir: 'asc' | 'desc';
+  search?: string;
   scrapeRuns: ScrapeRunListItemDto[];
 }
 
@@ -44,6 +47,7 @@ export function SourcesPageClient({
   pageSize,
   sortBy,
   sortDir,
+  search,
   scrapeRuns,
 }: SourcesPageClientProps) {
   const t = useTranslations('sources');
@@ -52,22 +56,33 @@ export function SourcesPageClient({
   const [pending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [localSearch, setLocalSearch] = useState(search ?? '');
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const from = total === 0 ? 0 : (page - 1) * pageSize + 1;
   const to = Math.min(page * pageSize, total);
+  const hasSearch = Boolean(search?.trim());
 
   const navigate = (next: {
     page?: number;
     sortBy?: SourceSortBy;
     sortDir?: 'asc' | 'desc';
+    search?: string;
   }) => {
     const params = new URLSearchParams();
     params.set('page', String(next.page ?? page));
     params.set('pageSize', String(pageSize));
     params.set('sortBy', next.sortBy ?? sortBy);
     params.set('sortDir', next.sortDir ?? sortDir);
+    const nextSearch = (next.search ?? search ?? '').trim();
+    if (nextSearch) {
+      params.set('search', nextSearch);
+    }
     router.push(`/sources?${params.toString()}`);
+  };
+
+  const applySearch = () => {
+    navigate({ page: 1, search: localSearch.trim() });
   };
 
   const toggleSort = (column: SourceSortBy) => {
@@ -112,6 +127,25 @@ export function SourcesPageClient({
             </Button>
           </div>
 
+          <div className="flex flex-wrap gap-3">
+            <Input
+              value={localSearch}
+              onChange={(event) => setLocalSearch(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                  applySearch();
+                }
+              }}
+              placeholder={t('search')}
+              className="max-w-sm"
+              aria-label={t('search')}
+            />
+            <Button type="button" variant="secondary" onClick={applySearch}>
+              {t('searchAction')}
+            </Button>
+          </div>
+
           <p className="text-xs text-muted-foreground">{t('runHint')}</p>
 
           {message ? (
@@ -120,7 +154,9 @@ export function SourcesPageClient({
           {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
           {total === 0 ? (
-            <p className="text-sm text-muted-foreground">{t('empty')}</p>
+            <p className="text-sm text-muted-foreground">
+              {hasSearch ? t('emptySearch') : t('empty')}
+            </p>
           ) : (
             <>
               <div className="overflow-x-auto rounded-lg border border-border">
@@ -210,70 +246,7 @@ export function SourcesPageClient({
           )}
         </div>
 
-        <section className="space-y-3">
-          <div>
-            <h2 className="text-lg font-semibold tracking-tight">{t('historyTitle')}</h2>
-            <p className="text-sm text-muted-foreground">{t('historySubtitle')}</p>
-          </div>
-          {scrapeRuns.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{t('historyEmpty')}</p>
-          ) : (
-            <div className="overflow-x-auto rounded-lg border border-border">
-              <table className="w-full min-w-[720px] text-left text-sm">
-                <thead className="border-b border-border bg-muted/40">
-                  <tr>
-                    <th className="px-4 py-3 font-medium text-muted-foreground">
-                      {t('historyColumns.source')}
-                    </th>
-                    <th className="px-4 py-3 font-medium text-muted-foreground">
-                      {t('historyColumns.status')}
-                    </th>
-                    <th className="px-4 py-3 font-medium text-muted-foreground">
-                      {t('historyColumns.found')}
-                    </th>
-                    <th className="px-4 py-3 font-medium text-muted-foreground">
-                      {t('historyColumns.upserted')}
-                    </th>
-                    <th className="px-4 py-3 font-medium text-muted-foreground">
-                      {t('historyColumns.started')}
-                    </th>
-                    <th className="px-4 py-3 font-medium text-muted-foreground">
-                      {t('historyColumns.error')}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {scrapeRuns.map((run) => (
-                    <tr key={run.id} className="border-b border-border last:border-0">
-                      <td className="px-4 py-3 align-top font-medium">{run.sourceName}</td>
-                      <td className="px-4 py-3 align-top">
-                        <Badge
-                          variant={
-                            run.status === 'SUCCESS'
-                              ? 'success'
-                              : run.status === 'FAILED'
-                                ? 'danger'
-                                : 'secondary'
-                          }
-                        >
-                          {t(`runStatus.${run.status}`)}
-                        </Badge>
-                      </td>
-                      <td className="px-4 py-3 align-top">{run.jobsFound}</td>
-                      <td className="px-4 py-3 align-top">{run.jobsUpserted}</td>
-                      <td className="px-4 py-3 align-top text-xs text-muted-foreground">
-                        {new Date(run.startedAt).toLocaleString()}
-                      </td>
-                      <td className="px-4 py-3 align-top text-xs text-muted-foreground">
-                        {run.errorSummary ?? '—'}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </section>
+        <SourcesScrapeHistory scrapeRuns={scrapeRuns} />
       </div>
     </TooltipProvider>
   );

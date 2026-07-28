@@ -105,9 +105,19 @@ export class PrismaCompanySeedRepository implements CompanySeedRepository {
   async listSources(filter: ListSourcesFilter): Promise<ListSourcesResult> {
     const skip = (filter.page - 1) * filter.pageSize;
     const orderBy = buildSourceOrderBy(filter.sortBy, filter.sortDir);
+    const search = filter.search?.trim();
+    const where: Prisma.SourceWhereInput = search
+      ? {
+          OR: [
+            { name: { contains: search } },
+            { company: { name: { contains: search } } },
+          ],
+        }
+      : {};
 
     const [sources, total] = await prisma.$transaction([
       prisma.source.findMany({
+        where,
         include: {
           company: { select: { name: true, country: true } },
         },
@@ -115,7 +125,7 @@ export class PrismaCompanySeedRepository implements CompanySeedRepository {
         skip,
         take: filter.pageSize,
       }),
-      prisma.source.count(),
+      prisma.source.count({ where }),
     ]);
 
     return {
