@@ -39,6 +39,8 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 - [x] ATS detection heuristics + unit tests
 - [x] Sources admin page
 - [x] ScrapeRun history (Sources page section)
+- [x] Sources name search filter
+- [x] Refresh remote job boards in `worldwide.md` (We Work Remotely, Remote.com, Workana, etc.; skip dead/redundant)
 - [ ] Dedicated ScrapeRun history page (optional)
 
 ### Scraping P0

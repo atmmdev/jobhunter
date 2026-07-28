@@ -288,16 +288,20 @@
 | RelocateMe                             | https://relocate.me                            |
 | Remote Base                            | https://remotebase.io                          |
 | Remote CO                              | http://remote.co                               |
+| Remote.com                             | https://remote.com/jobs                        |
 | Remote Crew                            | https://www.remotecrew.io/jobs                 |
+| Remote Habits                          | https://remotehabits.com                       |
 | Remote List                            | https://remotelist.io                          |
 | Remote More                            | https://remotemore.com                         |
 | Remote Python                          | https://www.remotepython.com                   |
 | Remote Python Io                       | https://remotepython.io                        |
+| Remote Rocketship                      | https://www.remoterocketship.com               |
 | Remote Working                         | http://www.remoteworking.co                    |
+| Remote4Me                              | https://remote4me.com                          |
 | RemoteBase                             | https://remotebase.com                         |
 | Remotees                               | https://remotees.com                           |
-| Remoteok                               | http://www.remoteok.io                         |
-| Remotive                               | http://remotive.io                             |
+| Remoteok                               | https://remoteok.com                           |
+| Remotive                               | https://remotive.com                           |
 | RenoFi                                 | https://renofi.com                             |
 | RtCamp                                 | https://rtcamp.com                             |
 | SUSE                                   | https://www.suse.com                           |
@@ -378,19 +382,23 @@
 | Veryfi                                 | https://veryfi.com/about                       |
 | Vettery                                | https://www.vettery.com                        |
 | Viperdev                               | https://viperdev.io                            |
+| Virtual Vocations                      | https://www.virtualvocations.com               |
 | VueJs Jobs                             | https://vuejobs.com                            |
+| WAW Asia                               | https://waw.asia/jobs                          |
 | WFH                                    | http://www.wfh.io                              |
 | WP Hired                               | http://www.wphired.com                         |
 | WP-Media                               | https://wp-media.me                            |
+| We Work Remotely                       | https://weworkremotely.com                     |
 | WeMakeMVP                              | https://www.wemakemvp.com                      |
 | WebFX                                  | https://www.webfx.com                          |
 | Webikon                                | https://www.webikon.sk/en                      |
-| Well Found                             | http://wellfound.com                           |
+| Well Found                             | https://wellfound.com                          |
 | Wemake.services                        | https://wemake.services                        |
 | Whitespectre                           | https://whitespectre.com                       |
 | Wikimedia Foundation                   | https://wikimediafoundation.org                |
 | Wizeline                               | https://www.wizeline.com                       |
 | Wolfram                                | https://www.wolfram.com                        |
+| Workana                                | https://www.workana.com                        |
 | Working Nomads                         | http://www.workingnomads.co/jobs               |
 | Workray                                | https://www.workray.com                        |
 | X-Team                                 | https://x-team.com                             |

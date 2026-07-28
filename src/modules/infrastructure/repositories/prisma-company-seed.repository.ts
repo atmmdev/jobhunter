@@ -27,6 +27,7 @@ export class PrismaCompanySeedRepository implements CompanySeedRepository {
     });
 
     if (existing) {
+      const previousCareersUrl = existing.careersUrl;
       const company = await prisma.company.update({
         where: { id: existing.id },
         data: {
@@ -39,12 +40,30 @@ export class PrismaCompanySeedRepository implements CompanySeedRepository {
         include: { sources: true },
       });
 
-      const existingSource = company.sources.find((source) => source.baseUrl === input.careersUrl);
-      if (existingSource) {
+      const matchedSource =
+        company.sources.find((source) => source.baseUrl === input.careersUrl) ??
+        company.sources.find((source) => source.baseUrl === previousCareersUrl);
+
+      if (matchedSource) {
+        if (
+          matchedSource.baseUrl !== input.careersUrl ||
+          matchedSource.atsType !== input.atsType ||
+          matchedSource.type !== toSourceType(input.atsType)
+        ) {
+          await prisma.source.update({
+            where: { id: matchedSource.id },
+            data: {
+              baseUrl: input.careersUrl,
+              atsType: input.atsType,
+              type: toSourceType(input.atsType),
+            },
+          });
+        }
+
         return {
           companyId: company.id,
           created: false,
-          sourceId: existingSource.id,
+          sourceId: matchedSource.id,
           sourceCreated: false,
         };
       }
