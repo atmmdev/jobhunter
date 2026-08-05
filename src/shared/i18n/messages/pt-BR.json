@@ -41,7 +41,7 @@
     "emptyValue": "—",
     "comingSoon": "Em fases posteriores",
     "focusCountriesTitle": "Países de foco",
-    "focusCountriesSubtitle": "Prioridades de relocação e busca, agrupadas por continente. Cada pílula mostra a bandeira e a quantidade de vagas; passe o mouse para ver o nome do país.",
+    "focusCountriesSubtitle": "Prioridades de relocação e busca, agrupadas por continente. Cada pílula mostra a bandeira e a quantidade de vagas;",
     "focusJobsBadge": "{count, plural, =0 {Nenhuma vaga} one {# vaga} other {# vagas}}",
     "focusRegions": {
       "europe": "Europa",
