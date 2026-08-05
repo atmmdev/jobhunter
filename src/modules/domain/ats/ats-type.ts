@@ -6,6 +6,7 @@ export const ATS_TYPES = [
   'BAMBOOHR',
   'SMARTRECRUITERS',
   'TEAMTAILOR',
+  'PERSONIO',
   'GUPY',
   'KENOBY',
   'SOLIDES',

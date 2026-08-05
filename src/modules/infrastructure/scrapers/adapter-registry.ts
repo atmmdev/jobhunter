@@ -9,6 +9,7 @@ import { GenericCareersAdapter } from '@/modules/infrastructure/scrapers/generic
 import { GreenhouseAdapter } from '@/modules/infrastructure/scrapers/greenhouse.adapter';
 import { GupyAdapter } from '@/modules/infrastructure/scrapers/gupy.adapter';
 import { LeverAdapter } from '@/modules/infrastructure/scrapers/lever.adapter';
+import { PersonioAdapter } from '@/modules/infrastructure/scrapers/personio.adapter';
 import { SmartRecruitersAdapter } from '@/modules/infrastructure/scrapers/smartrecruiters.adapter';
 import { TeamTailorAdapter } from '@/modules/infrastructure/scrapers/teamtailor.adapter';
 import { WorkdayAdapter } from '@/modules/infrastructure/scrapers/workday.adapter';
@@ -30,6 +31,7 @@ export class JobSourceAdapterRegistry {
       new SmartRecruitersAdapter(),
       new BambooHrAdapter(),
       new TeamTailorAdapter(),
+      new PersonioAdapter(),
       new GenericCareersAdapter(),
     ],
   ) {

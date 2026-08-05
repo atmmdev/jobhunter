@@ -129,13 +129,29 @@ export async function detectManualBlockers(page: Page): Promise<string | null> {
 }
 
 /**
- * Looks for thank-you / confirmation copy after submit.
+ * Looks for thank-you / confirmation copy after submit (en + pt-BR).
  */
 export async function detectApplyConfirmation(page: Page): Promise<boolean> {
-  const confirmation = page
-    .getByText(/thank you|application (has been )?submitted|successfully applied|we received/i)
-    .first();
-  return confirmation.isVisible().catch(() => false);
+  const patterns = [
+    /thank you|thanks for (your )?appl/i,
+    /application (has been )?submitted|successfully applied|we received your application/i,
+    /candidatura (enviada|recebida)|obrigad[oa].*candidat/i,
+    /recebemos (a )?sua candidatura|inscri(ç|c)[aã]o (enviada|conclu(í|i)da)/i,
+  ];
+
+  for (const pattern of patterns) {
+    const confirmation = page.getByText(pattern).first();
+    if (await confirmation.isVisible().catch(() => false)) {
+      return true;
+    }
+  }
+
+  const url = page.url().toLowerCase();
+  if (/thank|success|confirmation|obrigad|sucesso|enviad/.test(url)) {
+    return true;
+  }
+
+  return false;
 }
 
 /**
@@ -143,7 +159,9 @@ export async function detectApplyConfirmation(page: Page): Promise<boolean> {
  */
 export async function clickSubmitIfPresent(page: Page): Promise<boolean> {
   const button = page
-    .getByRole('button', { name: /submit application|submit|apply now|apply/i })
+    .getByRole('button', {
+      name: /submit application|submit|apply now|apply|enviar candidatura|candidatar|enviar/i,
+    })
     .first();
   if (!(await button.isVisible().catch(() => false))) {
     return false;

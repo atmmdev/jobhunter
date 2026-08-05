@@ -20,6 +20,7 @@ const RUNNABLE_ATS = new Set([
   'SMARTRECRUITERS',
   'BAMBOOHR',
   'TEAMTAILOR',
+  'PERSONIO',
   'CUSTOM',
 ]);
 

@@ -39,6 +39,10 @@ describe('detectAtsType', () => {
     assert.equal(detectAtsType('https://bambuser.teamtailor.com/jobs'), 'TEAMTAILOR');
   });
 
+  it('detects Personio', () => {
+    assert.equal(detectAtsType('https://acme.jobs.personio.de/'), 'PERSONIO');
+  });
+
   it('detects Apinfo', () => {
     assert.equal(detectAtsType('http://www.apinfo.com/apinfo'), 'APINFO');
   });

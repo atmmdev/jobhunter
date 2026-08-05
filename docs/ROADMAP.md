@@ -109,7 +109,8 @@ Phased delivery toward a production-ready system. Each phase must be shippable a
 - [x] Credential vault encryption primitives (+ Prisma repo)
 - [x] UI / use cases to manage vaulted storage-state (Settings)
 - [x] Auto-apply loads vault storage-state when present
-- [ ] Hardened auto-submit (`PLAYWRIGHT_AUTO_SUBMIT=true`)
+- [x] Auto-submit confirmation hardening (en + pt-BR + URL heuristics)
+- [ ] Further strategy-specific submit hardening on live ATS forms
 
 **Exit criteria:** Approved jobs can auto-apply on supported ATS with safe failure modes.  
 **Current behavior:** Opens apply URL, fills common fields (incl. resume file when possible), saves screenshot/HTML artifacts, returns `MANUAL_REQUIRED` unless `PLAYWRIGHT_AUTO_SUBMIT=true` and confirmation is detected.
@@ -118,7 +119,7 @@ Phased delivery toward a production-ready system. Each phase must be shippable a
 
 ## Phase 7 — Expanded Sources
 
-**Status:** Partial (~60%)
+**Status:** Partial (~65%)
 
 - [x] Ashby adapter
 - [x] Workday adapter (CXS)
@@ -126,9 +127,10 @@ Phased delivery toward a production-ready system. Each phase must be shippable a
 - [x] BambooHR adapter (careers/list + detail JSON)
 - [x] SmartRecruiters adapter (public postings API)
 - [x] TeamTailor adapter (`/jobs.json` feed)
-- [ ] Kenoby, Solides
-- [ ] LinkedIn / Indeed (cautious)
-- [ ] Catho
+- [x] Personio adapter (public XML board)
+- [ ] Kenoby, Solides (blocked: no stable public unauthenticated API)
+- [ ] LinkedIn / Indeed (cautious / anti-bot)
+- [ ] Catho (anti-bot 403 from datacenter IPs)
 - [x] APInfo (homepage recent jobs)
 - [ ] Telegram + Slack ingest
 
@@ -153,11 +155,12 @@ Phased delivery toward a production-ready system. Each phase must be shippable a
 
 ## Phase 9 — Hardening & Production
 
-**Status:** Early
+**Status:** Partial
 
 - [ ] Queue workers (Redis/BullMQ or equivalent)
-- [ ] Rate limiters & observability dashboards
-- [ ] Backup/restore docs
+- [x] Scrape rate pacing (`SCRAPE_DELAY_MS` between sources)
+- [x] Structured JSON logs + correlation IDs on scrape runs
+- [x] Backup/restore docs (`docs/BACKUP.md`)
 - [ ] Security review (secrets, authz)
 - [x] CI workflow baseline
 - [ ] Performance pass on heavy tables

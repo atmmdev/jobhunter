@@ -212,3 +212,26 @@ export function extractTeamTailorOrigin(url: string): string | null {
     return null;
   }
 }
+
+export interface PersonioBoardParts {
+  company: string;
+  host: string;
+}
+
+/**
+ * Extracts Personio career board parts from `*.jobs.personio.de|com` URLs.
+ * Example: https://acme.jobs.personio.de/
+ */
+export function extractPersonioBoard(url: string): PersonioBoardParts | null {
+  try {
+    const parsed = new URL(url.includes('://') ? url : `https://${url}`);
+    const host = parsed.hostname.toLowerCase();
+    const match = host.match(/^([a-z0-9-]+)\.jobs\.personio\.(de|com)$/i);
+    if (!match?.[1]) {
+      return null;
+    }
+    return { company: match[1], host };
+  } catch {
+    return null;
+  }
+}

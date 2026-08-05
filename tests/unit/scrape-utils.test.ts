@@ -7,6 +7,7 @@ import {
   extractGreenhouseBoardToken,
   extractGupySubdomain,
   extractLeverSite,
+  extractPersonioBoard,
   extractSmartRecruitersCompany,
   extractTeamTailorOrigin,
   extractWorkdayBoard,
@@ -83,6 +84,14 @@ describe('extract board tokens', () => {
       'https://bambuser.teamtailor.com',
     );
     assert.equal(extractTeamTailorOrigin('https://www.teamtailor.com/'), null);
+  });
+
+  it('extracts Personio board', () => {
+    assert.deepEqual(extractPersonioBoard('https://acme.jobs.personio.de/'), {
+      company: 'acme',
+      host: 'acme.jobs.personio.de',
+    });
+    assert.equal(extractPersonioBoard('https://boards.greenhouse.io/acme'), null);
   });
 });
 

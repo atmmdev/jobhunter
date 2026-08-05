@@ -203,7 +203,7 @@
     "next": "Next",
     "run": "Run",
     "running": "Running…",
-    "runHint": "Run works for Greenhouse, Lever, Ashby, Apinfo, Gupy, Workday, SmartRecruiters, BambooHR, TeamTailor, and CUSTOM careers pages. Jobs appear under Jobs.",
+    "runHint": "Run works for Greenhouse, Lever, Ashby, Apinfo, Gupy, Workday, SmartRecruiters, BambooHR, TeamTailor, Personio, and CUSTOM careers pages. Jobs appear under Jobs.",
     "runResult": "{adapter}: found {found}, created {created}, updated {updated}",
     "enabled": "Enabled",
     "disabled": "Disabled",

@@ -30,9 +30,10 @@ A dashboard to:
 | SmartRecruiters | Public postings API |
 | BambooHR | Public careers/list JSON |
 | TeamTailor | Public `/jobs.json` feed |
+| Personio | Public XML board (`*.jobs.personio.de|com/xml`) |
 | CUSTOM | Generic HTML careers fallback |
 
-**Not ready yet:** LinkedIn / Indeed discovery, Telegram/Slack ingest, trusted auto-submit at scale, production queue/workers, vault UI for browser sessions.
+**Not ready yet:** Kenoby / Solides / Catho (no stable public API or strong anti-bot), LinkedIn / Indeed discovery, Telegram/Slack ingest, trusted auto-submit at scale, production Redis queue.
 
 ---
 
@@ -79,6 +80,7 @@ Edit `.env` and set at least:
 | `PLAYWRIGHT_HEADLESS` | optional | Default `true` (set `false` to watch the browser) |
 | `PLAYWRIGHT_AUTO_SUBMIT` | optional | Default `false` — **keep false** unless you intend to submit live applications |
 | `ENCRYPTION_KEY` | optional | `openssl rand -hex 32` — needed for credential vault |
+| `SCRAPE_DELAY_MS` | optional | Delay between sources in `scrape:run-all` (default `750`) |
 
 ### What `PLAYWRIGHT_AUTO_SUBMIT` means
 
@@ -164,6 +166,9 @@ npm run scrape:run-all
 | `npm run scrape:run-all` | Scrape all enabled supported sources |
 | `npx playwright install chromium` | Install browser for auto-apply |
 
+Backups: see [`BACKUP.md`](./BACKUP.md).
+
+
 ---
 
 ## Sharing this project with others
@@ -200,6 +205,7 @@ npm run scrape:run-all
 - Product vision: [`PROJECT.md`](./PROJECT.md)
 - Roadmap / phases: [`ROADMAP.md`](./ROADMAP.md)
 - Backlog: [`TODO.md`](./TODO.md)
+- Backup / restore: [`BACKUP.md`](./BACKUP.md)
 - Scrapers: [`SCRAPERS.md`](./SCRAPERS.md)
 - ATS coverage: [`ATS.md`](./ATS.md)
 - Playwright rules: [`PLAYWRIGHT.md`](./PLAYWRIGHT.md)

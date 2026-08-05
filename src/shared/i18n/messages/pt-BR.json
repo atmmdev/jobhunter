@@ -203,7 +203,7 @@
     "next": "Próxima",
     "run": "Rodar",
     "running": "Rodando…",
-    "runHint": "Rodar funciona para Greenhouse, Lever, Ashby, Apinfo, Gupy, Workday, SmartRecruiters, BambooHR, TeamTailor e páginas CUSTOM. As vagas aparecem em Vagas.",
+    "runHint": "Rodar funciona para Greenhouse, Lever, Ashby, Apinfo, Gupy, Workday, SmartRecruiters, BambooHR, TeamTailor, Personio e páginas CUSTOM. As vagas aparecem em Vagas.",
     "runResult": "{adapter}: encontradas {found}, criadas {created}, atualizadas {updated}",
     "enabled": "Ativa",
     "disabled": "Inativa",

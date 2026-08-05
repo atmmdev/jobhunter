@@ -259,6 +259,7 @@
 | PayU                                   | https://corporate.payu.com                     |
 | Payfully                               | https://www.payfully.co                        |
 | People per Hour                        | http://www.peopleperhour.com/freelance-jobs    |
+| Personio ACME (demo)                   | https://acme.jobs.personio.de/                 |
 | Percona                                | https://www.percona.com                        |
 | Pex                                    | https://pex.com                                |
 | Pitch ME                               | https://pitchme.co                             |

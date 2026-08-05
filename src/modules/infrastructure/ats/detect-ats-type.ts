@@ -8,6 +8,7 @@ const ATS_PATTERNS: ReadonlyArray<{ atsType: AtsTypeValue; pattern: RegExp }> = 
   { atsType: 'BAMBOOHR', pattern: /bamboohr\.com/i },
   { atsType: 'SMARTRECRUITERS', pattern: /smartrecruiters\.com/i },
   { atsType: 'TEAMTAILOR', pattern: /teamtailor\.com/i },
+  { atsType: 'PERSONIO', pattern: /personio\.(de|com)/i },
   { atsType: 'GUPY', pattern: /gupy\.io/i },
   { atsType: 'KENOBY', pattern: /kenoby\.com/i },
   { atsType: 'SOLIDES', pattern: /solides\.com(\.br)?/i },

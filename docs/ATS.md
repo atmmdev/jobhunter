@@ -21,14 +21,15 @@ Provide first-class adapters for Applicant Tracking Systems and adjacent job pla
 | BambooHR | `BAMBOOHR` | Careers list/detail JSON | P2 ✅ |
 | SmartRecruiters | `SMARTRECRUITERS` | Public postings API | P2 ✅ |
 | TeamTailor | `TEAMTAILOR` | Public `/jobs.json` feed | P2 ✅ |
+| Personio | `PERSONIO` | Public XML board | P2 ✅ |
 
 ### Brazil-focused ATS / HR
 
 | Platform | Enum | Notes |
 | -------- | ---- | ----- |
-| Gupy | `GUPY` | Very common in BR tech |
-| Kenoby | `KENOBY` | BR ATS |
-| Solides | `SOLIDES` | BR HR/ATS |
+| Gupy | `GUPY` | Very common in BR tech — adapter ✅ |
+| Kenoby | `KENOBY` | BR ATS — blocked (no public unauth API) |
+| Solides | `SOLIDES` | BR HR/ATS — blocked (portal is client-side / auth API) |
 
 ### Job Boards / Networks
 
@@ -61,6 +62,7 @@ Implement `detectAtsType(url: string): AtsType` in infrastructure.
 | `bamboohr.com` | BAMBOOHR |
 | `smartrecruiters.com` | SMARTRECRUITERS |
 | `teamtailor.com` | TEAMTAILOR |
+| `jobs.personio.de` / `jobs.personio.com` | PERSONIO |
 | `gupy.io` | GUPY |
 | `kenoby.com` | KENOBY |
 | `solides.com.br` / `solides.*` | SOLIDES |
@@ -108,6 +110,7 @@ Always capture vendor job ids when available:
 | SmartRecruiters | posting id |
 | BambooHR | job opening id |
 | TeamTailor | feed item id / job UUID |
+| Personio | position id |
 | Gupy | job id from URL/API |
 
 `@@unique([sourceId, externalId])` prevents duplicates.

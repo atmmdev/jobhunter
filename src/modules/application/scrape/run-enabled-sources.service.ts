@@ -1,6 +1,8 @@
-import type { JobSourceAdapterRegistry } from '@/modules/infrastructure/scrapers/adapter-registry';
-import type { ScrapePersistenceRepository } from '@/modules/domain/scrape/scrape-persistence.repository';
 import type { RunSourceScrapeService } from '@/modules/application/scrape/run-source-scrape.service';
+import type { ScrapePersistenceRepository } from '@/modules/domain/scrape/scrape-persistence.repository';
+import type { JobSourceAdapterRegistry } from '@/modules/infrastructure/scrapers/adapter-registry';
+import { delay, getScrapeDelayMs } from '@/shared/lib/delay';
+import { createCorrelationId, rootLogger } from '@/shared/logging/logger';
 
 export interface RunEnabledSourceResult {
   sourceId: string;
@@ -11,6 +13,7 @@ export interface RunEnabledSourceResult {
   jobsCreated?: number;
   jobsUpdated?: number;
   error?: string;
+  correlationId?: string;
 }
 
 /**
@@ -24,13 +27,24 @@ export class RunEnabledSourcesService {
   ) {}
 
   async execute(): Promise<RunEnabledSourceResult[]> {
+    const batchId = createCorrelationId('scrape-batch');
+    const log = rootLogger.child({ correlationId: batchId });
     const sources = await this.persistence.listEnabledForScrape();
+    const delayMs = getScrapeDelayMs();
     const results: RunEnabledSourceResult[] = [];
+    let runnableIndex = 0;
+
+    log.info('scrape.batch.started', { sourceCount: sources.length, delayMs });
 
     for (const source of sources) {
       if (!this.adapters.resolve(source)) {
         continue;
       }
+
+      if (runnableIndex > 0 && delayMs > 0) {
+        await delay(delayMs);
+      }
+      runnableIndex += 1;
 
       try {
         const result = await this.runSource.execute({ sourceId: source.id });
@@ -42,6 +56,7 @@ export class RunEnabledSourcesService {
           jobsFound: result.jobsFound,
           jobsCreated: result.jobsCreated,
           jobsUpdated: result.jobsUpdated,
+          correlationId: result.correlationId,
         });
       } catch (error) {
         results.push({
@@ -52,6 +67,12 @@ export class RunEnabledSourcesService {
         });
       }
     }
+
+    log.info('scrape.batch.finished', {
+      ran: results.length,
+      ok: results.filter((item) => item.ok).length,
+      failed: results.filter((item) => !item.ok).length,
+    });
 
     return results;
   }

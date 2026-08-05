@@ -3,6 +3,7 @@ import type { JobRepository } from '@/modules/domain/job/job.repository';
 import type { JobSourceAdapterRegistry } from '@/modules/infrastructure/scrapers/adapter-registry';
 import type { ScrapePersistenceRepository } from '@/modules/domain/scrape/scrape-persistence.repository';
 import { buildJobContentHash } from '@/shared/lib/job-content-hash';
+import { createCorrelationId, rootLogger } from '@/shared/logging/logger';
 import type { RunSourceDto } from '@/shared/schemas/scrape.schema';
 
 export interface RunSourceScrapeResult {
@@ -13,6 +14,7 @@ export interface RunSourceScrapeResult {
   jobsUpdated: number;
   status: 'SUCCESS' | 'PARTIAL' | 'FAILED';
   errorSummary: string | null;
+  correlationId: string;
 }
 
 /**
@@ -26,6 +28,9 @@ export class RunSourceScrapeService {
   ) {}
 
   async execute(input: RunSourceDto): Promise<RunSourceScrapeResult> {
+    const correlationId = createCorrelationId('scrape');
+    const log = rootLogger.child({ correlationId, sourceId: input.sourceId });
+
     const source = await this.persistence.findSourceById(input.sourceId);
     if (!source) {
       throw new NotFoundError('Source', input.sourceId);
@@ -40,6 +45,8 @@ export class RunSourceScrapeService {
         `No scraper adapter for ATS ${source.atsType ?? 'UNKNOWN'} (${source.baseUrl})`,
       );
     }
+
+    log.info('scrape.started', { adapter: adapter.key, atsType: source.atsType });
 
     const startedAt = new Date();
     let jobsFound = 0;
@@ -92,6 +99,7 @@ export class RunSourceScrapeService {
     } catch (error) {
       status = 'FAILED';
       errorSummary = error instanceof Error ? error.message : 'Unknown scrape error';
+      log.error('scrape.failed', { error: errorSummary });
     }
 
     if (status !== 'FAILED' && jobsFound > 0 && jobsCreated + jobsUpdated < jobsFound) {
@@ -110,6 +118,14 @@ export class RunSourceScrapeService {
     });
     await this.persistence.markSourceRun(source.id, status, finishedAt);
 
+    log.info('scrape.finished', {
+      status,
+      jobsFound,
+      jobsCreated,
+      jobsUpdated,
+      durationMs: finishedAt.getTime() - startedAt.getTime(),
+    });
+
     if (status === 'FAILED') {
       throw new ValidationError(errorSummary ?? 'Scrape failed');
     }
@@ -122,6 +138,7 @@ export class RunSourceScrapeService {
       jobsUpdated,
       status,
       errorSummary,
+      correlationId,
     };
   }
 }

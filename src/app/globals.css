@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Only scan app sources — ignore probe HTML/JS leftovers at repo root */
+@source not "../../tmp-*";
+@source not "../../tmp.*";
+
 :root {
   --background: #f7f7f5;
   --foreground: #141414;

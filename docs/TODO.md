@@ -81,7 +81,8 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 - [x] Credential vault encryption helpers (AES-256-GCM + Prisma repository)
 - [x] UI to save provider storage-state into vault (Settings)
 - [x] Auto-apply injects vaulted storage-state into Playwright context
-- [ ] Auto-submit confirmation hardening (`PLAYWRIGHT_AUTO_SUBMIT`)
+- [x] Auto-submit confirmation hardening (en + pt-BR text + URL heuristics)
+- [ ] Further live ATS submit confirmation coverage
 
 ---
 
@@ -93,10 +94,11 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 - [x] BambooHR adapter (careers/list + `/careers/{id}/detail`)
 - [x] SmartRecruiters adapter (public company postings API)
 - [x] TeamTailor adapter (public `/jobs.json` JSON Feed)
-- [ ] Kenoby / Solides adapters
+- [x] Personio adapter (public XML board)
+- [ ] Kenoby / Solides adapters (blocked — no public unauth API)
 - [ ] LinkedIn discovery (careful)
 - [ ] Indeed discovery (careful)
-- [ ] Catho adapter
+- [ ] Catho adapter (anti-bot)
 - [x] APInfo adapter (homepage recent jobs)
 - [ ] Telegram source ingest
 - [ ] Slack source ingest
@@ -121,11 +123,11 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 ## Hardening (Phase 9)
 
 - [ ] Background queue (BullMQ/Redis or equivalent)
-- [ ] Rate limit per source
-- [ ] Structured logs + correlation IDs
+- [x] Rate pacing per scrape batch (`SCRAPE_DELAY_MS`)
+- [x] Structured logs + correlation IDs (scrape)
 - [x] CI workflow baseline
 - [ ] CI: e2e smoke
-- [ ] Backup documentation
+- [x] Backup documentation (`docs/BACKUP.md`)
 - [ ] Security pass on secrets & authz
 - [ ] Performance indexes review
 
