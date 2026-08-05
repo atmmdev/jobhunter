@@ -2,9 +2,8 @@
 
 import { revalidatePath } from 'next/cache';
 
-import { DomainError } from '@/modules/domain/shared/errors';
-import { auth } from '@/modules/infrastructure/auth/auth';
 import { createScrapeModule } from '@/modules/infrastructure/composition';
+import { requireUserId } from '@/shared/auth/require-user';
 import { runSourceSchema } from '@/shared/schemas/scrape.schema';
 
 export type ActionResult<T> =
@@ -12,7 +11,7 @@ export type ActionResult<T> =
   | { ok: false; error: string };
 
 /**
- * Runs job discovery for a single source (Greenhouse/Lever today).
+ * Runs job discovery for a single source.
  */
 export async function runSourceScrapeAction(
   input: unknown,
@@ -26,11 +25,7 @@ export async function runSourceScrapeAction(
   }>
 > {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      throw new DomainError('UNAUTHORIZED', 'You must be signed in');
-    }
-
+    await requireUserId();
     const parsed = runSourceSchema.parse(input);
     const { runSource } = createScrapeModule();
     const result = await runSource.execute(parsed);

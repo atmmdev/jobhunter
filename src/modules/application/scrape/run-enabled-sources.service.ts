@@ -1,5 +1,6 @@
 import type { RunSourceScrapeService } from '@/modules/application/scrape/run-source-scrape.service';
 import type { ScrapePersistenceRepository } from '@/modules/domain/scrape/scrape-persistence.repository';
+import { scrapeConcurrencyGuard } from '@/modules/infrastructure/scrape/scrape-concurrency-guard';
 import type { JobSourceAdapterRegistry } from '@/modules/infrastructure/scrapers/adapter-registry';
 import { delay, getScrapeDelayMs } from '@/shared/lib/delay';
 import { createCorrelationId, rootLogger } from '@/shared/logging/logger';
@@ -27,6 +28,10 @@ export class RunEnabledSourcesService {
   ) {}
 
   async execute(): Promise<RunEnabledSourceResult[]> {
+    return scrapeConcurrencyGuard.runBatchExclusive(() => this.executeUnlocked());
+  }
+
+  private async executeUnlocked(): Promise<RunEnabledSourceResult[]> {
     const batchId = createCorrelationId('scrape-batch');
     const log = rootLogger.child({ correlationId: batchId });
     const sources = await this.persistence.listEnabledForScrape();

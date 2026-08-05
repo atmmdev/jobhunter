@@ -2,6 +2,7 @@ import { NotFoundError, ValidationError } from '@/modules/domain/shared/errors';
 import type { JobRepository } from '@/modules/domain/job/job.repository';
 import type { JobSourceAdapterRegistry } from '@/modules/infrastructure/scrapers/adapter-registry';
 import type { ScrapePersistenceRepository } from '@/modules/domain/scrape/scrape-persistence.repository';
+import { scrapeConcurrencyGuard } from '@/modules/infrastructure/scrape/scrape-concurrency-guard';
 import { buildJobContentHash } from '@/shared/lib/job-content-hash';
 import { createCorrelationId, rootLogger } from '@/shared/logging/logger';
 import type { RunSourceDto } from '@/shared/schemas/scrape.schema';
@@ -28,6 +29,10 @@ export class RunSourceScrapeService {
   ) {}
 
   async execute(input: RunSourceDto): Promise<RunSourceScrapeResult> {
+    return scrapeConcurrencyGuard.runExclusive(input.sourceId, () => this.executeUnlocked(input));
+  }
+
+  private async executeUnlocked(input: RunSourceDto): Promise<RunSourceScrapeResult> {
     const correlationId = createCorrelationId('scrape');
     const log = rootLogger.child({ correlationId, sourceId: input.sourceId });
 

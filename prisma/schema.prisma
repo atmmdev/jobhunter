@@ -218,6 +218,8 @@ model Job {
   @@index([companyId])
   @@index([isRemote])
   @@index([country])
+  @@index([status, scrapedAt])
+  @@index([sourceId, status])
   @@map("jobs")
 }
 
@@ -304,6 +306,7 @@ model Application {
   @@index([appliedAt])
   @@index([userId])
   @@index([jobId])
+  @@index([userId, status])
   @@map("applications")
 }
 

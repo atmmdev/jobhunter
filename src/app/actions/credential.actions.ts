@@ -3,8 +3,8 @@
 import { revalidatePath } from 'next/cache';
 
 import { DomainError } from '@/modules/domain/shared/errors';
-import { auth } from '@/modules/infrastructure/auth/auth';
 import { createCredentialModule } from '@/modules/infrastructure/composition';
+import { requireUserId } from '@/shared/auth/require-user';
 import {
   deleteVaultSecretSchema,
   upsertVaultSecretSchema,
@@ -13,14 +13,6 @@ import {
 export type ActionResult<T> =
   | { ok: true; data: T }
   | { ok: false; error: string };
-
-async function requireUserId(): Promise<string> {
-  const session = await auth();
-  if (!session?.user?.id) {
-    throw new DomainError('UNAUTHORIZED', 'You must be signed in');
-  }
-  return session.user.id;
-}
 
 /**
  * Saves an encrypted Playwright storage-state for a provider.

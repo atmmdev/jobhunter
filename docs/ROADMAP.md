@@ -155,16 +155,17 @@ Phased delivery toward a production-ready system. Each phase must be shippable a
 
 ## Phase 9 — Hardening & Production
 
-**Status:** Partial
+**Status:** Partial (~50%)
 
 - [ ] Queue workers (Redis/BullMQ or equivalent)
+- [x] In-process scrape concurrency guard (source + batch)
 - [x] Scrape rate pacing (`SCRAPE_DELAY_MS` between sources)
 - [x] Structured JSON logs + correlation IDs on scrape runs
 - [x] Backup/restore docs (`docs/BACKUP.md`)
-- [ ] Security review (secrets, authz)
+- [x] Security checklist (`docs/SECURITY.md`) + shared `requireUserId`
 - [x] CI workflow baseline
-- [ ] Performance pass on heavy tables
-- [ ] E2E suite in CI
+- [x] Performance indexes (`jobs` status/scrapedAt, sourceId/status; `applications` userId/status)
+- [x] E2E smoke suite in CI (login + auth redirect)
 
 **Exit criteria:** Production deployment checklist complete.
 

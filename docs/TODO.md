@@ -123,13 +123,14 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 ## Hardening (Phase 9)
 
 - [ ] Background queue (BullMQ/Redis or equivalent)
+- [x] In-process scrape concurrency guard
 - [x] Rate pacing per scrape batch (`SCRAPE_DELAY_MS`)
 - [x] Structured logs + correlation IDs (scrape)
 - [x] CI workflow baseline
-- [ ] CI: e2e smoke
+- [x] CI: e2e smoke (`tests/e2e/smoke.spec.ts`)
 - [x] Backup documentation (`docs/BACKUP.md`)
-- [ ] Security pass on secrets & authz
-- [ ] Performance indexes review
+- [x] Security checklist (`docs/SECURITY.md`)
+- [x] Performance indexes review (jobs + applications composites)
 
 ---
 

@@ -160,6 +160,7 @@ npm run scrape:run-all
 | `npm run build` / `npm start` | Production build & serve |
 | `npm run typecheck` | TypeScript |
 | `npm test` | Unit tests |
+| `npm run test:e2e` | Playwright smoke (build + start, or reuse running server) |
 | `npm run db:migrate` | Apply migrations |
 | `npm run db:seed` | Seed admin + default resumes |
 | `npm run db:studio` | Browse DB |
@@ -206,6 +207,7 @@ Backups: see [`BACKUP.md`](./BACKUP.md).
 - Roadmap / phases: [`ROADMAP.md`](./ROADMAP.md)
 - Backlog: [`TODO.md`](./TODO.md)
 - Backup / restore: [`BACKUP.md`](./BACKUP.md)
+- Security checklist: [`SECURITY.md`](./SECURITY.md)
 - Scrapers: [`SCRAPERS.md`](./SCRAPERS.md)
 - ATS coverage: [`ATS.md`](./ATS.md)
 - Playwright rules: [`PLAYWRIGHT.md`](./PLAYWRIGHT.md)
