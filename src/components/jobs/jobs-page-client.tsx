@@ -1,7 +1,8 @@
 'use client';
 
+import { Search } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 
 import { CreateJobForm } from '@/components/jobs/create-job-form';
 import { JobsTable } from '@/components/jobs/jobs-table';
@@ -40,18 +41,24 @@ export function JobsPageClient({ jobs, total, status, search }: JobsPageClientPr
   const router = useRouter();
   const [showForm, setShowForm] = useState(false);
   const [localSearch, setLocalSearch] = useState(search ?? '');
-  const [localStatus, setLocalStatus] = useState(status ?? '');
+  const [localStatus, setLocalStatus] = useState<string>(status ?? '');
+  const [pending, startTransition] = useTransition();
 
-  const applyFilters = () => {
+  const applyFilters = (overrides?: { search?: string; status?: string }) => {
+    const nextSearch = overrides?.search ?? localSearch;
+    const nextStatus = overrides?.status ?? localStatus;
+
     const params = new URLSearchParams();
-    if (localSearch.trim()) {
-      params.set('search', localSearch.trim());
+    if (nextSearch.trim()) {
+      params.set('search', nextSearch.trim());
     }
-    if (localStatus) {
-      params.set('status', localStatus);
+    if (nextStatus) {
+      params.set('status', nextStatus);
     }
     const query = params.toString();
-    router.push(query ? `/jobs?${query}` : '/jobs');
+    startTransition(() => {
+      router.push(query ? `/jobs?${query}` : '/jobs');
+    });
   };
 
   return (
@@ -73,16 +80,36 @@ export function JobsPageClient({ jobs, total, status, search }: JobsPageClientPr
         </Card>
       ) : null}
 
-      <div className="flex w-full justify-between gap-3">
-        <div className="flex gap-3">
-          <Input
-            value={localSearch}
-            onChange={(event) => setLocalSearch(event.target.value)}
-            placeholder={t('search')}
-          />
+      <div className="flex w-full flex-wrap items-center justify-between gap-3">
+        <form
+          className="flex flex-1 flex-wrap items-center gap-3"
+          onSubmit={(event) => {
+            event.preventDefault();
+            applyFilters();
+          }}
+        >
+          <div className="relative w-full sm:w-80">
+            <Search
+              aria-hidden
+              className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+            />
+            <Input
+              type="search"
+              className="pl-9"
+              value={localSearch}
+              onChange={(event) => setLocalSearch(event.target.value)}
+              placeholder={t('search')}
+              aria-label={t('search')}
+            />
+          </div>
           <Select
+            className="w-full sm:w-56"
             value={localStatus}
-            onChange={(event) => setLocalStatus(event.target.value)}
+            onChange={(event) => {
+              const nextStatus = event.target.value;
+              setLocalStatus(nextStatus);
+              applyFilters({ status: nextStatus });
+            }}
             aria-label={t('filterStatus')}
           >
             <option value="">{t('allStatuses')}</option>
@@ -92,10 +119,10 @@ export function JobsPageClient({ jobs, total, status, search }: JobsPageClientPr
               </option>
             ))}
           </Select>
-          <Button type="button" variant="secondary" onClick={applyFilters}>
-            {t('filterStatus')}
+          <Button type="submit" variant="secondary" disabled={pending}>
+            {t('searchButton')}
           </Button>
-        </div>
+        </form>
         <Button type="button" onClick={() => setShowForm((value) => !value)}>
           {t('add')}
         </Button>

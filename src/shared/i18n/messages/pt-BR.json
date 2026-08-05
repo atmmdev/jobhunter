@@ -58,6 +58,7 @@
     "empty": "Nenhuma vaga ainda. Adicione manualmente ou sincronize fontes nas fases 2–3.",
     "add": "Adicionar vaga",
     "search": "Buscar título, empresa, localização…",
+    "searchButton": "Buscar",
     "filterStatus": "Status",
     "allStatuses": "Todos os status",
     "total": "{count} vagas",

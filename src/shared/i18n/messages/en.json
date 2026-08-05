@@ -58,6 +58,7 @@
     "empty": "No jobs yet. Add one manually or sync sources in Phase 2–3.",
     "add": "Add job",
     "search": "Search title, company, location…",
+    "searchButton": "Search",
     "filterStatus": "Status",
     "allStatuses": "All statuses",
     "total": "{count} jobs",

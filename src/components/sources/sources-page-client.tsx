@@ -98,7 +98,6 @@ export function SourcesPageClient({
       <div className="space-y-8">
         <div className="space-y-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm text-muted-foreground">{t('showing', { from, to, total })}</p>
             <Button
               type="button"
               disabled={pending}
