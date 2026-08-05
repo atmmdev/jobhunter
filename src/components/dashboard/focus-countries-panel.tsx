@@ -1,33 +1,58 @@
 import {
-  countryCodeToFlagEmoji,
+  FocusCountriesGrid,
+  type FocusRegionGroup,
+} from '@/components/dashboard/focus-countries-grid';
+import {
   countryNameAliases,
   groupFocusCountriesByRegion,
   localizeCountryName,
   type FocusCountryRegion,
 } from '@/modules/domain/analytics/focus-countries';
-import { cn } from '@/shared/lib/utils';
 
 interface FocusCountriesPanelProps {
   locale: string;
   title: string;
   subtitle: string;
   regionLabels: Record<FocusCountryRegion, string>;
+  /** Formats the accessible label for a country job badge. */
+  formatCountLabel: (count: number) => string;
   /** Optional job counts keyed by ISO code or free-text country name (case-insensitive). */
   jobCountsByCountry?: Record<string, number>;
 }
 
 /**
- * Dashboard panel listing relocation / search focus countries by region.
+ * Dashboard section listing relocation / search focus countries grouped in
+ * one card per continent.
  */
 export function FocusCountriesPanel({
   locale,
   title,
   subtitle,
   regionLabels,
+  formatCountLabel,
   jobCountsByCountry = {},
 }: FocusCountriesPanelProps) {
-  const groups = groupFocusCountriesByRegion();
   const countLookup = buildCountLookup(jobCountsByCountry);
+
+  const regions: FocusRegionGroup[] = groupFocusCountriesByRegion().map((group) => {
+    const countries = group.countries.map((country) => {
+      const name = localizeCountryName(country.code, locale);
+      const count = resolveJobCount(country.code, name, countLookup);
+      return {
+        code: country.code,
+        name,
+        count,
+        countLabel: formatCountLabel(count),
+      };
+    });
+
+    return {
+      region: group.region,
+      label: regionLabels[group.region],
+      total: countries.reduce((sum, country) => sum + country.count, 0),
+      countries,
+    };
+  });
 
   return (
     <section className="space-y-4">
@@ -35,46 +60,7 @@ export function FocusCountriesPanel({
         <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
         <p className="max-w-3xl text-sm text-muted-foreground">{subtitle}</p>
       </header>
-
-      <div className="space-y-5">
-        {groups.map((group) => (
-          <div key={group.region} className="space-y-2">
-            <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-              {regionLabels[group.region]}
-            </p>
-            <ul className="flex flex-wrap gap-2">
-              {group.countries.map((country) => {
-                const name = localizeCountryName(country.code, locale);
-                const flag = countryCodeToFlagEmoji(country.code);
-                const count = resolveJobCount(country.code, name, countLookup);
-                const hasJobs = count > 0;
-
-                return (
-                  <li key={country.code}>
-                    <span
-                      className={cn(
-                        'inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm',
-                        hasJobs
-                          ? 'border-sky-500/80 bg-sky-500/10 text-foreground'
-                          : 'border-border bg-background text-foreground',
-                      )}
-                      title={hasJobs ? `${name}: ${count}` : name}
-                    >
-                      <span aria-hidden className="text-base leading-none">
-                        {flag}
-                      </span>
-                      <span>{name}</span>
-                      {hasJobs ? (
-                        <span className="text-xs text-muted-foreground">({count})</span>
-                      ) : null}
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        ))}
-      </div>
+      <FocusCountriesGrid regions={regions} />
     </section>
   );
 }
