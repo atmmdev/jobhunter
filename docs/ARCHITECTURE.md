@@ -126,7 +126,7 @@ docs/                           # Project documentation
 ### Infrastructure
 
 - Prisma repositories
-- ATS adapters (Greenhouse, Lever, Ashby, Workday, SmartRecruiters, BambooHR, Gupy, …)
+- ATS adapters (Greenhouse, Lever, Ashby, Workday, SmartRecruiters, BambooHR, TeamTailor, Gupy, …)
 - Playwright browser service + site strategies
 - OpenAI-compatible AI client
 - Auth.js adapters

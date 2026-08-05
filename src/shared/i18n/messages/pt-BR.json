@@ -203,7 +203,7 @@
     "next": "Próxima",
     "run": "Rodar",
     "running": "Rodando…",
-    "runHint": "Rodar funciona para Greenhouse, Lever, Ashby, Apinfo, Gupy, Workday, SmartRecruiters, BambooHR e páginas CUSTOM. As vagas aparecem em Vagas.",
+    "runHint": "Rodar funciona para Greenhouse, Lever, Ashby, Apinfo, Gupy, Workday, SmartRecruiters, BambooHR, TeamTailor e páginas CUSTOM. As vagas aparecem em Vagas.",
     "runResult": "{adapter}: encontradas {found}, criadas {created}, atualizadas {updated}",
     "enabled": "Ativa",
     "disabled": "Inativa",
@@ -243,7 +243,27 @@
     "theme": "Tema",
     "themeLight": "Claro",
     "themeDark": "Escuro",
-    "themeSystem": "Sistema"
+    "themeSystem": "Sistema",
+    "vault": {
+      "title": "Cofre de credenciais",
+      "subtitle": "Guarde storage-state do Playwright criptografado para sessões logadas no auto-apply. O segredo não é exibido de novo após salvar.",
+      "encryptionMissing": "Defina ENCRYPTION_KEY no .env (openssl rand -hex 32) antes de salvar segredos.",
+      "saved": "Provedores salvos",
+      "empty": "Nenhuma entrada no cofre ainda.",
+      "updatedAt": "Atualizado {date}",
+      "delete": "Excluir",
+      "deleted": "Entrada removida.",
+      "provider": "Provedor",
+      "json": "JSON storageState",
+      "jsonHint": "Cole o storageState do Playwright (cookies/origins). Exporte com context.storageState().",
+      "save": "Salvar criptografado",
+      "savedOk": "Entrada salva no cofre.",
+      "providers": {
+        "linkedin": "LinkedIn",
+        "indeed": "Indeed",
+        "generic": "Genérico (qualquer site)"
+      }
+    }
   },
   "notifications": {
     "title": "Notificações",

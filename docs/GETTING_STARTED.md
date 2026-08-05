@@ -29,6 +29,7 @@ A dashboard to:
 | Workday | Public CXS JSON (`*.myworkdayjobs.com`) |
 | SmartRecruiters | Public postings API |
 | BambooHR | Public careers/list JSON |
+| TeamTailor | Public `/jobs.json` feed |
 | CUSTOM | Generic HTML careers fallback |
 
 **Not ready yet:** LinkedIn / Indeed discovery, Telegram/Slack ingest, trusted auto-submit at scale, production queue/workers, vault UI for browser sessions.
@@ -133,7 +134,8 @@ Open:
 4. Enable sources you care about, then click **Run** on supported ATS types (table above).
 5. Open **Jobs** — score, favorite, reject, or approve.
 6. Open **Applications** — track status, edit cover letters, or click **Auto-apply** (robot icon).
-7. Optional CLI for all enabled scrapable sources:
+7. Optional: **Settings → Credential vault** — paste Playwright `storageState` JSON (requires `ENCRYPTION_KEY`) for logged-in sessions.
+8. Optional CLI for all enabled scrapable sources:
 
 ```bash
 npm run scrape:run-all
@@ -188,6 +190,8 @@ npm run scrape:run-all
 | Workday Run fails | URL must be `*.wdN.myworkdayjobs.com/.../SiteName` (tenant + site in path) |
 | SmartRecruiters empty | Company identifier in URL must match API slug (e.g. `Canva`) |
 | BambooHR Run fails | URL must be `https://{subdomain}.bamboohr.com/careers` (not the marketing site) |
+| TeamTailor empty | Careers host must serve `/jobs.json` (e.g. `https://bambuser.teamtailor.com/jobs.json`) |
+| Vault save fails / encryption missing | Set `ENCRYPTION_KEY` to `openssl rand -hex 32` in `.env` |
 
 ---
 

@@ -1,11 +1,31 @@
+import type {
+  CredentialVaultEntryMeta,
+  CredentialVaultRepository,
+} from '@/modules/domain/credential/credential-vault.repository';
 import type { CredentialCrypto, EncryptedPayload } from '@/modules/infrastructure/security/credential-crypto';
 import { prisma } from '@/modules/infrastructure/prisma/client';
 
 /**
  * Persists encrypted provider credentials / Playwright storage-state JSON.
  */
-export class PrismaCredentialVaultRepository {
+export class PrismaCredentialVaultRepository implements CredentialVaultRepository {
   constructor(private readonly crypto: CredentialCrypto) {}
+
+  /**
+   * Lists vault entry metadata for a user (never returns ciphertext).
+   */
+  async listEntries(userId: string): Promise<CredentialVaultEntryMeta[]> {
+    const rows = await prisma.credentialVault.findMany({
+      where: { userId },
+      select: { provider: true, createdAt: true, updatedAt: true },
+      orderBy: { updatedAt: 'desc' },
+    });
+    return rows.map((row) => ({
+      provider: row.provider,
+      createdAt: row.createdAt,
+      updatedAt: row.updatedAt,
+    }));
+  }
 
   /**
    * Upserts encrypted secret for a user + provider key (e.g. `linkedin`, `indeed`).

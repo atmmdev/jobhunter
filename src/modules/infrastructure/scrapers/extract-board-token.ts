@@ -185,3 +185,30 @@ export function extractBambooHrSubdomain(url: string): string | null {
     return null;
   }
 }
+
+/**
+ * Extracts TeamTailor career-site origin for the public `/jobs.json` feed.
+ * Example: https://bambuser.teamtailor.com/jobs → https://bambuser.teamtailor.com
+ */
+export function extractTeamTailorOrigin(url: string): string | null {
+  try {
+    const parsed = new URL(url.includes('://') ? url : `https://${url}`);
+    const host = parsed.hostname.toLowerCase();
+    if (!host.includes('teamtailor.com')) {
+      return null;
+    }
+
+    const reserved = new Set(['www', 'api', 'app', 'login', 'support', 'assets-aws']);
+    const labels = host.split('.');
+    if (labels.length >= 3) {
+      const subdomain = labels[0];
+      if (subdomain && reserved.has(subdomain)) {
+        return null;
+      }
+    }
+
+    return parsed.origin;
+  } catch {
+    return null;
+  }
+}

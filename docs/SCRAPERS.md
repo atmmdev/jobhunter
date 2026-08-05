@@ -31,7 +31,7 @@ Scheduler / Manual Trigger
 
 | Type | Examples | Strategy |
 | ---- | -------- | -------- |
-| `ATS` | Greenhouse, Lever, Ashby, Workday, SmartRecruiters, BambooHR, Gupy… | Prefer public board JSON/API; HTML fallback |
+| `ATS` | Greenhouse, Lever, Ashby, Workday, SmartRecruiters, BambooHR, TeamTailor, Gupy… | Prefer public board JSON/API; HTML fallback |
 | `CAREERS` | Company career pages from `docs/companies-to-work/` | HTML parse + ATS detection redirect |
 | `JOB_BOARD` | LinkedIn, Indeed, Catho, APInfo | Authenticated or public listing adapters |
 | `TELEGRAM` | Job groups | Bot/MTProto or export ingestion |

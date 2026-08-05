@@ -79,7 +79,8 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 - [x] Failure artifacts storage (`storage/artifacts/apply/…`)
 - [x] Resume file upload into ATS forms (materialize `.txt` from contentText when needed)
 - [x] Credential vault encryption helpers (AES-256-GCM + Prisma repository)
-- [ ] UI to save provider storage-state into vault
+- [x] UI to save provider storage-state into vault (Settings)
+- [x] Auto-apply injects vaulted storage-state into Playwright context
 - [ ] Auto-submit confirmation hardening (`PLAYWRIGHT_AUTO_SUBMIT`)
 
 ---
@@ -91,7 +92,7 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 - [x] Gupy adapter (career SSR listing)
 - [x] BambooHR adapter (careers/list + `/careers/{id}/detail`)
 - [x] SmartRecruiters adapter (public company postings API)
-- [ ] TeamTailor adapter
+- [x] TeamTailor adapter (public `/jobs.json` JSON Feed)
 - [ ] Kenoby / Solides adapters
 - [ ] LinkedIn discovery (careful)
 - [ ] Indeed discovery (careful)

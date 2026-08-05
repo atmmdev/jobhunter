@@ -22,6 +22,7 @@
 | BandLab                                | https://bandlab.com                            |
 | Bandcamp                               | https://bandcamp.com                           |
 | Bandzoogle                             | https://bandzoogle.com                         |
+| Bambuser TeamTailor                    | https://bambuser.teamtailor.com/jobs           |
 | Baremetrics                            | https://baremetrics.com                        |
 | Basecamp                               | https://basecamp.com                           |
 | BeBanjo                                | https://bebanjo.com                            |
@@ -358,6 +359,7 @@
 | Taskade                                | https://taskade.com                            |
 | TatvaSoft                              | https://www.tatvasoft.com                      |
 | Teamflow                               | https://www.teamflow.com                       |
+| Teamtailor Careers                     | https://career.teamtailor.com/jobs             |
 | Tech me Abroad                         | http://techmeabroad.com                        |
 | Telerik                                | https://www.telerik.com                        |
 | Telestax                               | https://telestax.com                           |

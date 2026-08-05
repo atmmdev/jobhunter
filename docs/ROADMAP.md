@@ -107,7 +107,8 @@ Phased delivery toward a production-ready system. Each phase must be shippable a
 - [x] Failure artifacts + `MANUAL_REQUIRED` (default when submit disabled)
 - [x] Resume file upload (disk file or materialized `.txt`)
 - [x] Credential vault encryption primitives (+ Prisma repo)
-- [ ] UI / use cases to manage vaulted storage-state
+- [x] UI / use cases to manage vaulted storage-state (Settings)
+- [x] Auto-apply loads vault storage-state when present
 - [ ] Hardened auto-submit (`PLAYWRIGHT_AUTO_SUBMIT=true`)
 
 **Exit criteria:** Approved jobs can auto-apply on supported ATS with safe failure modes.  
@@ -117,14 +118,14 @@ Phased delivery toward a production-ready system. Each phase must be shippable a
 
 ## Phase 7 — Expanded Sources
 
-**Status:** Partial (~55%)
+**Status:** Partial (~60%)
 
 - [x] Ashby adapter
 - [x] Workday adapter (CXS)
 - [x] Gupy adapter (career SSR)
 - [x] BambooHR adapter (careers/list + detail JSON)
 - [x] SmartRecruiters adapter (public postings API)
-- [ ] TeamTailor
+- [x] TeamTailor adapter (`/jobs.json` feed)
 - [ ] Kenoby, Solides
 - [ ] LinkedIn / Indeed (cautious)
 - [ ] Catho

@@ -20,7 +20,7 @@ Provide first-class adapters for Applicant Tracking Systems and adjacent job pla
 | Workday | `WORKDAY` | Career site / feeds (variable) | P1 |
 | BambooHR | `BAMBOOHR` | Careers list/detail JSON | P2 ✅ |
 | SmartRecruiters | `SMARTRECRUITERS` | Public postings API | P2 ✅ |
-| TeamTailor | `TEAMTAILOR` | Career site / API | P2 |
+| TeamTailor | `TEAMTAILOR` | Public `/jobs.json` feed | P2 ✅ |
 
 ### Brazil-focused ATS / HR
 
@@ -107,6 +107,7 @@ Always capture vendor job ids when available:
 | Workday | requisition / path id |
 | SmartRecruiters | posting id |
 | BambooHR | job opening id |
+| TeamTailor | feed item id / job UUID |
 | Gupy | job id from URL/API |
 
 `@@unique([sourceId, externalId])` prevents duplicates.

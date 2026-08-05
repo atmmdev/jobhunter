@@ -11,6 +11,8 @@ export interface BrowserSession {
 export interface LaunchBrowserSessionOptions {
   headless?: boolean;
   timeoutMs?: number;
+  /** Playwright storageState JSON string (cookies/origins). */
+  storageStateJson?: string;
 }
 
 /**

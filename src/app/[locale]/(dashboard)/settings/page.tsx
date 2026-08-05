@@ -3,11 +3,13 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { SignOutButton } from '@/components/auth/sign-out-button';
 import { LocaleSwitcher } from '@/components/layout/locale-switcher';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
+import { CredentialVaultPanel } from '@/components/settings/credential-vault-panel';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { auth } from '@/modules/infrastructure/auth/auth';
+import { createCredentialModule } from '@/modules/infrastructure/composition';
 
 /**
- * Account settings: locale, theme, sign out.
+ * Account settings: locale, theme, credential vault, sign out.
  */
 export default async function SettingsPage({
   params,
@@ -18,6 +20,10 @@ export default async function SettingsPage({
   setRequestLocale(locale);
   const t = await getTranslations('settings');
   const session = await auth();
+  const { listVaultEntries, crypto } = createCredentialModule();
+  const entries = session?.user?.id
+    ? await listVaultEntries.execute(session.user.id)
+    : [];
 
   return (
     <div className="space-y-6">
@@ -42,6 +48,14 @@ export default async function SettingsPage({
           <SignOutButton />
         </CardContent>
       </Card>
+
+      <CredentialVaultPanel
+        encryptionConfigured={crypto.isConfigured()}
+        entries={entries.map((entry) => ({
+          provider: entry.provider,
+          updatedAt: entry.updatedAt.toISOString(),
+        }))}
+      />
     </div>
   );
 }

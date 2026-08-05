@@ -1,3 +1,6 @@
+import { DeleteVaultSecretService } from '@/modules/application/credential/delete-vault-secret.service';
+import { ListVaultEntriesService } from '@/modules/application/credential/list-vault-entries.service';
+import { UpsertVaultSecretService } from '@/modules/application/credential/upsert-vault-secret.service';
 import { CreateHighScoreNotificationService } from '@/modules/application/notification/create-high-score-notification.service';
 import { ListNotificationsService } from '@/modules/application/notification/list-notifications.service';
 import { MarkNotificationReadService } from '@/modules/application/notification/mark-notification-read.service';
@@ -33,6 +36,7 @@ import { PrismaAnalyticsRepository } from '@/modules/infrastructure/repositories
 import { PrismaApplicationRepository } from '@/modules/infrastructure/repositories/prisma-application.repository';
 import { PrismaAuditLogRepository } from '@/modules/infrastructure/repositories/prisma-audit-log.repository';
 import { PrismaCoverLetterRepository } from '@/modules/infrastructure/repositories/prisma-cover-letter.repository';
+import { PrismaCredentialVaultRepository } from '@/modules/infrastructure/repositories/prisma-credential-vault.repository';
 import { PrismaCompanyRepository } from '@/modules/infrastructure/repositories/prisma-company.repository';
 import { PrismaCompanySeedRepository } from '@/modules/infrastructure/repositories/prisma-company-seed.repository';
 import { PrismaJobRepository } from '@/modules/infrastructure/repositories/prisma-job.repository';
@@ -42,6 +46,7 @@ import { PrismaScrapePersistenceRepository } from '@/modules/infrastructure/repo
 import { PrismaScrapeRunRepository } from '@/modules/infrastructure/repositories/prisma-scrape-run.repository';
 import { PrismaSourceRepository } from '@/modules/infrastructure/repositories/prisma-source.repository';
 import { PrismaUserRepository } from '@/modules/infrastructure/repositories/prisma-user.repository';
+import { CredentialCrypto } from '@/modules/infrastructure/security/credential-crypto';
 
 function getHighScoreThreshold(): number {
   const raw = Number(process.env.HIGH_SCORE_THRESHOLD ?? 75);
@@ -165,6 +170,8 @@ export function createApplicationModule() {
   const coverLetters = new PrismaCoverLetterRepository();
   const users = new PrismaUserRepository();
   const audit = new PrismaAuditLogRepository();
+  const crypto = new CredentialCrypto();
+  const vault = new PrismaCredentialVaultRepository(crypto);
 
   return {
     createFromJob: new CreateApplicationFromJobService(applications, jobs, resumes, audit),
@@ -176,11 +183,26 @@ export function createApplicationModule() {
       resumes,
       coverLetters,
       users,
+      vault,
       new PlaywrightBrowserService(),
       new ApplyStrategyRegistry(),
       new ApplyArtifactStore(),
       audit,
     ),
+  };
+}
+
+/**
+ * Composes encrypted credential vault services.
+ */
+export function createCredentialModule() {
+  const crypto = new CredentialCrypto();
+  const vault = new PrismaCredentialVaultRepository(crypto);
+  return {
+    crypto,
+    listVaultEntries: new ListVaultEntriesService(vault),
+    upsertVaultSecret: new UpsertVaultSecretService(vault, crypto),
+    deleteVaultSecret: new DeleteVaultSecretService(vault),
   };
 }
 

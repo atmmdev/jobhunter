@@ -3,6 +3,7 @@ import type { ApplicationRepository } from '@/modules/domain/application/applica
 import type { BrowserService } from '@/modules/domain/apply/browser-service';
 import type { AuditLogRepository } from '@/modules/domain/audit/audit-log.repository';
 import type { CoverLetterRepository } from '@/modules/domain/cover-letter/cover-letter.repository';
+import type { CredentialVaultRepository } from '@/modules/domain/credential/credential-vault.repository';
 import type { JobRepository } from '@/modules/domain/job/job.repository';
 import type { ResumeRepository } from '@/modules/domain/resume/resume.repository';
 import { DomainError, NotFoundError } from '@/modules/domain/shared/errors';
@@ -31,6 +32,7 @@ export class ExecuteAutoApplyService {
     private readonly resumes: ResumeRepository,
     private readonly coverLetters: CoverLetterRepository,
     private readonly users: UserRepository,
+    private readonly vault: CredentialVaultRepository,
     private readonly browser: BrowserService,
     private readonly strategies: ApplyStrategyRegistry,
     private readonly artifacts: ApplyArtifactStore,
@@ -110,7 +112,10 @@ export class ExecuteAutoApplyService {
       artifactsDir,
       preferredName: resume.name,
     });
-    const session = await this.browser.launchSession();
+    const storageStateJson = await this.resolveStorageState(userId, job.applyUrl);
+    const session = await this.browser.launchSession({
+      storageStateJson: storageStateJson ?? undefined,
+    });
 
     let result: AutoApplyResult;
     try {
@@ -138,6 +143,33 @@ export class ExecuteAutoApplyService {
 
     await this.persistResult(userId, application.id, application.jobId, result);
     return { applicationId: application.id, result };
+  }
+
+  private async resolveStorageState(userId: string, applyUrl: string): Promise<string | null> {
+    const host = (() => {
+      try {
+        return new URL(applyUrl).hostname.toLowerCase();
+      } catch {
+        return '';
+      }
+    })();
+
+    const candidates: string[] = [];
+    if (host.includes('linkedin.com')) {
+      candidates.push('linkedin');
+    }
+    if (host.includes('indeed.com')) {
+      candidates.push('indeed');
+    }
+    candidates.push('generic');
+
+    for (const provider of candidates) {
+      const secret = await this.vault.getSecret(userId, provider);
+      if (secret) {
+        return secret;
+      }
+    }
+    return null;
   }
 
   private async persistResult(

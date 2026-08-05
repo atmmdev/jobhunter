@@ -203,7 +203,7 @@
     "next": "Next",
     "run": "Run",
     "running": "Running…",
-    "runHint": "Run works for Greenhouse, Lever, Ashby, Apinfo, Gupy, Workday, SmartRecruiters, BambooHR, and CUSTOM careers pages. Jobs appear under Jobs.",
+    "runHint": "Run works for Greenhouse, Lever, Ashby, Apinfo, Gupy, Workday, SmartRecruiters, BambooHR, TeamTailor, and CUSTOM careers pages. Jobs appear under Jobs.",
     "runResult": "{adapter}: found {found}, created {created}, updated {updated}",
     "enabled": "Enabled",
     "disabled": "Disabled",
@@ -243,7 +243,27 @@
     "theme": "Theme",
     "themeLight": "Light",
     "themeDark": "Dark",
-    "themeSystem": "System"
+    "themeSystem": "System",
+    "vault": {
+      "title": "Credential vault",
+      "subtitle": "Store encrypted Playwright storage-state JSON for logged-in apply sessions. Secrets are never shown again after save.",
+      "encryptionMissing": "Set ENCRYPTION_KEY in .env (openssl rand -hex 32) before saving secrets.",
+      "saved": "Saved providers",
+      "empty": "No vault entries yet.",
+      "updatedAt": "Updated {date}",
+      "delete": "Delete",
+      "deleted": "Vault entry deleted.",
+      "provider": "Provider",
+      "json": "storageState JSON",
+      "jsonHint": "Paste Playwright storageState (cookies/origins). Export via browser context.storageState().",
+      "save": "Save encrypted",
+      "savedOk": "Vault entry saved.",
+      "providers": {
+        "linkedin": "LinkedIn",
+        "indeed": "Indeed",
+        "generic": "Generic (any site)"
+      }
+    }
   },
   "notifications": {
     "title": "Notifications",

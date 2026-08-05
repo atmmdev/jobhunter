@@ -1,4 +1,4 @@
-import { chromium, type Browser, type Page } from 'playwright';
+import { chromium, type Browser, type BrowserContextOptions, type Page } from 'playwright';
 
 import type {
   BrowserService,
@@ -15,9 +15,11 @@ export class PlaywrightBrowserService implements BrowserService {
     const timeoutMs = options.timeoutMs ?? 45_000;
 
     const browser = await chromium.launch({ headless });
+    const storageState = parseStorageState(options.storageStateJson);
     const context = await browser.newContext({
       viewport: { width: 1280, height: 720 },
       locale: 'en-US',
+      ...(storageState ? { storageState } : {}),
     });
     context.setDefaultTimeout(timeoutMs);
     const page = await context.newPage();
@@ -31,6 +33,19 @@ export class PlaywrightBrowserService implements BrowserService {
         await browser.close().catch(() => undefined);
       },
     };
+  }
+}
+
+function parseStorageState(
+  raw: string | undefined,
+): BrowserContextOptions['storageState'] | undefined {
+  if (!raw?.trim()) {
+    return undefined;
+  }
+  try {
+    return JSON.parse(raw) as BrowserContextOptions['storageState'];
+  } catch {
+    return undefined;
   }
 }
 

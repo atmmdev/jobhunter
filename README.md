@@ -135,7 +135,7 @@ Details: [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md).
 
 ---
 
-## Current Status (approx. **~75%** of full roadmap)
+## Current Status (approx. **~77%** of full roadmap)
 
 | Phase | Name | Status |
 | ----- | ---- | ------ |
@@ -145,14 +145,14 @@ Details: [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md).
 | 3 | Scrapers P0 (GH/Lever/CUSTOM + CLI) | ✅ Complete |
 | 4 | AI enrichment | ✅ Mostly complete |
 | 5 | Application workflow (manual) | ✅ Complete |
-| 6 | Playwright auto-apply | 🟡 Foundation (fill + resume upload; submit off by default) |
-| 7 | Expanded sources | 🟡 Partial (~55% — +SmartRecruiters/BambooHR) |
+| 6 | Playwright auto-apply | 🟡 Foundation (+ vault UI; submit off by default) |
+| 7 | Expanded sources | 🟡 Partial (~60% — +TeamTailor) |
 | 8 | Analytics dashboard | ✅ Mostly complete (metrics live; polish/charts optional) |
 | 9 | Hardening / production | 🟡 Early |
 | 10 | Advanced intelligence | ❌ Later |
 
-**Usable MVP today:** sync sources → scrape → score → approve → track applications → optional Playwright fill.  
-**Biggest remaining gaps:** trusted auto-submit, vault UI, TeamTailor/LinkedIn/Indeed, production queue.
+**Usable MVP today:** sync sources → scrape → score → approve → track applications → optional Playwright fill + vaulted sessions.  
+**Biggest remaining gaps:** trusted auto-submit, Kenoby/Solides/LinkedIn/Indeed, production queue.
 
 Details: [docs/ROADMAP.md](./docs/ROADMAP.md) · [docs/TODO.md](./docs/TODO.md) · [docs/GETTING_STARTED.md](./docs/GETTING_STARTED.md)
 

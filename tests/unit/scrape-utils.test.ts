@@ -8,6 +8,7 @@ import {
   extractGupySubdomain,
   extractLeverSite,
   extractSmartRecruitersCompany,
+  extractTeamTailorOrigin,
   extractWorkdayBoard,
 } from '../../src/modules/infrastructure/scrapers/extract-board-token';
 import { stripHtml } from '../../src/modules/infrastructure/scrapers/strip-html';
@@ -74,6 +75,14 @@ describe('extract board tokens', () => {
   it('extracts BambooHR subdomain', () => {
     assert.equal(extractBambooHrSubdomain('https://g2.bamboohr.com/careers'), 'g2');
     assert.equal(extractBambooHrSubdomain('https://www.bamboohr.com/'), null);
+  });
+
+  it('extracts TeamTailor origin', () => {
+    assert.equal(
+      extractTeamTailorOrigin('https://bambuser.teamtailor.com/jobs'),
+      'https://bambuser.teamtailor.com',
+    );
+    assert.equal(extractTeamTailorOrigin('https://www.teamtailor.com/'), null);
   });
 });
 
