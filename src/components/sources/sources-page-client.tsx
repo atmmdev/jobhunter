@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpDown, Search } from 'lucide-react';
 import { useRouter as useNextRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
@@ -54,6 +54,7 @@ export function SourcesPageClient({
   const router = useRouter();
   const nextRouter = useNextRouter();
   const [pending, startTransition] = useTransition();
+  const [searchPending, startSearchTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [localSearch, setLocalSearch] = useState(search ?? '');
@@ -82,7 +83,9 @@ export function SourcesPageClient({
   };
 
   const applySearch = () => {
-    navigate({ page: 1, search: localSearch.trim() });
+    startSearchTransition(() => {
+      navigate({ page: 1, search: localSearch.trim() });
+    });
   };
 
   const toggleSort = (column: SourceSortBy) => {
@@ -97,7 +100,32 @@ export function SourcesPageClient({
     <TooltipProvider delayDuration={300}>
       <div className="space-y-8">
         <div className="space-y-6">
-          <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex w-full flex-wrap items-center justify-between gap-3">
+            <form
+              className="flex flex-1 flex-wrap items-center gap-3"
+              onSubmit={(event) => {
+                event.preventDefault();
+                applySearch();
+              }}
+            >
+              <div className="relative w-full sm:w-80">
+                <Search
+                  aria-hidden
+                  className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                />
+                <Input
+                  type="search"
+                  className="pl-9"
+                  value={localSearch}
+                  onChange={(event) => setLocalSearch(event.target.value)}
+                  placeholder={t('search')}
+                  aria-label={t('search')}
+                />
+              </div>
+              <Button type="submit" variant="secondary" disabled={searchPending}>
+                {t('searchAction')}
+              </Button>
+            </form>
             <Button
               type="button"
               disabled={pending}
@@ -125,27 +153,6 @@ export function SourcesPageClient({
               {t('sync')}
             </Button>
           </div>
-
-          <div className="flex flex-wrap gap-3">
-            <Input
-              value={localSearch}
-              onChange={(event) => setLocalSearch(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  event.preventDefault();
-                  applySearch();
-                }
-              }}
-              placeholder={t('search')}
-              className="max-w-sm"
-              aria-label={t('search')}
-            />
-            <Button type="button" variant="secondary" onClick={applySearch}>
-              {t('searchAction')}
-            </Button>
-          </div>
-
-          <p className="text-xs text-muted-foreground">{t('runHint')}</p>
 
           {message ? (
             <p className="text-sm text-emerald-600 dark:text-emerald-400">{message}</p>

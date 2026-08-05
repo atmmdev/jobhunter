@@ -23,6 +23,7 @@ export interface VaultEntryView {
 interface CredentialVaultPanelProps {
   entries: VaultEntryView[];
   encryptionConfigured: boolean;
+  className?: string;
 }
 
 /**
@@ -31,6 +32,7 @@ interface CredentialVaultPanelProps {
 export function CredentialVaultPanel({
   entries,
   encryptionConfigured,
+  className,
 }: CredentialVaultPanelProps) {
   const t = useTranslations('settings.vault');
   const router = useRouter();
@@ -41,7 +43,7 @@ export function CredentialVaultPanel({
   const [error, setError] = useState<string | null>(null);
 
   return (
-    <Card className="max-w-3xl">
+    <Card className={className}>
       <CardHeader>
         <CardTitle>{t('title')}</CardTitle>
         <CardDescription>{t('subtitle')}</CardDescription>
