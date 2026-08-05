@@ -22,7 +22,14 @@ It covers install, Docker/MySQL, seed login, first scrape, and the Jobs → Appl
 - Docker Desktop (for MySQL)
 - npm
 
-### 2. Environment
+### 2. Install
+
+```bash
+npm install
+npx playwright install chromium
+```
+
+### 3. Environment
 
 ```bash
 cp .env.example .env
@@ -30,7 +37,7 @@ cp .env.example .env
 
 Set a strong `AUTH_SECRET` in `.env` (for example `openssl rand -base64 32`).
 
-### 3. Database
+### 4. Database
 
 ```bash
 docker compose up -d
@@ -43,10 +50,9 @@ Default seed user (from `.env.example`):
 - Email: `admin@jobhunter.local`
 - Password: `ChangeMe123!`
 
-### 4. Run
+### 5. Run
 
 ```bash
-npm install
 npm run dev
 ```
 

@@ -54,6 +54,9 @@ npm install
 npx playwright install chromium
 ```
 
+Wait until `npm install` finishes successfully (it also runs `prisma generate`).  
+**Do not** run `db:migrate` before this step — without `node_modules`, Windows shows `'prisma' não é reconhecido`.
+
 ---
 
 ## 2. Environment
@@ -166,7 +169,7 @@ npm run scrape:run-all
 1. Push the repo (never commit `.env`).
 2. Point them to **this file** from the root README.
 3. Keep `.env.example` accurate.
-4. Tell them Docker must be running before `db:migrate`.
+4. Tell them: `npm install` **before** Docker migrate/seed; Docker must be running before `db:migrate`.
 5. Mention Playwright Chromium install if they will use Auto-apply.
 6. Optionally share a short loom / screenshots of Sources → Jobs → Applications.
 
@@ -176,6 +179,7 @@ npm run scrape:run-all
 
 | Symptom | Fix |
 | ------- | --- |
+| `'prisma' is not recognized` / `'prisma' não é reconhecido` | Run `npm install` in the project root **before** `db:migrate`. Confirm `node_modules/.bin/prisma` exists. Do not use `npm install --omit=dev`. |
 | `Can't reach database server at 127.0.0.1:3306` | Start Docker Desktop, then `docker compose up -d` |
 | Run button disabled on a source | ATS not supported yet, or source disabled |
 | Accented titles look broken (Apinfo) | Re-run Apinfo scrape; delete old bad rows if needed |
