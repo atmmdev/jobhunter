@@ -23,7 +23,7 @@ const ALLOWED: Record<ApplicationStatusValue, readonly ApplicationStatusValue[]>
  */
 export function assertApplicationTransition(
   from: ApplicationStatusValue,
-  to: ManualApplicationTransition,
+  to: ApplicationStatusValue,
 ): void {
   if (!ALLOWED[from].includes(to)) {
     throw new DomainError(

@@ -1,8 +1,16 @@
 # Job Hunter AI
 
-Production-ready platform to discover, score, match, and apply to software jobs across ATS platforms, career pages, and community channels — with human approval and Playwright automation.
+Production-ready platform to discover, score, match, and apply to software jobs across ATS platforms, career pages, and community channels — with human approval and (later) Playwright automation.
 
 > This is **not** a demo. Engineering standards: Clean Architecture, TypeScript strict, Zod boundaries, repository/service layers.
+
+---
+
+## Start here (for new users)
+
+**Follow the mini-tutorial:** [`docs/GETTING_STARTED.md`](./docs/GETTING_STARTED.md)
+
+It covers install, Docker/MySQL, seed login, first scrape, and the Jobs → Applications flow.
 
 ---
 
@@ -52,9 +60,11 @@ Open [http://localhost:3000/en/login](http://localhost:3000/en/login) or [http:/
 | `npm run build` | Production build |
 | `npm run typecheck` | TypeScript check |
 | `npm run lint` | ESLint |
-| `npm run db:migrate` | Prisma migrate (dev) |
-| `npm run db:seed` | Seed admin user |
+| `npm run test` | Unit tests |
+| `npm run db:migrate` | Prisma migrate |
+| `npm run db:seed` | Seed admin user + default resumes |
 | `npm run db:studio` | Prisma Studio |
+| `npm run scrape:run-all` | Scrape all enabled supported sources |
 
 ---
 
@@ -64,6 +74,7 @@ All project docs live in [`docs/`](./docs/).
 
 | Document | Purpose |
 | -------- | ------- |
+| [**GETTING_STARTED.md**](./docs/GETTING_STARTED.md) | **Mini-tutorial for new operators / contributors** |
 | [MASTER_PROMPT.md](./docs/MASTER_PROMPT.md) | How Cursor / AI agents must think |
 | [AGENTS.md](./docs/AGENTS.md) | Specialist agent roster |
 | [RULES.md](./docs/RULES.md) | Mandatory project rules |
@@ -86,7 +97,7 @@ Company / board seed lists: [`docs/companies-to-work/`](./docs/companies-to-work
 
 ## Tech Stack
 
-Next.js · React · TypeScript · Prisma · MySQL · TailwindCSS · shadcn/ui · Auth.js · Zod · React Hook Form · TanStack Table/Query · Playwright · OpenAI-compatible API
+Next.js · React · TypeScript · Prisma · MySQL · TailwindCSS · shadcn/ui · Auth.js · Zod · React Hook Form · TanStack Table/Query · OpenAI-compatible API · Playwright (planned)
 
 See [docs/TECH_STACK.md](./docs/TECH_STACK.md).
 
@@ -118,15 +129,26 @@ Details: [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md).
 
 ---
 
-## Current Status
+## Current Status (approx. **~75%** of full roadmap)
 
-**Phase 0 — Foundations:** complete.
+| Phase | Name | Status |
+| ----- | ---- | ------ |
+| 0 | Foundations | ✅ Complete |
+| 1 | Core domain & Jobs/Resumes | ✅ Complete |
+| 2 | Company seed & Sources | ✅ Complete |
+| 3 | Scrapers P0 (GH/Lever/CUSTOM + CLI) | ✅ Complete |
+| 4 | AI enrichment | ✅ Mostly complete |
+| 5 | Application workflow (manual) | ✅ Complete |
+| 6 | Playwright auto-apply | 🟡 Foundation (fill + resume upload; submit off by default) |
+| 7 | Expanded sources | 🟡 Partial (~55% — +SmartRecruiters/BambooHR) |
+| 8 | Analytics dashboard | ✅ Mostly complete (metrics live; polish/charts optional) |
+| 9 | Hardening / production | 🟡 Early |
+| 10 | Advanced intelligence | ❌ Later |
 
-**Phase 1 — Jobs & Resumes:** complete.
+**Usable MVP today:** sync sources → scrape → score → approve → track applications → optional Playwright fill.  
+**Biggest remaining gaps:** trusted auto-submit, vault UI, TeamTailor/LinkedIn/Indeed, production queue.
 
-**Phase 2 — Companies & Sources:** sync + Sources UI complete (ScrapeRun history pending).
-
-**Next:** Phase 3 — Greenhouse + Lever job discovery.
+Details: [docs/ROADMAP.md](./docs/ROADMAP.md) · [docs/TODO.md](./docs/TODO.md) · [docs/GETTING_STARTED.md](./docs/GETTING_STARTED.md)
 
 ---
 
@@ -150,6 +172,8 @@ Details: [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md).
 ## Contributing
 
 Read [docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md) and [docs/RULES.md](./docs/RULES.md) before opening changes.
+
+New operators: start at [docs/GETTING_STARTED.md](./docs/GETTING_STARTED.md).
 
 ---
 

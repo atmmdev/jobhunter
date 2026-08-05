@@ -157,8 +157,10 @@
       "INTERVIEW": "Interview",
       "OFFER": "Offer",
       "REJECTED": "Rejected",
-      "WITHDRAWN": "Withdraw"
+      "WITHDRAWN": "Withdraw",
+      "autoApply": "Auto-apply (Playwright)"
     },
+    "autoApplyResult": "Auto-apply {status} via {provider}: {reason}",
     "status": {
       "DRAFT": "Draft",
       "PENDING_APPROVAL": "Pending approval",
@@ -201,7 +203,7 @@
     "next": "Next",
     "run": "Run",
     "running": "Running…",
-    "runHint": "Run works for Greenhouse, Lever, Ashby, Apinfo, Gupy, and CUSTOM careers pages. Jobs appear under Jobs.",
+    "runHint": "Run works for Greenhouse, Lever, Ashby, Apinfo, Gupy, Workday, SmartRecruiters, BambooHR, and CUSTOM careers pages. Jobs appear under Jobs.",
     "runResult": "{adapter}: found {found}, created {created}, updated {updated}",
     "enabled": "Enabled",
     "disabled": "Disabled",

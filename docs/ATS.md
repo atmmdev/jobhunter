@@ -18,8 +18,8 @@ Provide first-class adapters for Applicant Tracking Systems and adjacent job pla
 | Lever | `LEVER` | Postings API / board | P0 |
 | Ashby | `ASHBY` | Job board API | P1 |
 | Workday | `WORKDAY` | Career site / feeds (variable) | P1 |
-| BambooHR | `BAMBOOHR` | Careers API/pages | P2 |
-| SmartRecruiters | `SMARTRECRUITERS` | Public postings | P2 |
+| BambooHR | `BAMBOOHR` | Careers list/detail JSON | P2 ✅ |
+| SmartRecruiters | `SMARTRECRUITERS` | Public postings API | P2 ✅ |
 | TeamTailor | `TEAMTAILOR` | Career site / API | P2 |
 
 ### Brazil-focused ATS / HR
@@ -105,6 +105,8 @@ Always capture vendor job ids when available:
 | Lever | posting id |
 | Ashby | job id |
 | Workday | requisition / path id |
+| SmartRecruiters | posting id |
+| BambooHR | job opening id |
 | Gupy | job id from URL/API |
 
 `@@unique([sourceId, externalId])` prevents duplicates.

@@ -72,21 +72,26 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 - [x] Approval queue UI
 - [x] Application status machine + audit log
 - [x] Manual applied / interview / offer transitions
-- [ ] `BrowserService`
-- [ ] Greenhouse apply strategy
-- [ ] Lever apply strategy
-- [ ] Careers apply strategy (best-effort)
-- [ ] Credential vault encryption
-- [ ] Failure artifacts storage
+- [x] `BrowserService` (Playwright)
+- [x] Greenhouse apply strategy (fill + safe MANUAL_REQUIRED by default)
+- [x] Lever apply strategy (fill + safe MANUAL_REQUIRED by default)
+- [x] Careers apply strategy (best-effort)
+- [x] Failure artifacts storage (`storage/artifacts/apply/…`)
+- [x] Resume file upload into ATS forms (materialize `.txt` from contentText when needed)
+- [x] Credential vault encryption helpers (AES-256-GCM + Prisma repository)
+- [ ] UI to save provider storage-state into vault
+- [ ] Auto-submit confirmation hardening (`PLAYWRIGHT_AUTO_SUBMIT`)
 
 ---
 
 ## Expanded coverage (Phase 7)
 
 - [x] Ashby adapter
-- [ ] Workday adapter
+- [x] Workday adapter (CXS public JSON)
 - [x] Gupy adapter (career SSR listing)
-- [ ] BambooHR / SmartRecruiters / TeamTailor adapters
+- [x] BambooHR adapter (careers/list + `/careers/{id}/detail`)
+- [x] SmartRecruiters adapter (public company postings API)
+- [ ] TeamTailor adapter
 - [ ] Kenoby / Solides adapters
 - [ ] LinkedIn discovery (careful)
 - [ ] Indeed discovery (careful)
@@ -99,15 +104,16 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 
 ## Analytics (Phase 8)
 
-- [ ] Jobs Found metric
-- [ ] Applications metric
-- [ ] Favorites / Rejected metrics
-- [ ] Interviews / Offers metrics
-- [ ] Response Rate calculation
-- [ ] Top Technologies chart
-- [ ] Salary Analytics
-- [ ] Countries breakdown
-- [ ] ATS Statistics panel
+- [x] Jobs Found metric
+- [x] Applications metric
+- [x] Favorites / Rejected metrics
+- [x] Interviews / Offers metrics
+- [x] Response Rate calculation
+- [x] Top Technologies (dashboard summary)
+- [x] Salary Analytics (avg min/max)
+- [x] Countries breakdown
+- [x] ATS Statistics panel
+- [ ] Richer charts / dedicated analytics page (optional polish)
 
 ---
 
@@ -116,7 +122,8 @@ Living backlog. Check items off as they ship. Aligns with `ROADMAP.md`.
 - [ ] Background queue (BullMQ/Redis or equivalent)
 - [ ] Rate limit per source
 - [ ] Structured logs + correlation IDs
-- [ ] CI: lint, typecheck, unit, e2e smoke
+- [x] CI workflow baseline
+- [ ] CI: e2e smoke
 - [ ] Backup documentation
 - [ ] Security pass on secrets & authz
 - [ ] Performance indexes review

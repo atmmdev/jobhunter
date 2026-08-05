@@ -17,11 +17,22 @@ describe('detectAtsType', () => {
   });
 
   it('detects Workday', () => {
-    assert.equal(detectAtsType('https://acme.wd1.myworkdayjobs.com/Careers'), 'WORKDAY');
+    assert.equal(
+      detectAtsType('https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite'),
+      'WORKDAY',
+    );
   });
 
   it('detects Ashby boards', () => {
     assert.equal(detectAtsType('https://jobs.ashbyhq.com/notion'), 'ASHBY');
+  });
+
+  it('detects SmartRecruiters', () => {
+    assert.equal(detectAtsType('https://jobs.smartrecruiters.com/Canva'), 'SMARTRECRUITERS');
+  });
+
+  it('detects BambooHR', () => {
+    assert.equal(detectAtsType('https://g2.bamboohr.com/careers'), 'BAMBOOHR');
   });
 
   it('detects Apinfo', () => {

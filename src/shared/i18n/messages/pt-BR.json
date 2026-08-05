@@ -157,8 +157,10 @@
       "INTERVIEW": "Entrevista",
       "OFFER": "Oferta",
       "REJECTED": "Rejeitada",
-      "WITHDRAWN": "Retirar"
+      "WITHDRAWN": "Retirar",
+      "autoApply": "Auto-aplicar (Playwright)"
     },
+    "autoApplyResult": "Auto-apply {status} via {provider}: {reason}",
     "status": {
       "DRAFT": "Rascunho",
       "PENDING_APPROVAL": "Aguardando aprovação",
@@ -201,7 +203,7 @@
     "next": "Próxima",
     "run": "Rodar",
     "running": "Rodando…",
-    "runHint": "Rodar funciona para Greenhouse, Lever, Ashby, Apinfo, Gupy e páginas CUSTOM. As vagas aparecem em Vagas.",
+    "runHint": "Rodar funciona para Greenhouse, Lever, Ashby, Apinfo, Gupy, Workday, SmartRecruiters, BambooHR e páginas CUSTOM. As vagas aparecem em Vagas.",
     "runResult": "{adapter}: encontradas {found}, criadas {created}, atualizadas {updated}",
     "enabled": "Ativa",
     "disabled": "Inativa",

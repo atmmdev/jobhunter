@@ -123,6 +123,10 @@ export class PrismaApplicationRepository implements ApplicationRepository {
         ...(input.appliedAt !== undefined ? { appliedAt: input.appliedAt } : {}),
         ...(input.failureCode !== undefined ? { failureCode: input.failureCode } : {}),
         ...(input.failureMessage !== undefined ? { failureMessage: input.failureMessage } : {}),
+        ...(input.provider !== undefined ? { provider: input.provider } : {}),
+        ...(input.externalReference !== undefined
+          ? { externalReference: input.externalReference }
+          : {}),
       },
       include: applicationInclude,
     });

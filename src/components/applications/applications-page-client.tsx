@@ -2,6 +2,7 @@
 
 import {
   Ban,
+  Bot,
   CheckCircle2,
   CircleHelp,
   FileText,
@@ -15,8 +16,11 @@ import { useRouter } from '@/shared/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
 
+import {
+  executeAutoApplyAction,
+  transitionApplicationAction,
+} from '@/app/actions/application.actions';
 import { CoverLetterEditor } from '@/components/applications/cover-letter-editor';
-import { transitionApplicationAction } from '@/app/actions/application.actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { IconTooltipButton } from '@/components/ui/icon-tooltip-button';
@@ -89,7 +93,9 @@ export function ApplicationsPageClient({
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
   const [editingApplicationId, setEditingApplicationId] = useState<string | null>(null);
+  const [autoApplyingId, setAutoApplyingId] = useState<string | null>(null);
 
   const filterStatus = (next?: ApplicationStatusValue) => {
     const params = new URLSearchParams();
@@ -137,6 +143,9 @@ export function ApplicationsPageClient({
         </div>
 
         {error ? <p className="text-sm text-destructive">{error}</p> : null}
+        {message ? (
+          <p className="text-sm text-emerald-600 dark:text-emerald-400">{message}</p>
+        ) : null}
 
         {applications.length === 0 ? (
           <p className="text-sm text-muted-foreground">{t('empty')}</p>
@@ -190,6 +199,37 @@ export function ApplicationsPageClient({
                               )
                             }
                           />
+                          {canAutoApply(app.status) ? (
+                            <IconTooltipButton
+                              label={t('actions.autoApply')}
+                              icon={Bot}
+                              tone="autoApply"
+                              disabled={pending || autoApplyingId === app.id}
+                              onClick={() =>
+                                startTransition(async () => {
+                                  setError(null);
+                                  setMessage(null);
+                                  setAutoApplyingId(app.id);
+                                  const result = await executeAutoApplyAction({
+                                    applicationId: app.id,
+                                  });
+                                  setAutoApplyingId(null);
+                                  if (!result.ok) {
+                                    setError(result.error);
+                                    return;
+                                  }
+                                  setMessage(
+                                    t('autoApplyResult', {
+                                      status: result.data.status,
+                                      provider: result.data.provider,
+                                      reason: result.data.reason ?? '—',
+                                    }),
+                                  );
+                                  router.refresh();
+                                })
+                              }
+                            />
+                          ) : null}
                           {app.allowedTransitions.map((next) => (
                             <IconTooltipButton
                               key={next}
@@ -200,6 +240,7 @@ export function ApplicationsPageClient({
                               onClick={() =>
                                 startTransition(async () => {
                                   setError(null);
+                                  setMessage(null);
                                   const result = await transitionApplicationAction({
                                     applicationId: app.id,
                                     status: next,
@@ -235,4 +276,8 @@ export function ApplicationsPageClient({
       </div>
     </TooltipProvider>
   );
+}
+
+function canAutoApply(status: ApplicationStatusValue): boolean {
+  return ['APPROVED', 'PENDING_APPLY', 'FAILED', 'MANUAL_REQUIRED'].includes(status);
 }

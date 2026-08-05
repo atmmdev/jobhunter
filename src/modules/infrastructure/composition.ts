@@ -6,6 +6,7 @@ import { UpdateCoverLetterService } from '@/modules/application/cover-letter/upd
 import { CreateApplicationFromJobService } from '@/modules/application/application/create-application-from-job.service';
 import { ListApplicationsService } from '@/modules/application/application/list-applications.service';
 import { TransitionApplicationService } from '@/modules/application/application/transition-application.service';
+import { ExecuteAutoApplyService } from '@/modules/application/apply/execute-auto-apply.service';
 import { CreateJobService } from '@/modules/application/job/create-job.service';
 import { DeleteJobsService } from '@/modules/application/job/delete-jobs.service';
 import { ListJobsService } from '@/modules/application/job/list-jobs.service';
@@ -24,6 +25,9 @@ import { ScoreJobService } from '@/modules/application/scoring/score-job.service
 import { ListSourcesService } from '@/modules/application/source/list-sources.service';
 import { SetSourceEnabledService } from '@/modules/application/source/set-source-enabled.service';
 import { OpenAiCompatibleClient } from '@/modules/infrastructure/ai/openai-compatible.client';
+import { ApplyArtifactStore } from '@/modules/infrastructure/apply/apply-artifact-store';
+import { ApplyStrategyRegistry } from '@/modules/infrastructure/apply/apply-strategy-registry';
+import { PlaywrightBrowserService } from '@/modules/infrastructure/apply/playwright-browser.service';
 import { JobSourceAdapterRegistry } from '@/modules/infrastructure/scrapers/adapter-registry';
 import { PrismaAnalyticsRepository } from '@/modules/infrastructure/repositories/prisma-analytics.repository';
 import { PrismaApplicationRepository } from '@/modules/infrastructure/repositories/prisma-application.repository';
@@ -37,6 +41,7 @@ import { PrismaResumeRepository } from '@/modules/infrastructure/repositories/pr
 import { PrismaScrapePersistenceRepository } from '@/modules/infrastructure/repositories/prisma-scrape-persistence.repository';
 import { PrismaScrapeRunRepository } from '@/modules/infrastructure/repositories/prisma-scrape-run.repository';
 import { PrismaSourceRepository } from '@/modules/infrastructure/repositories/prisma-source.repository';
+import { PrismaUserRepository } from '@/modules/infrastructure/repositories/prisma-user.repository';
 
 function getHighScoreThreshold(): number {
   const raw = Number(process.env.HIGH_SCORE_THRESHOLD ?? 75);
@@ -157,12 +162,25 @@ export function createApplicationModule() {
   const applications = new PrismaApplicationRepository();
   const jobs = new PrismaJobRepository();
   const resumes = new PrismaResumeRepository();
+  const coverLetters = new PrismaCoverLetterRepository();
+  const users = new PrismaUserRepository();
   const audit = new PrismaAuditLogRepository();
 
   return {
     createFromJob: new CreateApplicationFromJobService(applications, jobs, resumes, audit),
     listApplications: new ListApplicationsService(applications),
     transition: new TransitionApplicationService(applications, jobs, audit),
+    executeAutoApply: new ExecuteAutoApplyService(
+      applications,
+      jobs,
+      resumes,
+      coverLetters,
+      users,
+      new PlaywrightBrowserService(),
+      new ApplyStrategyRegistry(),
+      new ApplyArtifactStore(),
+      audit,
+    ),
   };
 }
 

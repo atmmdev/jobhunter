@@ -18,6 +18,8 @@ export interface TransitionApplicationInput {
   appliedAt?: Date | null;
   failureCode?: string | null;
   failureMessage?: string | null;
+  provider?: string | null;
+  externalReference?: string | null;
 }
 
 export interface ListApplicationsFilter {

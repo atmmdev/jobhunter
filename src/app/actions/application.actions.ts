@@ -9,6 +9,7 @@ import {
   createApplicationFromJobSchema,
   transitionApplicationSchema,
 } from '@/shared/schemas/application.schema';
+import { executeAutoApplySchema } from '@/shared/schemas/auto-apply.schema';
 
 export type ActionResult<T> =
   | { ok: true; data: T }
@@ -68,6 +69,55 @@ export async function transitionApplicationAction(
     revalidatePath('/[locale]/dashboard', 'page');
 
     return { ok: true, data: { id: application.id, status: application.status } };
+  } catch (error) {
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : 'Unexpected error',
+    };
+  }
+}
+
+/**
+ * Runs Playwright auto-apply for an application (safe by default: no submit).
+ */
+export async function executeAutoApplyAction(
+  input: unknown,
+): Promise<
+  ActionResult<{
+    applicationId: string;
+    status: string;
+    provider: string;
+    reason?: string;
+  }>
+> {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      throw new DomainError('UNAUTHORIZED', 'You must be signed in');
+    }
+
+    const parsed = executeAutoApplySchema.parse(input);
+    const { executeAutoApply } = createApplicationModule();
+    const outcome = await executeAutoApply.execute(session.user.id, parsed);
+
+    revalidatePath('/[locale]/applications', 'page');
+    revalidatePath('/[locale]/jobs', 'page');
+    revalidatePath('/[locale]/dashboard', 'page');
+
+    return {
+      ok: true,
+      data: {
+        applicationId: outcome.applicationId,
+        status: outcome.result.status,
+        provider: outcome.result.provider,
+        reason:
+          outcome.result.status === 'MANUAL_REQUIRED'
+            ? outcome.result.reason
+            : outcome.result.status === 'FAILED'
+              ? outcome.result.message
+              : undefined,
+      },
+    };
   } catch (error) {
     return {
       ok: false,

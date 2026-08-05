@@ -91,7 +91,7 @@ Phased delivery toward a production-ready system. Each phase must be shippable a
 - [x] Application state machine
 - [x] Manual mark as applied
 - [x] Audit log of transitions
-- [ ] Basic notifications (in-app)
+- [x] In-app notifications (high-score jobs)
 
 **Exit criteria:** Human-in-the-loop apply tracking works without Playwright. ✅
 
@@ -99,22 +99,32 @@ Phased delivery toward a production-ready system. Each phase must be shippable a
 
 ## Phase 6 — Playwright Auto-Apply (P0/P1)
 
-- [ ] BrowserService
-- [ ] Greenhouse / Lever apply strategies
-- [ ] Careers fallback strategy
-- [ ] Failure artifacts + `MANUAL_REQUIRED`
-- [ ] Credential vault for sessions
+**Status:** Foundation complete (safe fill-only by default)
 
-**Exit criteria:** Approved jobs can auto-apply on supported ATS with safe failure modes.
+- [x] BrowserService
+- [x] Greenhouse / Lever apply strategies
+- [x] Careers fallback strategy
+- [x] Failure artifacts + `MANUAL_REQUIRED` (default when submit disabled)
+- [x] Resume file upload (disk file or materialized `.txt`)
+- [x] Credential vault encryption primitives (+ Prisma repo)
+- [ ] UI / use cases to manage vaulted storage-state
+- [ ] Hardened auto-submit (`PLAYWRIGHT_AUTO_SUBMIT=true`)
+
+**Exit criteria:** Approved jobs can auto-apply on supported ATS with safe failure modes.  
+**Current behavior:** Opens apply URL, fills common fields (incl. resume file when possible), saves screenshot/HTML artifacts, returns `MANUAL_REQUIRED` unless `PLAYWRIGHT_AUTO_SUBMIT=true` and confirmation is detected.
 
 ---
 
 ## Phase 7 — Expanded Sources
 
+**Status:** Partial (~55%)
+
 - [x] Ashby adapter
-- [ ] Workday adapter
+- [x] Workday adapter (CXS)
 - [x] Gupy adapter (career SSR)
-- [ ] BambooHR, SmartRecruiters, TeamTailor
+- [x] BambooHR adapter (careers/list + detail JSON)
+- [x] SmartRecruiters adapter (public postings API)
+- [ ] TeamTailor
 - [ ] Kenoby, Solides
 - [ ] LinkedIn / Indeed (cautious)
 - [ ] Catho
@@ -127,23 +137,28 @@ Phased delivery toward a production-ready system. Each phase must be shippable a
 
 ## Phase 8 — Analytics Dashboard
 
-- [ ] Jobs Found, Applications, Favorites, Rejected
-- [ ] Interviews, Offers, Response Rate
-- [ ] Top Technologies
-- [ ] Salary Analytics
-- [ ] Countries
-- [ ] ATS Statistics
+**Status:** Mostly complete (live aggregations on dashboard; richer charts optional)
 
-**Exit criteria:** Dashboard metrics match `PROJECT.md` requirements.
+- [x] Jobs Found, Applications, Favorites, Rejected
+- [x] Interviews, Offers, Response Rate
+- [x] Top Technologies
+- [x] Salary Analytics (avg min/max)
+- [x] Countries
+- [x] ATS Statistics
+
+**Exit criteria:** Dashboard metrics match `PROJECT.md` requirements. ✅ (charts polish optional)
 
 ---
 
 ## Phase 9 — Hardening & Production
 
+**Status:** Early
+
 - [ ] Queue workers (Redis/BullMQ or equivalent)
 - [ ] Rate limiters & observability dashboards
 - [ ] Backup/restore docs
 - [ ] Security review (secrets, authz)
+- [x] CI workflow baseline
 - [ ] Performance pass on heavy tables
 - [ ] E2E suite in CI
 
@@ -152,6 +167,8 @@ Phased delivery toward a production-ready system. Each phase must be shippable a
 ---
 
 ## Phase 10 — Advanced Intelligence (Later)
+
+**Status:** Not started
 
 - [ ] Embeddings search / semantic dedupe
 - [ ] Preference learning from accept/reject
@@ -173,6 +190,11 @@ Phased delivery toward a production-ready system. Each phase must be shippable a
 
 ## Current Focus
 
-1. Phase 3 Greenhouse + Lever discovery
-2. ScrapeRun history UI
-3. Phase 4 AI enrichment
+1. Phase 6 — harden auto-submit + resume file upload + credential vault
+2. Phase 7 — Workday + cautious LinkedIn/Indeed
+3. Phase 9 — queue, rate limits, e2e in CI
+
+**Overall progress (roadmap-weighted estimate): ~68%.**  
+Operator MVP (Phases 0–5 + core of 3/4/8): **shippable**.  
+Auto-apply foundation (Phase 6): **fill-only / MANUAL_REQUIRED by default**.  
+Full vision (trusted auto-submit + broad sources + production hardening): **remaining**.

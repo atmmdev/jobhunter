@@ -16,6 +16,9 @@ const RUNNABLE_ATS = new Set([
   'ASHBY',
   'APINFO',
   'GUPY',
+  'WORKDAY',
+  'SMARTRECRUITERS',
+  'BAMBOOHR',
   'CUSTOM',
 ]);
 

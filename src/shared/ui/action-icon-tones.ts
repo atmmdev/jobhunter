@@ -24,6 +24,7 @@ export const ACTION_ICON_TONES = {
   offer: 'text-emerald-500 hover:text-emerald-400',
   withdrawn: 'text-red-500 hover:text-red-400',
   manual: 'text-amber-400 hover:text-amber-300',
+  autoApply: 'text-emerald-500 hover:text-emerald-400',
 } as const;
 
 export type ActionIconTone = keyof typeof ACTION_ICON_TONES;

@@ -46,6 +46,7 @@
 | CareCru                                | https://carecru.com                            |
 | CareMessage                            | https://caremessage.org/careers                |
 | Careers Google                         | https://careers.google.com/                    |
+| Canva SmartRecruiters                  | https://jobs.smartrecruiters.com/Canva         |
 | CartStack                              | https://www.cartstack.com                      |
 | CartoDB                                | https://cartodb.com                            |
 | Chroma                                 | https://hichroma.com                           |
@@ -136,6 +137,7 @@
 | Glenn Website Design                   | https://glennwebsitedesign.com                 |
 | Glitch                                 | https://www.glitch.com                         |
 | GoHiring                               | https://www.gohiring.com                       |
+| G2 BambooHR                            | https://g2.bamboohr.com/careers                |
 | Graylog                                | https://www.graylog.org                        |
 | Groove                                 | https://www.groovehq.com                       |
 | Grou.ps                                | https://build.gr.ps                            |
@@ -231,6 +233,7 @@
 | No Code No Problem                     | https://www.nocodenoprob.com                   |
 | NodeSource                             | https://nodesource.com                         |
 | Nodesk Remote Jobs                     | http://nodesk.co/remote-jobs                   |
+| NVIDIA Workday                         | https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite |
 | OfferZen                               | https://www.offerzen.com/                      |
 | Okta                                   | https://www.okta.com                           |
 | OmbuLabs                               | https://www.ombulabs.com                       |
