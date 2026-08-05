@@ -87,7 +87,7 @@ export function JobsTable({ jobs }: JobsTableProps) {
             checked={allSelected}
             onChange={toggleAll}
             aria-label={t('actions.selectAll')}
-            className="h-4 w-4 rounded border-border"
+            className="border-border h-4 w-4 rounded"
           />
         ),
         cell: ({ row }) => (
@@ -96,7 +96,7 @@ export function JobsTable({ jobs }: JobsTableProps) {
             checked={selectedIds.has(row.original.id)}
             onChange={() => toggleOne(row.original.id)}
             aria-label={t('actions.select')}
-            className="h-4 w-4 rounded border-border"
+            className="border-border h-4 w-4 rounded"
           />
         ),
       }),
@@ -104,7 +104,7 @@ export function JobsTable({ jobs }: JobsTableProps) {
         header: t('columns.title'),
         cell: (info) => (
           <div className="max-w-xs">
-            <div className="flex items-start gap-1.5">
+            <div className="flex items-center gap-1.5 uppercase">
               <p className="font-medium">{info.getValue()}</p>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -114,7 +114,7 @@ export function JobsTable({ jobs }: JobsTableProps) {
                     rel="noreferrer"
                     aria-label={t('actions.open')}
                     className={cn(
-                      'mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md',
+                      'mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md ',
                       ACTION_ICON_TONES.view,
                     )}
                   >
@@ -146,9 +146,7 @@ export function JobsTable({ jobs }: JobsTableProps) {
       columnHelper.accessor('status', {
         header: t('columns.status'),
         cell: (info) => (
-          <Badge variant={statusVariant(info.getValue())}>
-            {t(`status.${info.getValue()}`)}
-          </Badge>
+          <Badge variant={statusVariant(info.getValue())}>{t(`status.${info.getValue()}`)}</Badge>
         ),
       }),
       columnHelper.accessor('sourceName', {
@@ -165,9 +163,7 @@ export function JobsTable({ jobs }: JobsTableProps) {
           return (
             <div>
               <p className="font-medium">{score}</p>
-              {recommended ? (
-                <p className="text-xs text-muted-foreground">{recommended}</p>
-              ) : null}
+              {recommended ? <p className="text-muted-foreground text-xs">{recommended}</p> : null}
             </div>
           );
         },
@@ -199,15 +195,15 @@ export function JobsTable({ jobs }: JobsTableProps) {
   });
 
   if (jobs.length === 0) {
-    return <p className="text-sm text-muted-foreground">{t('empty')}</p>;
+    return <p className="text-muted-foreground text-sm">{t('empty')}</p>;
   }
 
   return (
     <TooltipProvider delayDuration={300}>
       <div className="space-y-3">
         {selectedIds.size > 0 ? (
-          <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-muted/30 px-3 py-2">
-            <p className="text-sm text-muted-foreground">
+          <div className="border-border bg-muted/30 flex flex-wrap items-center gap-3 rounded-lg border px-3 py-2">
+            <p className="text-muted-foreground text-sm">
               {t('actions.selected', { count: selectedIds.size })}
             </p>
             <IconTooltipButton
@@ -217,9 +213,7 @@ export function JobsTable({ jobs }: JobsTableProps) {
               disabled={pending}
               onClick={() => {
                 if (
-                  !window.confirm(
-                    t('actions.deleteSelectedConfirm', { count: selectedIds.size }),
-                  )
+                  !window.confirm(t('actions.deleteSelectedConfirm', { count: selectedIds.size }))
                 ) {
                   return;
                 }
@@ -237,13 +231,13 @@ export function JobsTable({ jobs }: JobsTableProps) {
           </div>
         ) : null}
 
-        <div className="overflow-x-auto rounded-lg border border-border">
+        <div className="border-border overflow-x-auto rounded-lg border">
           <table className="w-full min-w-[960px] text-left text-sm">
-            <thead className="border-b border-border bg-muted/40">
+            <thead className="border-border bg-muted/40 border-b">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <th key={header.id} className="px-4 py-3 font-medium text-muted-foreground">
+                    <th key={header.id} className="text-muted-foreground px-4 py-3 font-medium">
                       {header.isPlaceholder
                         ? null
                         : flexRender(header.column.columnDef.header, header.getContext())}
@@ -254,7 +248,7 @@ export function JobsTable({ jobs }: JobsTableProps) {
             </thead>
             <tbody>
               {table.getRowModel().rows.map((row) => (
-                <tr key={row.id} className="border-b border-border last:border-0">
+                <tr key={row.id} className="border-border border-b last:border-0">
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} className="px-4 py-3 align-top">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

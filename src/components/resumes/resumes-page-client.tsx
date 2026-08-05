@@ -89,7 +89,7 @@ export function ResumesPageClient({ resumes }: ResumesPageClientProps) {
         {resumes.length === 0 ? (
           <p className="text-sm text-muted-foreground">{t('empty')}</p>
         ) : (
-          <div className="grid gap-4 lg:grid-cols-2">
+          <div className="grid gap-4 lg:grid-cols-3">
             {resumes.map((resume) => (
               <Card key={resume.id}>
                 <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0">

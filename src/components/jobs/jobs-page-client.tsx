@@ -56,13 +56,6 @@ export function JobsPageClient({ jobs, total, status, search }: JobsPageClientPr
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-muted-foreground">{t('total', { count: total })}</p>
-        <Button type="button" onClick={() => setShowForm((value) => !value)}>
-          {t('add')}
-        </Button>
-      </div>
-
       {showForm ? (
         <Card>
           <CardHeader>
@@ -80,28 +73,31 @@ export function JobsPageClient({ jobs, total, status, search }: JobsPageClientPr
         </Card>
       ) : null}
 
-      <div className="flex flex-wrap gap-3">
-        <Input
-          value={localSearch}
-          onChange={(event) => setLocalSearch(event.target.value)}
-          placeholder={t('search')}
-          className="max-w-sm"
-        />
-        <Select
-          value={localStatus}
-          onChange={(event) => setLocalStatus(event.target.value)}
-          className="max-w-[200px]"
-          aria-label={t('filterStatus')}
-        >
-          <option value="">{t('allStatuses')}</option>
-          {STATUS_OPTIONS.map((value) => (
-            <option key={value} value={value}>
-              {t(`status.${value}`)}
-            </option>
-          ))}
-        </Select>
-        <Button type="button" variant="secondary" onClick={applyFilters}>
-          {t('filterStatus')}
+      <div className="flex w-full justify-between gap-3">
+        <div className="flex gap-3">
+          <Input
+            value={localSearch}
+            onChange={(event) => setLocalSearch(event.target.value)}
+            placeholder={t('search')}
+          />
+          <Select
+            value={localStatus}
+            onChange={(event) => setLocalStatus(event.target.value)}
+            aria-label={t('filterStatus')}
+          >
+            <option value="">{t('allStatuses')}</option>
+            {STATUS_OPTIONS.map((value) => (
+              <option key={value} value={value}>
+                {t(`status.${value}`)}
+              </option>
+            ))}
+          </Select>
+          <Button type="button" variant="secondary" onClick={applyFilters}>
+            {t('filterStatus')}
+          </Button>
+        </div>
+        <Button type="button" onClick={() => setShowForm((value) => !value)}>
+          {t('add')}
         </Button>
       </div>
 
