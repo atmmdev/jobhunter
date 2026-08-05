@@ -1,4 +1,5 @@
 import type { AtsTypeValue } from '@/modules/domain/ats/ats-type';
+import type { SourceTypeValue } from '@/modules/domain/company/company-seed.repository';
 import type { NormalizedJobDto } from '@/shared/schemas/scrape.schema';
 
 export interface ScrapeSourceInput {
@@ -9,7 +10,10 @@ export interface ScrapeSourceInput {
   enabled: boolean;
   companyName: string | null;
   country: string | null;
+  type?: SourceTypeValue;
+  config?: unknown;
 }
+
 
 /**
  * Port implemented by ATS/scraper adapters.

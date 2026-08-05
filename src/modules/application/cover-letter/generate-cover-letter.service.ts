@@ -61,7 +61,7 @@ export class GenerateCoverLetterService {
     });
     let usedAi = false;
     let model: string | null = 'deterministic-v1';
-    let promptVersion: string | null = 'cover-letter.v1';
+    const promptVersion: string | null = 'cover-letter.v1';
 
     if (this.ai.isConfigured()) {
       try {

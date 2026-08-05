@@ -1,10 +1,11 @@
-import type { AiClient } from '@/modules/domain/ai/ai-client';
 import type { EnrichJobService } from '@/modules/application/enrichment/enrich-job.service';
-import type { JobRepository } from '@/modules/domain/job/job.repository';
 import type { CreateHighScoreNotificationService } from '@/modules/application/notification/create-high-score-notification.service';
+import type { PreferenceLearningService } from '@/modules/application/scoring/preference-learning.service';
+import type { AiClient } from '@/modules/domain/ai/ai-client';
+import type { JobRepository } from '@/modules/domain/job/job.repository';
 import type { ResumeRepository } from '@/modules/domain/resume/resume.repository';
-import { NotFoundError } from '@/modules/domain/shared/errors';
 import { scoreJobAgainstStacks } from '@/modules/domain/scoring/score-job.policy';
+import { NotFoundError } from '@/modules/domain/shared/errors';
 import { aiScoreSchema } from '@/modules/infrastructure/ai/openai-compatible.client';
 import { prisma } from '@/modules/infrastructure/prisma/client';
 
@@ -18,7 +19,7 @@ export interface ScoreJobResult {
 }
 
 /**
- * Scores a job for a user using deterministic policy (+ optional AI refinement).
+ * Scores a job for a user using deterministic policy (+ optional AI + preference learning).
  */
 export class ScoreJobService {
   constructor(
@@ -28,6 +29,7 @@ export class ScoreJobService {
     private readonly modelName: string,
     private readonly highScoreNotifications?: CreateHighScoreNotificationService,
     private readonly enrichJob?: EnrichJobService,
+    private readonly preferences?: PreferenceLearningService,
   ) {}
 
   async execute(userId: string, jobId: string): Promise<ScoreJobResult> {
@@ -76,6 +78,19 @@ export class ScoreJobService {
         usedAi = true;
       } catch {
         // Keep deterministic score if AI fails.
+      }
+    }
+
+    if (this.preferences) {
+      const signals = await this.preferences.getSignals(userId);
+      const adjusted = this.preferences.adjustScore(
+        score,
+        `${job.title}\n${job.descriptionText}`,
+        signals,
+      );
+      if (adjusted.delta !== 0) {
+        score = adjusted.score;
+        explanation = `${explanation} | Preferences: delta ${adjusted.delta} (${adjusted.hits.join(', ') || 'none'})`;
       }
     }
 

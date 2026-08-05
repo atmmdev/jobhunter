@@ -2,6 +2,7 @@
 
 import {
   Briefcase,
+  CircleHelp,
   FileText,
   LayoutDashboard,
   Radio,
@@ -24,6 +25,7 @@ const items = [
   { href: '/resumes', key: 'resumes', icon: FileText },
   { href: '/sources', key: 'sources', icon: Radio },
   { href: '/settings', key: 'settings', icon: Settings },
+  { href: '/help', key: 'help', icon: CircleHelp },
 ] as const;
 
 interface AppSidebarProps {

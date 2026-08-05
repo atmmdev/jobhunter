@@ -34,6 +34,7 @@ export class PrismaScrapePersistenceRepository implements ScrapePersistenceRepos
       companyName: source.company?.name ?? null,
       country: source.company?.country ?? null,
       type: source.type as SourceTypeValue,
+      config: source.config,
     };
   }
 
@@ -56,6 +57,7 @@ export class PrismaScrapePersistenceRepository implements ScrapePersistenceRepos
       companyName: source.company?.name ?? null,
       country: source.company?.country ?? null,
       type: source.type as SourceTypeValue,
+      config: source.config,
     }));
   }
 

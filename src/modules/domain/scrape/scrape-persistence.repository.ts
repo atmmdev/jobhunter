@@ -1,4 +1,3 @@
-import type { AtsTypeValue } from '@/modules/domain/ats/ats-type';
 import type { SourceTypeValue } from '@/modules/domain/company/company-seed.repository';
 import type { ScrapeSourceInput } from '@/modules/domain/scrape/job-source-adapter';
 

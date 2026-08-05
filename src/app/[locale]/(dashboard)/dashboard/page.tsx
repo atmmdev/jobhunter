@@ -1,11 +1,13 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
+import { FocusCountriesPanel } from '@/components/dashboard/focus-countries-panel';
 import { MetricCard } from '@/components/dashboard/metric-card';
+import type { FocusCountryRegion } from '@/modules/domain/analytics/focus-countries';
 import { auth } from '@/modules/infrastructure/auth/auth';
 import { createAnalyticsModule } from '@/modules/infrastructure/composition';
 
 /**
- * Main dashboard with live analytics metrics.
+ * Main dashboard with live analytics metrics and relocation focus countries.
  */
 export default async function DashboardPage({
   params,
@@ -77,6 +79,19 @@ export default async function DashboardPage({
     },
   ];
 
+  const regionLabels: Record<FocusCountryRegion, string> = {
+    europe: t('focusRegions.europe'),
+    oceania: t('focusRegions.oceania'),
+    northAmerica: t('focusRegions.northAmerica'),
+    southAmerica: t('focusRegions.southAmerica'),
+    asia: t('focusRegions.asia'),
+    middleEast: t('focusRegions.middleEast'),
+  };
+
+  const jobCountsByCountry = Object.fromEntries(
+    stats.countries.map((item) => [item.name, item.count]),
+  );
+
   return (
     <div className="space-y-8">
       <header className="space-y-2">
@@ -88,6 +103,13 @@ export default async function DashboardPage({
           <MetricCard key={card.key} title={t(card.key)} value={card.value} hint={card.hint} />
         ))}
       </section>
+      <FocusCountriesPanel
+        locale={locale}
+        title={t('focusCountriesTitle')}
+        subtitle={t('focusCountriesSubtitle')}
+        regionLabels={regionLabels}
+        jobCountsByCountry={jobCountsByCountry}
+      />
     </div>
   );
 }

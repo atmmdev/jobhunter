@@ -262,6 +262,7 @@ export function ApplicationsPageClient({
                 {editingApplicationId === app.id ? (
                   <div className="border-t border-border p-4">
                     <CoverLetterEditor
+                      key={app.id}
                       applicationId={app.id}
                       coverLetterId={app.coverLetterId}
                       initialContent={app.coverLetterContent}

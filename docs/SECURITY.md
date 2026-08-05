@@ -43,8 +43,9 @@ Current surface:
 | `notification.actions` | yes |
 | `credential.actions` | yes |
 
-- [x] Shared helper: `src/shared/auth/require-user.ts`
-- [ ] Role-based admin vs operator (multi-user Phase 10)
+- [x] Background scrape queue (BullMQ + Redis optional)
+- [x] Security headers on Next responses
+- [x] Shared `requireUserId` helper
 
 ---
 

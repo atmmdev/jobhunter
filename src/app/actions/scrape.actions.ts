@@ -11,31 +11,47 @@ export type ActionResult<T> =
   | { ok: false; error: string };
 
 /**
- * Runs job discovery for a single source.
+ * Runs or enqueues job discovery for a single source.
+ * Uses BullMQ when REDIS_URL is set; otherwise runs inline.
  */
 export async function runSourceScrapeAction(
   input: unknown,
 ): Promise<
   ActionResult<{
-    jobsFound: number;
-    jobsCreated: number;
-    jobsUpdated: number;
-    adapterKey: string;
-    status: string;
+    mode: 'queued' | 'inline';
+    jobId?: string;
+    jobsFound?: number;
+    jobsCreated?: number;
+    jobsUpdated?: number;
+    adapterKey?: string;
+    status?: string;
   }>
 > {
   try {
-    await requireUserId();
+    const userId = await requireUserId();
     const parsed = runSourceSchema.parse(input);
-    const { runSource } = createScrapeModule();
-    const result = await runSource.execute(parsed);
+    const { runSource, enqueueScrape } = createScrapeModule();
 
+    if (enqueueScrape.isQueueEnabled()) {
+      const queued = await enqueueScrape.enqueueSource(parsed.sourceId, userId);
+      revalidatePath('/[locale]/sources', 'page');
+      return {
+        ok: true,
+        data: {
+          mode: 'queued',
+          jobId: queued.jobId,
+        },
+      };
+    }
+
+    const result = await runSource.execute(parsed);
     revalidatePath('/[locale]/sources', 'page');
     revalidatePath('/[locale]/jobs', 'page');
 
     return {
       ok: true,
       data: {
+        mode: 'inline',
         jobsFound: result.jobsFound,
         jobsCreated: result.jobsCreated,
         jobsUpdated: result.jobsUpdated,

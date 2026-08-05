@@ -21,8 +21,13 @@ const RUNNABLE_ATS = new Set([
   'BAMBOOHR',
   'TEAMTAILOR',
   'PERSONIO',
+  'LINKEDIN',
+  'INDEED',
+  'CATHO',
   'CUSTOM',
 ]);
+
+const RUNNABLE_TYPES = new Set(['TELEGRAM', 'SLACK', 'ATS', 'CAREERS', 'JOB_BOARD', 'OTHER']);
 
 interface SourceRowActionsProps {
   source: SourceListItemDto;
@@ -40,7 +45,12 @@ export function SourceRowActions({ source, onMessage, onError }: SourceRowAction
   const [running, setRunning] = useState(false);
   const [toggling, setToggling] = useState(false);
 
-  const canRun = source.enabled && source.atsType !== null && RUNNABLE_ATS.has(source.atsType);
+  const canRun =
+    source.enabled &&
+    RUNNABLE_TYPES.has(source.type) &&
+    (source.type === 'TELEGRAM' ||
+      source.type === 'SLACK' ||
+      (source.atsType !== null && RUNNABLE_ATS.has(source.atsType)));
 
   return (
     <div className="flex flex-wrap items-center gap-1">
@@ -83,14 +93,18 @@ export function SourceRowActions({ source, onMessage, onError }: SourceRowAction
               onError(result.error);
               return;
             }
-            onMessage(
-              t('runResult', {
-                adapter: result.data.adapterKey,
-                found: result.data.jobsFound,
-                created: result.data.jobsCreated,
-                updated: result.data.jobsUpdated,
-              }),
-            );
+            if (result.data.mode === 'queued') {
+              onMessage(t('runQueued', { jobId: result.data.jobId ?? '—' }));
+            } else {
+              onMessage(
+                t('runResult', {
+                  adapter: result.data.adapterKey ?? '—',
+                  found: result.data.jobsFound ?? 0,
+                  created: result.data.jobsCreated ?? 0,
+                  updated: result.data.jobsUpdated ?? 0,
+                }),
+              );
+            }
             nextRouter.refresh();
           })
         }

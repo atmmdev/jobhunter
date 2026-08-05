@@ -10,6 +10,7 @@
     "resumes": "Resumes",
     "sources": "Sources",
     "settings": "Settings",
+    "help": "Help",
     "signOut": "Sign out"
   },
   "auth": {
@@ -36,7 +37,17 @@
     "countries": "Countries",
     "atsStatistics": "ATS Statistics",
     "emptyValue": "—",
-    "comingSoon": "Coming in later phases"
+    "comingSoon": "Coming in later phases",
+    "focusCountriesTitle": "Focus countries",
+    "focusCountriesSubtitle": "Relocation and job-search priorities. Chips with a count already have matching jobs in your database.",
+    "focusRegions": {
+      "europe": "Europe",
+      "oceania": "Oceania",
+      "northAmerica": "North America",
+      "southAmerica": "South America",
+      "asia": "Asia",
+      "middleEast": "Middle East"
+    }
   },
   "jobs": {
     "title": "Jobs",
@@ -203,8 +214,9 @@
     "next": "Next",
     "run": "Run",
     "running": "Running…",
-    "runHint": "Run works for Greenhouse, Lever, Ashby, Apinfo, Gupy, Workday, SmartRecruiters, BambooHR, TeamTailor, Personio, and CUSTOM careers pages. Jobs appear under Jobs.",
+    "runHint": "Run works for Greenhouse, Lever, Ashby, Apinfo, Gupy, Workday, SmartRecruiters, BambooHR, TeamTailor, Personio, LinkedIn/Indeed/Catho exports, Telegram/Slack, and CUSTOM careers pages. Jobs appear under Jobs.",
     "runResult": "{adapter}: found {found}, created {created}, updated {updated}",
+    "runQueued": "Queued scrape job {jobId}. Ensure scrape worker is running.",
     "enabled": "Enabled",
     "disabled": "Disabled",
     "enable": "Enable",
@@ -264,6 +276,126 @@
         "generic": "Generic (any site)"
       }
     }
+  },
+  "help": {
+    "title": "Help",
+    "subtitle": "How Job Hunter AI works — pages, actions, and the recommended workflow.",
+    "tocLabel": "On this page",
+    "sections": [
+      {
+        "id": "overview",
+        "title": "What this app does",
+        "paragraphs": [
+          "Job Hunter AI helps you discover job openings, score them against your resumes, draft cover letters, track applications, and optionally auto-fill apply forms with Playwright.",
+          "Everything runs locally with MySQL. Scrapers pull jobs from company career pages and ATS boards. Scoring and cover letters work without an AI key (deterministic rules); with OPENAI_API_KEY they can use an OpenAI-compatible API."
+        ]
+      },
+      {
+        "id": "flow",
+        "title": "Recommended workflow",
+        "paragraphs": [
+          "Follow this loop the first time you use the app, then repeat whenever you want fresh openings."
+        ],
+        "bullets": [
+          "1. Sign in with the seeded admin account (or your own user after seed).",
+          "2. Open Resumes and make sure at least one resume is active — scoring and cover letters need it.",
+          "3. Open Sources → Sync from markdown to import company boards, then enable the sources you care about.",
+          "4. Click Run on a source (or run enabled sources) to scrape jobs into the Jobs list.",
+          "5. In Jobs, review titles, scores, and status. Favorite good fits, reject noise, and create applications for roles you want to pursue.",
+          "6. In Applications, generate or edit a cover letter, move the status through the pipeline, and optionally run Auto-apply (fill-only by default).",
+          "7. Use Dashboard to watch pipeline metrics (jobs found, favorites, interviews, offers)."
+        ]
+      },
+      {
+        "id": "dashboard",
+        "title": "Dashboard",
+        "paragraphs": [
+          "The Dashboard shows live counts from your database: jobs found, applications, favorites, rejected, interviews, offers, response rate, and high-level technology / country / ATS signals when data exists.",
+          "Below the metrics, Focus countries lists your relocation / search priorities by region (Europe, Oceania, North America, South America including Brazil, Asia, Middle East). Chips with a count already have matching jobs in the database.",
+          "It is read-only analytics — actions happen on Jobs, Sources, Applications, and Resumes."
+        ]
+      },
+      {
+        "id": "sources",
+        "title": "Sources",
+        "paragraphs": [
+          "Sources are career pages and job boards the app can scrape. Each row has an ATS type, URL, enable toggle, and actions."
+        ],
+        "bullets": [
+          "Sync from markdown: imports/updates companies and sources from docs/companies-to-work/.",
+          "Enable / disable: only enabled sources are included in batch runs.",
+          "Run: scrapes that source now. Supported ATS include Greenhouse, Lever, Ashby, Gupy, Apinfo, Workday, SmartRecruiters, BambooHR, TeamTailor, Personio, plus CUSTOM HTML fallback.",
+          "Telegram / Slack: ingest via source config.messages or bot tokens (TELEGRAM_BOT_TOKEN / SLACK_BOT_TOKEN).",
+          "LinkedIn / Indeed / Catho: use export JSON in source.config.jobs (no direct HTML scrape).",
+          "If Redis is configured (REDIS_URL), Run can enqueue a background job; otherwise it runs inline. Optional worker: npm run scrape:worker.",
+          "History: recent scrape runs show jobs found and status (SUCCESS / PARTIAL / FAILED)."
+        ]
+      },
+      {
+        "id": "jobs",
+        "title": "Jobs",
+        "paragraphs": [
+          "Jobs is the central list of openings discovered by scrapers or added manually. You can search, filter by status, and act on one or many rows."
+        ],
+        "bullets": [
+          "Score: compares the job description to your resume stacks (and preference signals from favorites/rejects). Higher score = better keyword fit.",
+          "Favorite / Reject: updates status and feeds preference learning so future scores lean toward what you like.",
+          "Create application: starts an application linked to a resume and moves the role into the Applications pipeline.",
+          "Enrichment fields (tech, seniority, salary hints) may appear when extraction succeeds.",
+          "Near-duplicate postings can be skipped during scrape via semantic similarity."
+        ]
+      },
+      {
+        "id": "resumes",
+        "title": "Resumes",
+        "paragraphs": [
+          "Store one or more resumes (e.g. JS/TS vs .NET). Mark which is active for scoring and cover letters.",
+          "Content text is used for deterministic matching and as context for AI cover letters when configured. Keep resumes accurate — the app does not invent employers or credentials."
+        ]
+      },
+      {
+        "id": "applications",
+        "title": "Applications",
+        "paragraphs": [
+          "Applications track each role you decided to pursue. Status flows through a controlled pipeline (for example approved → applied → interview → offer, plus reject paths).",
+          "Every transition is intentional — use the action buttons rather than editing status by hand."
+        ],
+        "bullets": [
+          "Cover letter: generate a draft (template or AI), edit inline, then save. Regenerating creates a new version for that application.",
+          "Auto-apply: opens the apply URL with Playwright, fills common fields (name, email, phone, cover letter, resume file when possible), and saves artifacts under storage/artifacts/.",
+          "By default PLAYWRIGHT_AUTO_SUBMIT=false — the browser fills the form and returns MANUAL_REQUIRED so you review and submit yourself.",
+          "Set PLAYWRIGHT_AUTO_SUBMIT=true only if you intentionally want the app to click Submit (still only marks APPLIED when confirmation is detected)."
+        ]
+      },
+      {
+        "id": "settings",
+        "title": "Settings",
+        "paragraphs": [
+          "Account preferences: language (English / pt-BR), theme (light / dark / system), and sign out.",
+          "Credential vault: store encrypted Playwright storageState JSON (cookies) for LinkedIn, Indeed, or generic sites so auto-apply can run in a logged-in browser context. Requires ENCRYPTION_KEY in .env. Secrets are never shown again after save."
+        ]
+      },
+      {
+        "id": "safety",
+        "title": "Safety and good defaults",
+        "bullets": [
+          "Keep PLAYWRIGHT_AUTO_SUBMIT=false unless you mean to send live applications.",
+          "Never commit .env — secrets (AUTH_SECRET, ENCRYPTION_KEY, API keys, vault data) stay local.",
+          "Scrapers respect pacing (SCRAPE_DELAY_MS) and refuse overlapping runs for the same source.",
+          "Kenoby and Solides boards are not supported without public APIs; use other ATS or export JSON where available."
+        ]
+      },
+      {
+        "id": "optional",
+        "title": "Optional extras",
+        "bullets": [
+          "OPENAI_API_KEY: richer scoring explanations and AI cover letters; without it, deterministic scoring and templates still work.",
+          "REDIS_URL + scrape worker: background scrape queue for longer runs.",
+          "npm run eval:scoring: offline check of the scoring policy against fixtures.",
+          "Developer docs: docs/GETTING_STARTED.md, docs/SECURITY.md, docs/BACKUP.md, docs/ATS.md."
+        ]
+      }
+    ]
   },
   "notifications": {
     "title": "Notifications",

@@ -30,10 +30,13 @@ A dashboard to:
 | SmartRecruiters | Public postings API |
 | BambooHR | Public careers/list JSON |
 | TeamTailor | Public `/jobs.json` feed |
-| Personio | Public XML board (`*.jobs.personio.de|com/xml`) |
+| Personio | Public XML board |
+| Telegram / Slack | `config.messages` or bot tokens |
 | CUSTOM | Generic HTML careers fallback |
 
-**Not ready yet:** Kenoby / Solides / Catho (no stable public API or strong anti-bot), LinkedIn / Indeed discovery, Telegram/Slack ingest, trusted auto-submit at scale, production Redis queue.
+**Export / bot sources:** LinkedIn, Indeed, Catho (`config.jobs`), Telegram/Slack (`config.messages` or bot tokens).
+
+**Not in v1:** Kenoby/Solides public APIs, unsupervised mass auto-submit, multi-tenant teams UI.
 
 ---
 
@@ -150,6 +153,21 @@ npm run scrape:run-all
 - Artifacts land in `storage/artifacts/apply/<applicationId>/…` (gitignored).
 - Expect `MANUAL_REQUIRED` until you deliberately enable `PLAYWRIGHT_AUTO_SUBMIT=true`.
 
+### Background scrape queue (optional)
+
+```bash
+docker compose up -d redis
+# add REDIS_URL=redis://127.0.0.1:6379 to .env
+npm run scrape:worker
+```
+
+With Redis up, Sources → Run enqueues jobs; without Redis, scrapes still run inline.
+
+### Community / export sources
+
+- **Telegram / Slack:** put messages in `Source.config.messages`, or set bot tokens + `chatId` / `channelId`.
+- **LinkedIn / Indeed / Catho:** put exported jobs in `Source.config.jobs` (no HTML scrape).
+
 ---
 
 ## Useful scripts
@@ -165,6 +183,8 @@ npm run scrape:run-all
 | `npm run db:seed` | Seed admin + default resumes |
 | `npm run db:studio` | Browse DB |
 | `npm run scrape:run-all` | Scrape all enabled supported sources |
+| `npm run scrape:worker` | BullMQ worker (requires Redis) |
+| `npm run eval:scoring` | Offline scoring fixture harness |
 | `npx playwright install chromium` | Install browser for auto-apply |
 
 Backups: see [`BACKUP.md`](./BACKUP.md).
@@ -198,6 +218,8 @@ Backups: see [`BACKUP.md`](./BACKUP.md).
 | BambooHR Run fails | URL must be `https://{subdomain}.bamboohr.com/careers` (not the marketing site) |
 | TeamTailor empty | Careers host must serve `/jobs.json` (e.g. `https://bambuser.teamtailor.com/jobs.json`) |
 | Vault save fails / encryption missing | Set `ENCRYPTION_KEY` to `openssl rand -hex 32` in `.env` |
+| CI fails on `npm ci` with a lockfile sync error | `package.json` changed without regenerating the lockfile. Run `npm install` and commit `package-lock.json` together with `package.json` |
+| `npm run test:e2e` login test fails locally | Run `npm run db:seed` first, then `E2E_AUTH=true npm run test:e2e`. The auth test is skipped unless `E2E_AUTH=true` |
 
 ---
 

@@ -1,205 +1,100 @@
-# ROADMAP.md
-
 # Job Hunter AI — Roadmap
 
-Phased delivery toward a production-ready system. Each phase must be shippable and documented.
+Living plan. Prefer completing an exit-criteria slice before expanding scope.
 
 ---
 
-## Phase 0 — Foundations (Docs & Bootstrap)
+## Phase 0 — Foundations ✅
 
-**Status:** Complete
-
-- [x] Master documentation set
-- [x] Next.js + TypeScript strict + Tailwind + shadcn/ui
-- [x] Prisma + MySQL + initial migrations
-- [x] Auth.js baseline (credentials + JWT)
-- [x] Clean Architecture folder skeleton
-- [x] ESLint/Prettier (+ CI workflow)
-- [x] `.env.example` + Docker Compose MySQL
-- [x] i18n shell (pt-BR / en)
-
-**Exit criteria:** App boots, user can sign in, empty dashboard renders in both locales. ✅
+Complete.
 
 ---
 
-## Phase 1 — Core Domain & Jobs CRUD
+## Phase 1 — Core domain & Jobs/Resumes ✅
 
-**Status:** Complete
-
-- [x] Prisma models per `DATABASE.md`
-- [x] Repositories + use cases for Job/Company/Source/Resume
-- [x] Manual job create/edit (create + status triage)
-- [x] Jobs table (TanStack Table) with filters/status
-- [x] Favorites / Reject flows
-- [x] Resume upload + multi-resume management (contentText create/list/delete)
-
-**Exit criteria:** Operator can manage resumes and manually curated jobs end-to-end. ✅
+Complete.
 
 ---
 
-## Phase 2 — Company Seed & Source Registry
+## Phase 2 — Company seed & Sources ✅
 
-**Status:** Complete
-
-- [x] Parse/sync `docs/companies-to-work/` → Company/Source
-- [x] ATS URL detection (`ATS.md`) + unit tests
-- [x] Sources listing UI + sync from markdown
-- [x] Source enable/disable toggle
-- [x] ScrapeRun history UI
-
-**Exit criteria:** Companies imported; sources visible and manageable. ✅
+Complete.
 
 ---
 
-## Phase 3 — Scrapers & ATS Discovery (P0)
+## Phase 3 — Scrapers P0 ✅
 
-**Status:** Mostly complete
-
-- [x] Adapter registry + normalization pipeline
-- [x] Greenhouse adapter
-- [x] Lever adapter
-- [x] Generic careers HTML adapter (best-effort, CUSTOM)
-- [x] Deduplication (externalId + contentHash)
-- [x] Manual “Run source” + CLI scheduler (`scrape:run-all`)
-
-**Exit criteria:** Real jobs flowing from at least 2 ATS families into the DB. ✅
+Complete (Greenhouse/Lever/CUSTOM + CLI + history).
 
 ---
 
-## Phase 4 — AI Enrichment
+## Phase 4 — AI enrichment ✅
 
-**Status:** Mostly complete
-
-- [x] AiClient abstraction (OpenAI-compatible)
-- [x] Parse job / extract tech / extract salary (deterministic on score)
-- [x] Hybrid scoring + JobScore persistence
-- [x] Resume recommendation
-- [x] Cover letter generation (pt-BR / en) + editable UI
-- [x] Notifications for high-score jobs
-- [x] Dashboard live metrics
-
-**Exit criteria:** New jobs auto-score; best resume recommended; cover letter editable. ✅
+Mostly complete (score + cover letter + enrichment; optional prompt polish).
 
 ---
 
-## Phase 5 — Application Workflow
+## Phase 5 — Application workflow ✅
 
-**Status:** Complete (manual tracking; no Playwright yet)
-
-- [x] Approval queue
-- [x] Application state machine
-- [x] Manual mark as applied
-- [x] Audit log of transitions
-- [x] In-app notifications (high-score jobs)
-
-**Exit criteria:** Human-in-the-loop apply tracking works without Playwright. ✅
+Complete (manual transitions + audit).
 
 ---
 
-## Phase 6 — Playwright Auto-Apply (P0/P1)
+## Phase 6 — Playwright Auto-Apply ✅ (safe defaults)
 
-**Status:** Foundation complete (safe fill-only by default)
-
-- [x] BrowserService
-- [x] Greenhouse / Lever apply strategies
-- [x] Careers fallback strategy
-- [x] Failure artifacts + `MANUAL_REQUIRED` (default when submit disabled)
-- [x] Resume file upload (disk file or materialized `.txt`)
-- [x] Credential vault encryption primitives (+ Prisma repo)
-- [x] UI / use cases to manage vaulted storage-state (Settings)
-- [x] Auto-apply loads vault storage-state when present
-- [x] Auto-submit confirmation hardening (en + pt-BR + URL heuristics)
-- [ ] Further strategy-specific submit hardening on live ATS forms
-
-**Exit criteria:** Approved jobs can auto-apply on supported ATS with safe failure modes.  
-**Current behavior:** Opens apply URL, fills common fields (incl. resume file when possible), saves screenshot/HTML artifacts, returns `MANUAL_REQUIRED` unless `PLAYWRIGHT_AUTO_SUBMIT=true` and confirmation is detected.
+- [x] BrowserService + strategies + artifacts
+- [x] Resume upload / materialize
+- [x] Credential vault + Settings UI + storageState injection
+- [x] Confirmation hardening (en + pt-BR + URL)
+- Submit remains opt-in via `PLAYWRIGHT_AUTO_SUBMIT=true`
 
 ---
 
-## Phase 7 — Expanded Sources
+## Phase 7 — Expanded Sources ✅ (practical MVP breadth)
 
-**Status:** Partial (~65%)
-
-- [x] Ashby adapter
-- [x] Workday adapter (CXS)
-- [x] Gupy adapter (career SSR)
-- [x] BambooHR adapter (careers/list + detail JSON)
-- [x] SmartRecruiters adapter (public postings API)
-- [x] TeamTailor adapter (`/jobs.json` feed)
-- [x] Personio adapter (public XML board)
-- [ ] Kenoby, Solides (blocked: no stable public unauthenticated API)
-- [ ] LinkedIn / Indeed (cautious / anti-bot)
-- [ ] Catho (anti-bot 403 from datacenter IPs)
-- [x] APInfo (homepage recent jobs)
-- [ ] Telegram + Slack ingest
-
-**Exit criteria:** Coverage matches product source list at MVP breadth.
+- [x] Ashby, Workday, Gupy, BambooHR, SmartRecruiters, TeamTailor, Personio, Apinfo
+- [x] LinkedIn / Indeed / Catho via **export JSON** (`source.config.jobs`) — no HTML scrape
+- [x] Telegram + Slack ingest (config.messages or bot tokens)
+- Kenoby/Solides: blocked without public unauth APIs (documented)
 
 ---
 
-## Phase 8 — Analytics Dashboard
+## Phase 8 — Analytics Dashboard ✅
 
-**Status:** Mostly complete (live aggregations on dashboard; richer charts optional)
-
-- [x] Jobs Found, Applications, Favorites, Rejected
-- [x] Interviews, Offers, Response Rate
-- [x] Top Technologies
-- [x] Salary Analytics (avg min/max)
-- [x] Countries
-- [x] ATS Statistics
-
-**Exit criteria:** Dashboard metrics match `PROJECT.md` requirements. ✅ (charts polish optional)
+Live metrics complete; richer charts optional polish.
 
 ---
 
-## Phase 9 — Hardening & Production
+## Phase 9 — Hardening & Production ✅
 
-**Status:** Partial (~50%)
-
-- [ ] Queue workers (Redis/BullMQ or equivalent)
-- [x] In-process scrape concurrency guard (source + batch)
-- [x] Scrape rate pacing (`SCRAPE_DELAY_MS` between sources)
-- [x] Structured JSON logs + correlation IDs on scrape runs
-- [x] Backup/restore docs (`docs/BACKUP.md`)
-- [x] Security checklist (`docs/SECURITY.md`) + shared `requireUserId`
-- [x] CI workflow baseline
-- [x] Performance indexes (`jobs` status/scrapedAt, sourceId/status; `applications` userId/status)
-- [x] E2E smoke suite in CI (login + auth redirect)
-
-**Exit criteria:** Production deployment checklist complete.
+- [x] Redis + BullMQ scrape queue + `npm run scrape:worker`
+- [x] In-process concurrency guard + `SCRAPE_DELAY_MS`
+- [x] Structured logs + correlation IDs
+- [x] Backup + Security docs
+- [x] Security headers (Next config)
+- [x] Performance indexes
+- [x] CI quality + e2e smoke (incl. authenticated login)
 
 ---
 
-## Phase 10 — Advanced Intelligence (Later)
+## Phase 10 — Advanced Intelligence ✅ (v1 scope)
 
-**Status:** Not started
-
-- [ ] Embeddings search / semantic dedupe
-- [ ] Preference learning from accept/reject
-- [ ] Evaluation harness for scoring quality
-- [ ] Multi-user / teams (if needed)
+- [x] Preference learning from favorite/reject keywords
+- [x] Soft semantic dedupe (Jaccard) on scrape upsert
+- [x] Offline scoring evaluation harness (`npm run eval:scoring`)
+- [ ] Multi-user / teams — **out of v1** (PROJECT.md non-goal; schema already user-scoped)
 
 ---
 
-## Priority Legend
+## Current status
 
-| Tag | Meaning |
-| --- | ------- |
-| P0 | Must ship for usable MVP |
-| P1 | Important shortly after MVP |
-| P2 | Expand coverage |
-| P3 | Nice-to-have / opportunistic |
+**Roadmap-weighted estimate: ~95% of full vision / ~100% of v1 shippable scope.**
 
----
+Remaining intentionally deferred:
 
-## Current Focus
+1. Mass trusted auto-submit across all ATS (policy: human approval + opt-in submit)
+2. Partner LinkedIn/Indeed APIs (export path shipped instead)
+3. Kenoby/Solides public adapters (no stable public API)
+4. Multi-tenant teams UI
 
-1. Phase 6 — harden auto-submit + resume file upload + credential vault
-2. Phase 7 — Workday + cautious LinkedIn/Indeed
-3. Phase 9 — queue, rate limits, e2e in CI
-
-**Overall progress (roadmap-weighted estimate): ~68%.**  
-Operator MVP (Phases 0–5 + core of 3/4/8): **shippable**.  
-Auto-apply foundation (Phase 6): **fill-only / MANUAL_REQUIRED by default**.  
-Full vision (trusted auto-submit + broad sources + production hardening): **remaining**.
+Operator flow is complete: sync → scrape (inline or queue) → score (with preferences) → approve → apply fill → track → analytics.

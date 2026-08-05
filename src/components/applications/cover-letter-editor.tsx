@@ -3,7 +3,7 @@
 import { RefreshCw, Save, X } from 'lucide-react';
 import { useRouter } from '@/shared/i18n/navigation';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 
 import {
   generateCoverLetterAction,
@@ -22,6 +22,10 @@ interface CoverLetterEditorProps {
 
 /**
  * Inline cover letter generator and editor for an application.
+ *
+ * Draft state is initialized from props on mount only; callers must pass a
+ * `key` tied to the application id so switching applications remounts a fresh
+ * draft instead of leaking edits across rows.
  */
 export function CoverLetterEditor({
   applicationId,
@@ -36,11 +40,6 @@ export function CoverLetterEditor({
   const [letterId, setLetterId] = useState<string | null>(coverLetterId);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setContent(initialContent ?? '');
-    setLetterId(coverLetterId);
-  }, [applicationId, coverLetterId, initialContent]);
 
   return (
     <TooltipProvider delayDuration={300}>

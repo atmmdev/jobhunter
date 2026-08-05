@@ -3,9 +3,11 @@ import type { JobRepository } from '@/modules/domain/job/job.repository';
 import type { JobSourceAdapterRegistry } from '@/modules/infrastructure/scrapers/adapter-registry';
 import type { ScrapePersistenceRepository } from '@/modules/domain/scrape/scrape-persistence.repository';
 import { scrapeConcurrencyGuard } from '@/modules/infrastructure/scrape/scrape-concurrency-guard';
+import { isNearDuplicate } from '@/modules/domain/scoring/semantic-dedupe.policy';
 import { buildJobContentHash } from '@/shared/lib/job-content-hash';
 import { createCorrelationId, rootLogger } from '@/shared/logging/logger';
 import type { RunSourceDto } from '@/shared/schemas/scrape.schema';
+import { prisma } from '@/modules/infrastructure/prisma/client';
 
 export interface RunSourceScrapeResult {
   sourceId: string;
@@ -64,8 +66,23 @@ export class RunSourceScrapeService {
       const normalizedJobs = await adapter.fetchJobs(source);
       jobsFound = normalizedJobs.length;
 
+      const recentJobs = await prisma.job.findMany({
+        where: { sourceId: source.id },
+        select: { title: true, descriptionText: true },
+        orderBy: { scrapedAt: 'desc' },
+        take: 80,
+      });
+
       for (const job of normalizedJobs) {
         if (!job.externalId) {
+          continue;
+        }
+
+        const haystack = `${job.title}\n${job.descriptionText}`;
+        const nearDuplicate = recentJobs.some((existing) =>
+          isNearDuplicate(haystack, `${existing.title}\n${existing.descriptionText}`),
+        );
+        if (nearDuplicate) {
           continue;
         }
 
@@ -97,6 +114,10 @@ export class RunSourceScrapeService {
 
         if (result.created) {
           jobsCreated += 1;
+          recentJobs.unshift({
+            title: job.title,
+            descriptionText: job.descriptionText,
+          });
         } else {
           jobsUpdated += 1;
         }

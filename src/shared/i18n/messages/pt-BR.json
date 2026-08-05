@@ -10,6 +10,7 @@
     "resumes": "Currículos",
     "sources": "Fontes",
     "settings": "Configurações",
+    "help": "Ajuda",
     "signOut": "Sair"
   },
   "auth": {
@@ -36,7 +37,17 @@
     "countries": "Países",
     "atsStatistics": "Estatísticas de ATS",
     "emptyValue": "—",
-    "comingSoon": "Em fases posteriores"
+    "comingSoon": "Em fases posteriores",
+    "focusCountriesTitle": "Países de foco",
+    "focusCountriesSubtitle": "Prioridades de relocação e busca. Chips com contagem já têm vagas correspondentes no banco.",
+    "focusRegions": {
+      "europe": "Europa",
+      "oceania": "Oceania",
+      "northAmerica": "América do Norte",
+      "southAmerica": "América do Sul",
+      "asia": "Ásia",
+      "middleEast": "Oriente Médio"
+    }
   },
   "jobs": {
     "title": "Vagas",
@@ -203,8 +214,9 @@
     "next": "Próxima",
     "run": "Rodar",
     "running": "Rodando…",
-    "runHint": "Rodar funciona para Greenhouse, Lever, Ashby, Apinfo, Gupy, Workday, SmartRecruiters, BambooHR, TeamTailor, Personio e páginas CUSTOM. As vagas aparecem em Vagas.",
+    "runHint": "Rodar funciona para Greenhouse, Lever, Ashby, Apinfo, Gupy, Workday, SmartRecruiters, BambooHR, TeamTailor, Personio, exports LinkedIn/Indeed/Catho, Telegram/Slack e páginas CUSTOM. As vagas aparecem em Vagas.",
     "runResult": "{adapter}: encontradas {found}, criadas {created}, atualizadas {updated}",
+    "runQueued": "Scrape enfileirado {jobId}. Garanta que o worker está rodando.",
     "enabled": "Ativa",
     "disabled": "Inativa",
     "enable": "Ativar",
@@ -264,6 +276,126 @@
         "generic": "Genérico (qualquer site)"
       }
     }
+  },
+  "help": {
+    "title": "Ajuda",
+    "subtitle": "Como o Job Hunter AI funciona — páginas, ações e o fluxo recomendado.",
+    "tocLabel": "Nesta página",
+    "sections": [
+      {
+        "id": "overview",
+        "title": "O que este app faz",
+        "paragraphs": [
+          "O Job Hunter AI ajuda a descobrir vagas, pontuá-las com base nos seus currículos, gerar cartas de apresentação, acompanhar candidaturas e, opcionalmente, preencher formulários de apply com Playwright.",
+          "Tudo roda localmente com MySQL. Os scrapers puxam vagas de páginas de carreira e ATS. Pontuação e cartas funcionam sem chave de IA (regras determinísticas); com OPENAI_API_KEY podem usar uma API compatível com OpenAI."
+        ]
+      },
+      {
+        "id": "flow",
+        "title": "Fluxo recomendado",
+        "paragraphs": [
+          "Siga este ciclo na primeira vez e repita sempre que quiser vagas novas."
+        ],
+        "bullets": [
+          "1. Entre com a conta admin do seed (ou o usuário que você configurou).",
+          "2. Abra Currículos e deixe pelo menos um currículo ativo — pontuação e cartas dependem disso.",
+          "3. Em Fontes → Sincronizar do markdown para importar boards, depois ative as fontes que importam.",
+          "4. Clique em Executar numa fonte (ou rode as habilitadas) para trazer vagas para a lista Vagas.",
+          "5. Em Vagas, revise títulos, scores e status. Favorite bons fits, rejeite ruído e crie candidaturas para o que for perseguir.",
+          "6. Em Candidaturas, gere ou edite a carta, avance o status no pipeline e, se quiser, rode Auto-apply (só preenche por padrão).",
+          "7. Use o Painel para acompanhar métricas (vagas, favoritas, entrevistas, ofertas)."
+        ]
+      },
+      {
+        "id": "dashboard",
+        "title": "Painel",
+        "paragraphs": [
+          "O Painel mostra contagens ao vivo do banco: vagas encontradas, candidaturas, favoritas, rejeitadas, entrevistas, ofertas, taxa de resposta e sinais de tecnologia / país / ATS quando houver dados.",
+          "Abaixo das métricas, Países de foco lista as prioridades de relocação / busca por região (Europa, Oceania, América do Norte, América do Sul incluindo Brasil, Ásia, Oriente Médio). Chips com contagem já têm vagas correspondentes no banco.",
+          "É só analytics — as ações ficam em Vagas, Fontes, Candidaturas e Currículos."
+        ]
+      },
+      {
+        "id": "sources",
+        "title": "Fontes",
+        "paragraphs": [
+          "Fontes são páginas de carreira e boards que o app consegue scrapear. Cada linha tem tipo de ATS, URL, liga/desliga e ações."
+        ],
+        "bullets": [
+          "Sincronizar do markdown: importa/atualiza empresas e fontes a partir de docs/companies-to-work/.",
+          "Ativar / desativar: só fontes ativas entram em execuções em lote.",
+          "Executar: faz o scrape agora. ATS suportados incluem Greenhouse, Lever, Ashby, Gupy, Apinfo, Workday, SmartRecruiters, BambooHR, TeamTailor, Personio, além do fallback CUSTOM em HTML.",
+          "Telegram / Slack: ingestão via config.messages da fonte ou tokens de bot (TELEGRAM_BOT_TOKEN / SLACK_BOT_TOKEN).",
+          "LinkedIn / Indeed / Catho: use JSON de export em source.config.jobs (sem scrape HTML direto).",
+          "Se Redis estiver configurado (REDIS_URL), Executar pode enfileirar um job em background; senão roda inline. Worker opcional: npm run scrape:worker.",
+          "Histórico: execuções recentes mostram vagas encontradas e status (SUCCESS / PARTIAL / FAILED)."
+        ]
+      },
+      {
+        "id": "jobs",
+        "title": "Vagas",
+        "paragraphs": [
+          "Vagas é a lista central de oportunidades vindas dos scrapers ou adicionadas manualmente. Dá para buscar, filtrar por status e agir em uma ou várias linhas."
+        ],
+        "bullets": [
+          "Pontuar: compara a descrição com as stacks do currículo (e sinais de preferência de favoritas/rejeitadas). Score maior = melhor encaixe de palavras-chave.",
+          "Favoritar / Rejeitar: atualiza o status e alimenta o aprendizado de preferência para scores futuros.",
+          "Criar candidatura: inicia uma application ligada a um currículo e entra no pipeline de Candidaturas.",
+          "Campos de enriquecimento (tech, senioridade, salário) aparecem quando a extração funciona.",
+          "Postagens quase duplicadas podem ser ignoradas no scrape por similaridade semântica."
+        ]
+      },
+      {
+        "id": "resumes",
+        "title": "Currículos",
+        "paragraphs": [
+          "Guarde um ou mais currículos (ex.: JS/TS vs .NET). Marque qual está ativo para pontuação e cartas.",
+          "O texto é usado no matching determinístico e como contexto para cartas com IA, se configurada. Mantenha o conteúdo fiel — o app não inventa empregadores nem credenciais."
+        ]
+      },
+      {
+        "id": "applications",
+        "title": "Candidaturas",
+        "paragraphs": [
+          "Candidaturas acompanham cada vaga que você decidiu perseguir. O status segue um pipeline controlado (ex.: aprovada → aplicada → entrevista → oferta, além de rejeição).",
+          "Toda transição é intencional — use os botões de ação em vez de editar status na mão."
+        ],
+        "bullets": [
+          "Carta: gere um rascunho (template ou IA), edite e salve. Regenerar cria uma nova versão para aquela candidatura.",
+          "Auto-apply: abre a URL de apply com Playwright, preenche campos comuns (nome, e-mail, telefone, carta, arquivo do currículo quando possível) e salva artefatos em storage/artifacts/.",
+          "Por padrão PLAYWRIGHT_AUTO_SUBMIT=false — o browser preenche e retorna MANUAL_REQUIRED para você revisar e enviar.",
+          "Só use PLAYWRIGHT_AUTO_SUBMIT=true se quiser que o app clique em Enviar (só marca APPLIED quando detecta confirmação)."
+        ]
+      },
+      {
+        "id": "settings",
+        "title": "Configurações",
+        "paragraphs": [
+          "Preferências da conta: idioma (English / pt-BR), tema (claro / escuro / sistema) e sair.",
+          "Cofre de credenciais: guarda storageState do Playwright criptografado (cookies) para LinkedIn, Indeed ou sites genéricos, para o auto-apply rodar logado. Exige ENCRYPTION_KEY no .env. O segredo não é mostrado de novo após salvar."
+        ]
+      },
+      {
+        "id": "safety",
+        "title": "Segurança e defaults bons",
+        "bullets": [
+          "Mantenha PLAYWRIGHT_AUTO_SUBMIT=false a menos que queira enviar candidaturas de verdade.",
+          "Nunca commite o .env — segredos (AUTH_SECRET, ENCRYPTION_KEY, chaves de API, cofre) ficam locais.",
+          "Scrapers respeitam intervalo (SCRAPE_DELAY_MS) e bloqueiam execuções sobrepostas da mesma fonte.",
+          "Kenoby e Solides não têm adapter público; use outros ATS ou export JSON quando disponível."
+        ]
+      },
+      {
+        "id": "optional",
+        "title": "Extras opcionais",
+        "bullets": [
+          "OPENAI_API_KEY: explicações de score e cartas com IA; sem ela, score e templates determinísticos continuam funcionando.",
+          "REDIS_URL + worker de scrape: fila em background para runs longos.",
+          "npm run eval:scoring: checagem offline da política de score com fixtures.",
+          "Docs de desenvolvimento: docs/GETTING_STARTED.md, docs/SECURITY.md, docs/BACKUP.md, docs/ATS.md."
+        ]
+      }
+    ]
   },
   "notifications": {
     "title": "Notificações",

@@ -135,24 +135,20 @@ Details: [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md).
 
 ---
 
-## Current Status (approx. **~82%** of full roadmap)
+## Current Status (approx. **~95%** full vision / **~100%** v1 scope)
 
 | Phase | Name | Status |
 | ----- | ---- | ------ |
-| 0 | Foundations | ✅ Complete |
-| 1 | Core domain & Jobs/Resumes | ✅ Complete |
-| 2 | Company seed & Sources | ✅ Complete |
-| 3 | Scrapers P0 (GH/Lever/CUSTOM + CLI) | ✅ Complete |
-| 4 | AI enrichment | ✅ Mostly complete |
-| 5 | Application workflow (manual) | ✅ Complete |
-| 6 | Playwright auto-apply | 🟡 Foundation (+ vault + stronger confirmation) |
-| 7 | Expanded sources | 🟡 Partial (~65% — +Personio; Kenoby/Solides/Catho blocked) |
-| 8 | Analytics dashboard | ✅ Mostly complete (metrics live; polish/charts optional) |
-| 9 | Hardening / production | 🟡 Partial (~50% — locks, indexes, e2e, security docs) |
-| 10 | Advanced intelligence | ❌ Later |
+| 0–5 | Foundations → Applications | ✅ Complete |
+| 6 | Playwright auto-apply | ✅ Safe fill-only default + vault |
+| 7 | Expanded sources | ✅ Practical MVP (+ exports / TG / Slack) |
+| 8 | Analytics dashboard | ✅ Complete |
+| 9 | Hardening / production | ✅ Queue, e2e, security, indexes |
+| 10 | Advanced intelligence | ✅ Preferences + dedupe + eval (teams later) |
 
-**Usable MVP today:** sync sources → scrape → score → approve → track applications → optional Playwright fill + vaulted sessions.  
-**Biggest remaining gaps:** Redis/BullMQ queue, LinkedIn/Indeed/Catho, trusted auto-submit at scale.
+**Deferred:** multi-tenant teams, partner LinkedIn/Indeed APIs, Kenoby/Solides, unsupervised mass submit.  
+Details: [docs/ROADMAP.md](./docs/ROADMAP.md) · [docs/GETTING_STARTED.md](./docs/GETTING_STARTED.md)
+
 
 Details: [docs/ROADMAP.md](./docs/ROADMAP.md) · [docs/TODO.md](./docs/TODO.md) · [docs/GETTING_STARTED.md](./docs/GETTING_STARTED.md)
 

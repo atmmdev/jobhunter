@@ -2,6 +2,8 @@ import { DeleteVaultSecretService } from '@/modules/application/credential/delet
 import { ListVaultEntriesService } from '@/modules/application/credential/list-vault-entries.service';
 import { UpsertVaultSecretService } from '@/modules/application/credential/upsert-vault-secret.service';
 import { CreateHighScoreNotificationService } from '@/modules/application/notification/create-high-score-notification.service';
+import { PreferenceLearningService } from '@/modules/application/scoring/preference-learning.service';
+import { EnqueueScrapeSourceService } from '@/modules/application/scrape/enqueue-scrape-source.service';
 import { ListNotificationsService } from '@/modules/application/notification/list-notifications.service';
 import { MarkNotificationReadService } from '@/modules/application/notification/mark-notification-read.service';
 import { GenerateCoverLetterService } from '@/modules/application/cover-letter/generate-cover-letter.service';
@@ -128,6 +130,7 @@ export function createScrapeModule() {
   return {
     runSource,
     runEnabledSources: new RunEnabledSourcesService(persistence, runSource, adapters),
+    enqueueScrape: new EnqueueScrapeSourceService(),
   };
 }
 
@@ -147,6 +150,7 @@ export function createScoringModule() {
       process.env.OPENAI_MODEL || 'gpt-4o-mini',
       createHighScoreNotificationService(),
       new EnrichJobService(jobs),
+      new PreferenceLearningService(),
     ),
   };
 }
